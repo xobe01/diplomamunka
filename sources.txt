@@ -1,0 +1,11 @@
+önvezetés: https://www.sciencedirect.com/science/article/pii/S095741742030628X
+pontfelhő automatikus mesh generálás: https://www.isprs-ann-photogramm-remote-sens-spatial-inf-sci.net/IV-2-W4/243/2017/isprs-annals-IV-2-W4-243-2017.pdf
+3d szkennelés összefogaló: https://arxiv.org/pdf/1801.08863.pdf
+pontfelhőből modell: https://www.research-collection.ethz.ch/handle/20.500.11850/369698
+pontfelhők és önvezetés: https://arxiv.org/pdf/2003.00601.pdf
+lidar vs photogrammatry: https://www.ingentaconnect.com/content/asprs/pers/2010/00000076/00000010/art00001#
+kocsi lidar jellemzők: https://opg.optica.org/DirectPDFAccess/402E9615-396A-4D8B-99BE907132C29184_380434/opn-29-1-26.pdf?da=1&id=380434&seq=0&mobile=no
+kocsi lidar: https://ieeexplore.ieee.org/abstract/document/9127855
+RANSAC plane detection: https://ris.utwente.nl/ws/files/103953896/Yang2010Plane.pdf
+átfedésben lévő felületek mergelése (később): https://ieeexplore.ieee.org/abstract/document/5152473
+rekonstrukció klasszifikációval (később): https://ieeexplore.ieee.org/abstract/document/7153124
