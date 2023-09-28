@@ -312,7 +312,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &272381938
 Transform:
   m_ObjectHideFlags: 0
@@ -586,8 +586,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 386672195}
-  m_LocalRotation: {x: 0.26690403, y: -0.1397528, z: 0.039151173, w: 0.9527322}
-  m_LocalPosition: {x: 6.8, y: 12.6, z: -18.8}
+  m_LocalRotation: {x: 0.26125875, y: 0.60239446, z: -0.21796347, w: 0.7220504}
+  m_LocalPosition: {x: 31.422375, y: 17.119904, z: 13.64516}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -685,17 +685,8 @@ MonoBehaviour:
   angles: {x: -18, y: 20}
   pointCount: 200000
   verticalPointCount: 200
-  pointColors:
-  - {r: 0.02349341, g: 1, b: 0, a: 1}
-  - {r: 1, g: 0.07592967, b: 0, a: 1}
-  - {r: 0, g: 1, b: 0.9473529, a: 1}
-  - {r: 1, g: 0.6272901, b: 0, a: 1}
-  - {r: 0.92907286, g: 0, b: 1, a: 1}
-  - {r: 0, g: 0.12723541, b: 1, a: 1}
-  - {r: 0.9567195, g: 1, b: 0, a: 1}
-  - {r: 0, g: 0.5660378, b: 0.0017233616, a: 1}
-  - {r: 0.6509434, g: 0, b: 0.015232275, a: 1}
   unprocesseedColor: {r: 1, g: 1, b: 1, a: 1}
+  linePrefab: {fileID: 4164652104965098200, guid: f405672ddcabc504887feed33e591ca1, type: 3}
 --- !u!199 &765635506
 ParticleSystemRenderer:
   serializedVersion: 6
@@ -6053,6 +6044,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pointCloudSkybox: {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
+  objMaterial: {fileID: 2100000, guid: ded2b9141af9e0f4d9d67928bdd4141e, type: 2}
+  pointColors:
+  - {r: 0, g: 0.9495752, b: 1, a: 1}
+  - {r: 0, g: 1, b: 0.072294, a: 1}
+  - {r: 1, g: 0, b: 0.009325504, a: 1}
+  - {r: 0, g: 0.15382528, b: 1, a: 1}
+  - {r: 1, g: 0, b: 0.9021702, a: 1}
+  - {r: 1, g: 0.99081707, b: 0, a: 1}
+  - {r: 1, g: 0.42777634, b: 0, a: 1}
 --- !u!4 &1857824065
 Transform:
   m_ObjectHideFlags: 0

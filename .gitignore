@@ -2,6 +2,17 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
+/PointCloudProcessor/PointCloudProcessor/x64/Debug
 /Diplomamunka/Diplomamunka/Assets/Resources
 /Diplomamunka/Diplomamunka/Library
 /Diplomamunka/Diplomamunka/Logs
+/PointCloudProcessor/PointCloudProcessor/.vs
+/PointCloudProcessor/PointCloudProcessor/PointCloudProcessor/x64/Debug
+/PointCloudProcessor/PointCloudProcessor/x64/Debug
+/Diplomamunka/Diplomamunka/Temp
+/Diplomamunka/Diplomamunka/obj/Debug
+/Diplomamunka/Diplomamunka/UserSettings
+/PointCloudProcessor/PointCloudProcessor/x64/Debug
+/PointCloudProcessor/PointCloudProcessor/x64/Debug/PointCloudProcessor.pdb
+/PointCloudProcessor/PointCloudProcessor/x64/Debug/PointCloudProcessor.exp
+/PointCloudProcessor/PointCloudProcessor/x64/Debug/PointCloudProcessor.exe

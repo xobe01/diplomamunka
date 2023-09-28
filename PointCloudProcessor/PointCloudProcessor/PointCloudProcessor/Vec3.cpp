@@ -20,14 +20,14 @@ struct Vec3 {
 	template<typename  R>
 	Vec3 operator/(R r) { return Vec3(x / r, y / r, z / r); }
 
-	static T length(Vec3 v)
+	T length()
 	{
-		return sqrt(pow(sqrt(pow(v.x, 2) + pow(v.y, 2)), 2) + pow(v.z, 2));
+		return sqrt(pow(sqrt(pow(x, 2) + pow(y, 2)), 2) + pow(z, 2));
 	}
 
 	static T distance(Vec3 v1, Vec3 v2)
 	{
-		return length(v1 - v2);
+		return (v1 - v2).length();
 	}
 
 	static Vec3<T> cross(Vec3<T> v1, Vec3<T> v2) {
