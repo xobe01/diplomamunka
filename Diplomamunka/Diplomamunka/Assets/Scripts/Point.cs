@@ -9,7 +9,6 @@ public class Point : MonoBehaviour
     int horizontalIndex;
     int verticalIndex;
     int id;
-    int separatedObjectId;
     int outlineId;
     int lineId;
 
@@ -23,12 +22,6 @@ public class Point : MonoBehaviour
     {
         get { return id; }
         set { id = value; }
-    }
-
-    public int SeparatedObjectId
-    {
-        get { return separatedObjectId; }
-        set { separatedObjectId = value; }
     }
 
     public int OutlineId
@@ -55,13 +48,12 @@ public class Point : MonoBehaviour
         set { horizontalIndex = value; }
     }
 
-    public Point(Vector3 _position, int _verticalIndex, int _horizontalIndex, int _id, int _separatedObjectId, int _outlineId, int _lineId)
+    public Point(Vector3 _position, int _verticalIndex, int _horizontalIndex, int _id, int _outlineId, int _lineId)
     {
         position = _position;
         verticalIndex = _verticalIndex;
         horizontalIndex = _horizontalIndex;
         id = _id;
-        separatedObjectId = _separatedObjectId;
         outlineId = _outlineId;
         lineId = _lineId;
     }

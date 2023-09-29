@@ -77,14 +77,10 @@ public class Controller : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Alpha4))
         {
-            lidarCont.Display(processedShowed, 3);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha5))
-        {
             linesShowed = !linesShowed;
             lidarCont.DisplayLines(linesShowed);
         }
-        if (Input.GetKeyDown(KeyCode.Alpha6))
+        if (Input.GetKeyDown(KeyCode.Alpha5))
         {
             objectsShowed = !objectsShowed;
             foreach (var obj in generatedModels) obj.SetActive(objectsShowed);

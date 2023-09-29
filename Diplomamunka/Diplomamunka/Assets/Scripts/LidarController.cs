@@ -77,14 +77,14 @@ public class LidarController : MonoBehaviour
             {
                 Point newPoint = new Point(new Vector3(float.Parse(parts[0].Replace('.', ',')), float.Parse(parts[1].Replace('.', ',')),
                     float.Parse(parts[2].Replace('.', ','))), int.Parse(parts[3]), int.Parse(parts[4]), int.Parse(parts[5]),
-                    int.Parse(parts[6]), int.Parse(parts[7]), int.Parse(parts[8]));
+                    int.Parse(parts[6]), int.Parse(parts[7]));
                 int id = int.Parse(parts[5]);
-                int lineId = int.Parse(parts[8]);
-                int lineIndex = int.Parse(parts[9]);
+                int lineId = int.Parse(parts[7]);
+                int lineIndex = int.Parse(parts[8]);
                 while (pointsById.Count < id + 1) pointsById.Add(new List<Point>());
                 pointsById[id].Add(newPoint);
                 processedPoints.Add(newPoint);
-                while (linePoints.Count < id) linePoints.Add(new List<Vector3>());
+                while (linePoints.Count < lineId) linePoints.Add(new List<Vector3>());
                 if (lineId != 0)
                 {                    
                     while (linePoints[lineId - 1].Count < lineIndex + 1) linePoints[lineId - 1].Add(Vector3.zero);
@@ -107,7 +107,7 @@ public class LidarController : MonoBehaviour
         {
             if (hit.point.magnitude < maxDistance)
             {
-                scannedPoints.Add(new Point(hit.point, verticalIndex, horizontalIndex, 0, 0, 0, 0));
+                scannedPoints.Add(new Point(hit.point, verticalIndex, horizontalIndex, 0, 0, 0));
                 verticalCounter++;
             }
         }
@@ -155,10 +155,8 @@ public class LidarController : MonoBehaviour
             if(type == 0)
                 cloud[i].color = (points[i].Id == 0) ? unprocesseedColor : pointColors[points[i].Id % pointColors.Length];
             if (type == 1)
-                cloud[i].color = (points[i].SeparatedObjectId == 0) ? unprocesseedColor : pointColors[points[i].SeparatedObjectId % pointColors.Length];
-            if (type == 2)
                 cloud[i].color = points[i].OutlineId == 0 ? unprocesseedColor : pointColors[points[i].OutlineId % pointColors.Length];
-            if (type == 3)
+            if (type == 2)
                 cloud[i].color = points[i].LineId == 0 ? unprocesseedColor : pointColors[points[i].LineId % pointColors.Length];
             cloud[i].size = .05f;
         }

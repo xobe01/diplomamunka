@@ -795,7 +795,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   angles: {x: -18, y: 20}
-  pointCount: 20000
+  pointCount: 200000
   verticalPointCount: 200
   unprocesseedColor: {r: 1, g: 1, b: 1, a: 1}
   linePrefab: {fileID: 4164652104965098200, guid: f405672ddcabc504887feed33e591ca1, type: 3}
@@ -6274,7 +6274,7 @@ MonoBehaviour:
   - {r: 1, g: 0, b: 0.9021702, a: 1}
   - {r: 1, g: 0.99081707, b: 0, a: 1}
   - {r: 1, g: 0.42777634, b: 0, a: 1}
-  dontScan: 0
+  dontScan: 1
   isGeneratorScene: 0
 --- !u!4 &1857824065
 Transform:
