@@ -669,10 +669,14 @@ void connectPlanes()
 							newPoints.push_back({ addNewPoint(previousPoint, previousNeighbourPoint, previousNeighbourPoint->plane, planes[i]->edges[j], k), k });
 						newPoints.push_back({ addNewPoint(planes[i]->edges[j][k], neighbour, neighbour->plane, planes[i]->edges[j], k), k });
 						neighbourPlaneId = neighbour->plane->id;
+						previousPoint = nullptr;
 					}
-					previousPoint = planes[i]->edges[j][k];
-					previousNeighbourPoint = neighbour;
-					previousIndex = k;
+					else 
+					{
+						previousPoint = planes[i]->edges[j][k];
+						previousNeighbourPoint = neighbour;
+						previousIndex = k;
+					}					
 				}
 			}
 			if (previousPoint) {
@@ -682,10 +686,11 @@ void connectPlanes()
 			for (size_t k = 0; k < newPoints.size(); k++) 
 			{
 				size_t realIndex = k + newPoints[k].second;
+				std::cout << newPoints[k].first->point->position.x << " " << newPoints[k].first->point->position.y << " " 
+					<< newPoints[k].first->point->position.z << " " << std::endl;
 				if (planes[i]->edges[j][realIndex]->isCorner) planes[i]->edges[j][realIndex]->isCorner = false;
 				planes[i]->edges[j].insert(planes[i]->edges[j].begin() + realIndex, newPoints[k].first);
 			}
-			std::cout << planes[i]->edges[j].size() << std::endl;
 		}
 	}
 }
@@ -734,7 +739,6 @@ void exportObjects()
 			MyFile << "o Mesh" << std::endl;
 			std::vector<EdgePoint*> corners;
 			currentCornerIndex = 0;
-			std::cout << planes[i]->edges[j].size() << std::endl;
 			for (size_t k = 0; k < planes[i]->edges[j].size(); k++) {
 				if (planes[i]->edges[j][k]->isCorner) {
 					planes[i]->edges[j][k]->point->cornerId = currentCornerId;
