@@ -6274,7 +6274,7 @@ MonoBehaviour:
   - {r: 1, g: 0, b: 0.9021702, a: 1}
   - {r: 1, g: 0.99081707, b: 0, a: 1}
   - {r: 1, g: 0.42777634, b: 0, a: 1}
-  dontScan: 1
+  dontScan: 0
   isGeneratorScene: 0
 --- !u!4 &1857824065
 Transform:

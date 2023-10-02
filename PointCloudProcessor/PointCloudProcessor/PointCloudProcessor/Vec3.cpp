@@ -12,6 +12,8 @@ struct Vec3 {
 	Vec3 operator-(Vec3 r) { return Vec3(x - r.x, y - r.y, z - r.z); }
 	Vec3 operator*(Vec3 r) { return Vec3(x * r.x, y * r.y, z * r.z); }
 
+	bool operator==(Vec3 r) { return x == r.x && y == r.y && z == r.z; }
+
 	template<typename  R>
 	Vec3 operator*(R r) { return Vec3(x * r, y * r, z * r); }
 
