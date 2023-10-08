@@ -2,6 +2,4 @@
 
 struct Point;
 
-struct EdgePoint;
-
 struct Plane;
