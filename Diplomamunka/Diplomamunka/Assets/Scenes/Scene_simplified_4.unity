@@ -305,7 +305,7 @@ Transform:
   m_GameObject: {fileID: 85514868}
   serializedVersion: 2
   m_LocalRotation: {x: -0.24234958, y: -0.25500286, z: -0.066185676, w: 0.93373424}
-  m_LocalPosition: {x: -11.87, y: 1.68, z: 6.22}
+  m_LocalPosition: {x: -11.87, y: 1.44, z: 6.22}
   m_LocalScale: {x: 5, y: 5, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -423,7 +423,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!65 &138275528
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -795,8 +795,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   angles: {x: -18, y: 20}
-  pointCount: 2000
-  verticalPointCount: 20
+  pointCount: 10000
+  verticalPointCount: 50
   unprocesseedColor: {r: 1, g: 1, b: 1, a: 1}
   linePrefab: {fileID: 4164652104965098200, guid: f405672ddcabc504887feed33e591ca1, type: 3}
 --- !u!199 &765635506
@@ -5670,7 +5670,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!65 &1020575363
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5958,7 +5958,7 @@ Transform:
   m_GameObject: {fileID: 1327814587}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -41.30796, y: -4.7765164, z: 13.73054}
+  m_LocalPosition: {x: -41.30796, y: -7.17, z: 13.73054}
   m_LocalScale: {x: 400, y: 1, z: 30}
   m_ConstrainProportionsScale: 0
   m_Children: []
