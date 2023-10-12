@@ -162,8 +162,13 @@ Vec3<Point*> pick3Points(const std::vector<Point*>& nonProcessedPoints)
 	return Vec3<Point*>(nonProcessedPoints[index1], nonProcessedPoints[index2], nonProcessedPoints[index3]);
 }
 
-size_t spikeType(Point* p)
+size_t spikeType(Point* p, int arriveDirection)
 {
+	//arriveDirection
+	// 0 - from left
+	// 1 - from up
+	// 2 - from rigth
+	// 3 - from down
 	size_t x = p->horizontalIndex;
 	size_t y = p->verticalIndex;
 	size_t neighbourCount = 0;
@@ -184,13 +189,15 @@ size_t spikeType(Point* p)
 			diagIsNeighbour[j] = true;
 		}
 	}
-	if (neighbourCount == 2 && ((isNeighbour[0] && isNeighbour[1]) || (isNeighbour[2] && isNeighbour[3]) ||
+	if ((neighbourCount == 2 && ((isNeighbour[0] && isNeighbour[1]) || (isNeighbour[2] && isNeighbour[3]) ||
 		(isNeighbour[0] && isNeighbour[2] && !diagIsNeighbour[0]) || (isNeighbour[0] && isNeighbour[3] && !diagIsNeighbour[1]) ||
-		(isNeighbour[1] && isNeighbour[2] && !diagIsNeighbour[3]) || (isNeighbour[1] && isNeighbour[3] && !diagIsNeighbour[2])))
+		(isNeighbour[1] && isNeighbour[2] && !diagIsNeighbour[3]) || (isNeighbour[1] && isNeighbour[3] && !diagIsNeighbour[2]))) || 
+		(neighbourCount > 1 && ((arriveDirection == 0 && !isNeighbour[1]) || (arriveDirection == 1 && !isNeighbour[2]) || (arriveDirection == 2 && !isNeighbour[0])
+			|| (arriveDirection == 3 && !isNeighbour[3]))))
 		return 0;
 	if (neighbourCount == 1)
 		return 1;
-	if (neighbourCount > 2)
+	if (neighbourCount > 1)
 		return 2;
 	return 3;
 }
@@ -204,7 +211,8 @@ bool checkIfBridge(Point* p)
 	Point* neighbourPoints[4] = { points[getOffset(x, y - 1)], points[getOffset(x, y + 1)], points[getOffset(x - 1, y)],
 				points[getOffset(x + 1, y)] };
 	for (size_t j = 0; j < 4; j++) {
-		if (neighbourPoints[j] && (j > 0 || y > 0) && (j < 3 || y < verticalCount - 1) && spikeType(neighbourPoints[j]) == 0)
+		if (neighbourPoints[j] && neighbourPoints[j]->plane == p->plane && (j > 0 || y > 0) && (j < 3 || y < verticalCount - 1) &&
+			spikeType(neighbourPoints[j], -1) > 1)
 			neighbourCount++;
 	}
 	if ((((y > 0 && (!points[getOffset(x - 1, y - 1)] || points[getOffset(x - 1, y - 1)]->plane != p->plane)) &&
@@ -514,44 +522,52 @@ void findPlanes()
 		<< " sec" << std::endl;
 }
 
-void findNextPoint(Point* startPoint, bool isOuterEdge, bool isPreviousSpike, bool wasThereNonSpike, /*out*/ std::vector<std::pair<Point*, size_t>>& currentEdge)
+void findNextPoint(Point* startPoint, size_t direction, bool isPreviousSpike, bool wasThereNonSpike, /*out*/ std::vector<std::pair<Point*, size_t>>& currentEdge,
+	size_t dbgPlaneIndex, std::vector<Plane*> dbgPlanes)
 {
-	size_t direction = isOuterEdge ? 0 : 1;
 	Point* currentPoint = nullptr;
-	Point* previousPoint = nullptr;
-	while (currentPoint != startPoint) 
-	{
+	std::pair<Point*, size_t> previousSavedPoint = {nullptr, 0};
+	bool isFirstPoint = true;
+	while (currentPoint != startPoint) {
 		if (!currentPoint)
 			currentPoint = startPoint;
 		Point* neighbourPoint = nullptr;
 		size_t x = currentPoint->horizontalIndex;
-		size_t y = currentPoint->verticalIndex;		
-		if (currentPoint->isMarked && spikeType(currentPoint) > 0) {
-			currentEdge.push_back({ currentPoint, 0 });
-			for (size_t i = 0; i < 4; i++) {
-				switch (direction) {
-				case 0: //to right
-				neighbourPoint = points[getOffset(x + 1, y)];
-				break;
-				case 1: //to down
-				neighbourPoint = y == verticalCount - 1 ? nullptr : points[getOffset(x, y + 1)];
-				break;
-				case 2: //to left
-				neighbourPoint = points[getOffset(x - 1, y)];
-				break;
-				case 3: //to up
-				neighbourPoint = y == 0 ? nullptr : points[getOffset(x, y - 1)];
-				break;
-				default:
-				break;
+		size_t y = currentPoint->verticalIndex;
+		if (spikeType(currentPoint, isFirstPoint ? -1 : ((direction + 1) % 4)) == 0)
+			isPreviousSpike = true;
+		else {
+			if (currentPoint->isMarked) {
+				currentEdge.push_back({ currentPoint, direction });
+				for (size_t i = 0; i < 4; i++) {
+					switch (direction) {
+					case 0: //to right
+					neighbourPoint = points[getOffset(x + 1, y)];
+					break;
+					case 1: //to down
+					neighbourPoint = y == verticalCount - 1 ? nullptr : points[getOffset(x, y + 1)];
+					break;
+					case 2: //to left
+					neighbourPoint = points[getOffset(x - 1, y)];
+					break;
+					case 3: //to up
+					neighbourPoint = y == 0 ? nullptr : points[getOffset(x, y - 1)];
+					break;
+					default:
+					break;
+					}
+					if (neighbourPoint && neighbourPoint->plane != startPoint->plane && neighbourPoint->plane != nullptr) {
+						currentPoint->neighbourPlaneNeighbours.push_back(neighbourPoint);
+					}
+					direction += direction == 3 ? -3 : 1;
 				}
-				if (neighbourPoint && neighbourPoint->plane != startPoint->plane && neighbourPoint->plane != nullptr) {
-					currentPoint->neighbourPlaneNeighbours.push_back(neighbourPoint);
-				}
-				direction += direction == 3 ? -3 : 1;
 			}
 		}
-		size_t initialDirection = direction;
+		currentPoint->isMarked = false;
+		currentPoint->isMarked2 = false;
+		isFirstPoint = false;
+		if (currentPoint->horizontalIndex == 71 && currentPoint->verticalIndex == 5)
+			std::cout << "asd";
 		for (size_t i = 0; i < 4; i++) {
 			switch (direction) {
 			case 0: //to right
@@ -570,60 +586,46 @@ void findNextPoint(Point* startPoint, bool isOuterEdge, bool isPreviousSpike, bo
 			break;
 			}
 			if (neighbourPoint == startPoint) {
-				currentPoint->isMarked = false;
 				currentPoint = startPoint;
 				break;
 			}
-			if (neighbourPoint && neighbourPoint->plane == startPoint->plane && neighbourPoint->plane != nullptr) {
-				if (wasThereNonSpike && currentEdge.size() > 1 && isPreviousSpike && spikeType(currentPoint) == 2 && currentPoint->isMarked) {
-					currentEdge[currentEdge.size() - 1].first = previousPoint;
-					currentPoint = currentEdge[currentEdge.size() - 2].first;
-					direction = (currentEdge[currentEdge.size() - 2].second + 2) % 4;
+			if (neighbourPoint && neighbourPoint->plane == startPoint->plane && neighbourPoint->plane != nullptr && neighbourPoint->isMarked 
+				&& (isPreviousSpike || spikeType(neighbourPoint, -1) <= 1 || spikeType(currentPoint, direction) > 0))
+			{
+				if (!wasThereNonSpike && spikeType(currentPoint, -1) > 1) {
+					startPoint = currentPoint;
+					isPreviousSpike = false;
+					wasThereNonSpike = true;
+				}
+				if (!isPreviousSpike)
+					previousSavedPoint = { currentPoint, (direction + (4 - i)) % 4 };
+				if (spikeType(neighbourPoint, -1) == 1 || (wasThereNonSpike && currentEdge.size() > 1 && isPreviousSpike && 
+					spikeType(neighbourPoint, -1) == 2 && neighbourPoint->isMarked)) {
+					auto savedPoint = spikeType(neighbourPoint, -1) == 1 ? neighbourPoint : currentPoint;
+					currentEdge.push_back({ savedPoint, 0 });
+					savedPoint->isMarked = false;
+					savedPoint->isMarked2 = false;
+					currentPoint = previousSavedPoint.first;
+					direction = previousSavedPoint.second;
 					isPreviousSpike = false;
 					break;
 				}
 				else {
-					if (!wasThereNonSpike && spikeType(currentPoint) > 1) {
-						startPoint = currentPoint;
-						if(!isPreviousSpike)
-							wasThereNonSpike = true;
-					}
-					currentPoint->isMarked = false;
-					if (isPreviousSpike) {
-						if (spikeType(currentPoint) > 0) {
-							if (!wasThereNonSpike) {
-								currentPoint = neighbourPoint;
-								wasThereNonSpike = true;
-							}
-							else 
-							{
-								currentPoint = currentEdge[currentEdge.size() - 2].first;
-								direction = (currentEdge[currentEdge.size() - 2].second + 2) % 4;
-							}
-							currentEdge[currentEdge.size() - 1].second = direction;
-							isPreviousSpike = false;
-						}
-						else {
-							currentPoint = neighbourPoint;
-						}
-					}
-					else 
-					{
-						if (spikeType(currentPoint) == 0) {
-							isPreviousSpike = true;
-							previousPoint = currentPoint;
-						}
-						else {
-							
-							currentEdge[currentEdge.size() - 1].second = direction;
-						}
-						currentPoint = neighbourPoint;
-					}		
-					direction = (direction + 3) % 4;
-					break;
+					currentPoint = neighbourPoint;
 				}
+				direction = (direction + 3) % 4;
+				break;
 			}
 			direction += direction == 3 ? -3 : 1;
+			if (i == 3) {
+				if (!wasThereNonSpike) {
+					currentEdge.clear();
+					break;
+				}
+				currentPoint = currentEdge[currentEdge.size() - 2].first;
+				direction = currentEdge[currentEdge.size() - 2].second;
+				std::cout << "INVALID EDGE SEARCH" << std::endl;;
+			}
 		}
 	}
 }
@@ -687,71 +689,68 @@ void findEdgePoints()
 {
 	for (size_t i = 0; i < planes.size(); i++) 
 	{
-		std::vector<Point*> PointsInPlane;
+		std::vector<Point*> edgePointsInPlane;
 		for (size_t j = 0; j < planes[i]->points.size(); j++) planes[i]->points[j]->isMarked = true;
-		for (size_t j = 0; j < planes[i]->points.size(); j++) if(isEdgePoint(planes[i]->points[j])) PointsInPlane.push_back(planes[i]->points[j]);
-		bool isFirstEdge = true;
-		while (PointsInPlane.size() > 0) 
+		for (size_t j = 0; j < planes[i]->points.size(); j++) planes[i]->points[j]->isMarked2 = true;
+		for (size_t j = 0; j < planes[i]->points.size(); j++) if(isEdgePoint(planes[i]->points[j])) edgePointsInPlane.push_back(planes[i]->points[j]);
+		while (edgePointsInPlane.size() > 0) 
 		{
-			std::vector<Point*> tempPointsInPlane;
-			Point* startPoint = PointsInPlane[0];
+			std::vector<Point*> tempEdgePointsInPlane;
+			Point* startPoint = edgePointsInPlane[0];
 			size_t minHorizontalCoord = startPoint->horizontalIndex;
 			size_t minVerticalCoord = startPoint->verticalIndex;
-			for (size_t j = 1; j < PointsInPlane.size(); j++) {
-				if ((PointsInPlane[j]->horizontalIndex < minHorizontalCoord && minHorizontalCoord - PointsInPlane[j]->horizontalIndex < horizontalCount / 2)
-					|| PointsInPlane[j]->horizontalIndex > minHorizontalCoord + horizontalCount / 2) {
-					minHorizontalCoord = PointsInPlane[j]->horizontalIndex;
-					minVerticalCoord = PointsInPlane[j]->verticalIndex;
-					startPoint = PointsInPlane[j];
+			for (size_t j = 1; j < edgePointsInPlane.size(); j++) {
+				if ((edgePointsInPlane[j]->horizontalIndex < minHorizontalCoord && minHorizontalCoord - edgePointsInPlane[j]->horizontalIndex < horizontalCount / 2)
+					|| edgePointsInPlane[j]->horizontalIndex > minHorizontalCoord + horizontalCount / 2) {
+					minHorizontalCoord = edgePointsInPlane[j]->horizontalIndex;
+					minVerticalCoord = edgePointsInPlane[j]->verticalIndex;
+					startPoint = edgePointsInPlane[j];
 				}
-				else if (PointsInPlane[j]->horizontalIndex == minHorizontalCoord && PointsInPlane[j]->verticalIndex < minVerticalCoord) {
-					minVerticalCoord = PointsInPlane[j]->verticalIndex;
-					startPoint = PointsInPlane[j];
+				else if (edgePointsInPlane[j]->horizontalIndex == minHorizontalCoord && edgePointsInPlane[j]->verticalIndex < minVerticalCoord) {
+					minVerticalCoord = edgePointsInPlane[j]->verticalIndex;
+					startPoint = edgePointsInPlane[j];
 				}
 			}
-			if (spikeType(startPoint) == 0) 
-			{
+			size_t direction = 0;
+			if (spikeType(startPoint, -1) == 0) {
 				size_t x = startPoint->horizontalIndex;
 				size_t y = startPoint->verticalIndex;
-				auto deletedStartPoint = startPoint;
-				if (startPoint->verticalIndex < verticalCount - 1 && points[getOffset(x, y + 1)] && 
-					points[getOffset(x, y + 1)]->plane == startPoint->plane) 
-				{
-					startPoint = points[getOffset(x, y + 1)];
-				}
-				else {
-					startPoint = points[getOffset(x, y + 1)];
-				}
-				deletedStartPoint->plane = nullptr;
-				deletedStartPoint->isMarked = false;
-				for (size_t j = 0; j < planes[i]->points.size(); j++) 	
-				{
-					if (planes[i]->points[j] == deletedStartPoint) {
+				startPoint->plane = nullptr;
+				startPoint->isMarked = false;
+				for (size_t j = 0; j < planes[i]->points.size(); j++) {
+					if (planes[i]->points[j] == startPoint) {
 						planes[i]->points.erase(planes[i]->points.begin() + j);
 						break;
 					}
 				}
+				startPoint = points[getOffset(x + 1, y)];
+				direction = 3;
 			}
+			else if(startPoint->verticalIndex > 0 && points[getOffset(startPoint->horizontalIndex, startPoint->verticalIndex - 1)] &&
+				points[getOffset(startPoint->horizontalIndex, startPoint->verticalIndex - 1)]->isMarked2)
+				direction = 1;
 			std::vector<std::pair<Point*, size_t>> currentEdge;
-			findNextPoint(startPoint, isFirstEdge, false, false, currentEdge);
-			if (!isFirstEdge) {
-				currentEdge.insert(currentEdge.begin(), currentEdge[currentEdge.size() - 1]);
-				currentEdge.pop_back();
+			findNextPoint(startPoint, direction, false, false, currentEdge, i, planes);
+			for (size_t j = 0; j < edgePointsInPlane.size(); j++) {
+				if (edgePointsInPlane[j]->isMarked) tempEdgePointsInPlane.push_back(edgePointsInPlane[j]);
 			}
-			std::vector<Point*> savedEdge;
-			for (size_t k = 0; k < currentEdge.size(); k++) {
-				currentEdge[k].first->outlineId = currentOutlineId;
-				savedEdge.push_back(currentEdge[k].first);
+			edgePointsInPlane = tempEdgePointsInPlane;
+			if (currentEdge.size() > 0) {
+				if (direction == 1) {
+					currentEdge.insert(currentEdge.begin(), currentEdge[currentEdge.size() - 1]);
+					currentEdge.pop_back();
+				}
+				std::vector<Point*> savedEdge;
+				for (size_t k = 0; k < currentEdge.size(); k++) {
+					currentEdge[k].first->outlineId = currentOutlineId;
+					savedEdge.push_back(currentEdge[k].first);
+				}
+				currentOutlineId++;
+				planes[i]->edges.push_back(savedEdge);
 			}
-			for (size_t j = 0; j < PointsInPlane.size(); j++) {
-				if (PointsInPlane[j]->isMarked) tempPointsInPlane.push_back(PointsInPlane[j]);
-			}
-			PointsInPlane = tempPointsInPlane;
-			currentOutlineId++;
-			planes[i]->edges.push_back(savedEdge);
-			isFirstEdge = false;
 		}
 		for (size_t j = 0; j < planes[i]->points.size(); j++) planes[i]->points[j]->isMarked = false;
+		for (size_t j = 0; j < planes[i]->points.size(); j++) planes[i]->points[j]->isMarked2 = false;
 	}
 }
 
@@ -1067,10 +1066,10 @@ void processData() {
 	groundSegmentation();
 	egoCarSegmentation();
 	findPlanes();
-	findEdgePoints();
+	//findEdgePoints();
 	//findCorners();
 	//connectPlanes2();
-	exportObjects();
+	//exportObjects();
 	writeData();
 }
 
