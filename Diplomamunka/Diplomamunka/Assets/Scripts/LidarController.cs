@@ -10,6 +10,7 @@ public class LidarController : MonoBehaviour
     [SerializeField] int verticalPointCount;
     [SerializeField] Color unprocesseedColor;
     [SerializeField] LineRenderer linePrefab;
+    [SerializeField] GameObject normalArrow;
 
     Controller cont;
     ParticleSystem particleSystem;
@@ -23,7 +24,7 @@ public class LidarController : MonoBehaviour
     Color[] pointColors;
     const float maxDistance = 200f;
     int verticalCounter = 0;
-    int currentIdShowed = 0;
+    [SerializeField] int currentIdShowed = 0;
     int horizontalCount;
 
     int scenesGenerated = 0;
@@ -68,6 +69,16 @@ public class LidarController : MonoBehaviour
         string line;
         TextAsset data = Resources.Load<TextAsset>("points_processed");
         StreamReader reader = new StreamReader(new MemoryStream(data.bytes));
+        line = reader.ReadLine();
+        int planeCount = int.Parse(line);
+        for (int i = 0; i < planeCount; i++)
+        {
+            line = reader.ReadLine();
+            string[] parts = line.Split(';');
+            Instantiate(normalArrow, new Vector3(float.Parse(parts[0].Replace('.', ',')), float.Parse(parts[1].Replace('.', ',')),
+                    float.Parse(parts[2].Replace('.', ','))), Quaternion.LookRotation(new Vector3(float.Parse(parts[3].Replace('.', ',')), 
+                    float.Parse(parts[4].Replace('.', ',')), float.Parse(parts[5].Replace('.', ',')))));
+        }
         int currentId = 1;
         List<Vector3> currentPointGroup = new List<Vector3>();
         while ((line = reader.ReadLine()) != null)

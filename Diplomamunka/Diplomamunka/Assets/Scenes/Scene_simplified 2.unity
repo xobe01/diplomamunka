@@ -827,6 +827,8 @@ MonoBehaviour:
   verticalPointCount: 200
   unprocesseedColor: {r: 1, g: 1, b: 1, a: 1}
   linePrefab: {fileID: 4164652104965098200, guid: f405672ddcabc504887feed33e591ca1, type: 3}
+  normalArrow: {fileID: 1620961892595129951, guid: 57325ff12ea32a54a8b72858208b1416, type: 3}
+  currentIdShowed: 0
 --- !u!199 &765635506
 ParticleSystemRenderer:
   serializedVersion: 6

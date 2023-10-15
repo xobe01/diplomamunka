@@ -638,7 +638,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -15.8, y: 4.78, z: -0.26}
-  m_LocalScale: {x: 5, y: 20, z: 20}
+  m_LocalScale: {x: 5, y: 20, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -694,6 +694,8 @@ MonoBehaviour:
   verticalPointCount: 20
   unprocesseedColor: {r: 1, g: 1, b: 1, a: 1}
   linePrefab: {fileID: 4164652104965098200, guid: f405672ddcabc504887feed33e591ca1, type: 3}
+  normalArrow: {fileID: 1620961892595129951, guid: 57325ff12ea32a54a8b72858208b1416, type: 3}
+  currentIdShowed: 0
 --- !u!199 &765635506
 ParticleSystemRenderer:
   serializedVersion: 6

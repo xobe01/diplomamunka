@@ -89,6 +89,8 @@ public class Controller : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.LeftArrow)) lidarCont.DisplayById(-1);
             if (Input.GetKeyDown(KeyCode.RightArrow)) lidarCont.DisplayById(1);
+            if (Input.GetKeyDown(KeyCode.UpArrow)) lidarCont.DisplayById(10);
+            if (Input.GetKeyDown(KeyCode.DownArrow)) lidarCont.DisplayById(-10);
         }
     }
 
