@@ -57,6 +57,7 @@ int currentPlaneId = 1;
 int currentOutlineId = 1;
 int currentCornerIndex = 0;
 const double objectPointDistance = 5;
+const double planeDistanceTreshold = 0.05;
 
 size_t getOffset(int horizontalIndex, int verticalIndex)
 {
@@ -285,9 +286,9 @@ int areNeighbours(Point* p1, Point* p2)
 {
 	if (points[getOffset(p1->horizontalIndex + 1, p1->verticalIndex)] == p2)
 		return 1;
-	if (points[getOffset(p1->horizontalIndex - 1, p1->verticalIndex)] == p2)
-		return 2;
 	if (points[getOffset(p1->horizontalIndex, p1->verticalIndex + 1)] == p2)
+		return 2;
+	if (points[getOffset(p1->horizontalIndex - 1, p1->verticalIndex)] == p2)
 		return 3;
 	if (points[getOffset(p1->horizontalIndex, p1->verticalIndex - 1)] == p2)
 		return 4;
@@ -296,7 +297,6 @@ int areNeighbours(Point* p1, Point* p2)
 
 void choosePoints(const Vec3<Point*> planePoints, Plane* basePlane, /*out*/ Plane* plane)
 {
-	double planeDistanceTreshold = 0.05;
 	if (basePlane) {
 		plane->pointDirections = basePlane->pointDirections;
 		plane->normal = basePlane->normal;
@@ -314,10 +314,10 @@ void choosePoints(const Vec3<Point*> planePoints, Plane* basePlane, /*out*/ Plan
 			horizontalDirection = neighbour->position - planePoints.x->position;
 			break;
 			case 2:
-			horizontalDirection = planePoints.x->position - neighbour->position;
+			verticalDirection = neighbour->position - planePoints.x->position;
 			break;
 			case 3:
-			verticalDirection = neighbour->position - planePoints.x->position;
+			horizontalDirection = planePoints.x->position - neighbour->position;
 			break;
 			case 4:
 			verticalDirection = planePoints.x->position - neighbour->position;
@@ -723,6 +723,8 @@ Point* createNewPoint(Vec3<double> newPointPos, Point* point, Point* neighbour, 
 	return newPoint;
 }
 
+const double twoPointDifferenceTreshold = 0.5;
+
 Point* addNewPoint(Point* point, Point*& neighbour, Plane* plane, size_t addedCount)
 {
 	if (neighbour->verticalIndex == verticalCount) { //created by other plane
@@ -752,10 +754,10 @@ Point* addNewPoint(Point* point, Point*& neighbour, Plane* plane, size_t addedCo
 	dir = point->plane->pointDirections.first;
 	break;
 	case 2:
-	dir = point->plane->pointDirections.first * -1;
+	dir = point->plane->pointDirections.second;
 	break;
 	case 3:
-	dir = point->plane->pointDirections.second;
+	dir = point->plane->pointDirections.first * -1;
 	break;
 	case 4:
 	dir = point->plane->pointDirections.second * -1;
@@ -768,7 +770,8 @@ Point* addNewPoint(Point* point, Point*& neighbour, Plane* plane, size_t addedCo
 	if (abs(newPointPos.x) > inf || abs(newPointPos.y) > inf || abs(newPointPos.z) > inf || isnan(newPointPos.x) || isnan(newPointPos.y) || isnan(newPointPos.z))
 		return nullptr;
 	Vec3<double> dirToNew = newPointPos - point->position;
-	if (Vec3<double>::dot_product(Vec3<double>::normalize(dir), Vec3<double>::normalize(dirToNew)) < newPointAcceptTreshold)
+	if (Vec3<double>::dot_product(Vec3<double>::normalize(dir), Vec3<double>::normalize(dirToNew)) < newPointAcceptTreshold && 
+		(point->position - newPointPos).length() > planeDistanceTreshold)
 		return nullptr;
 	Vec3<double> neighbourDir = { 0,0,0 };
 	switch (areNeighbours(neighbour, point)) {
@@ -776,10 +779,10 @@ Point* addNewPoint(Point* point, Point*& neighbour, Plane* plane, size_t addedCo
 	neighbourDir = plane->pointDirections.first;
 	break;
 	case 2:
-	neighbourDir = plane->pointDirections.first * -1;
+	neighbourDir = plane->pointDirections.second;
 	break;
 	case 3:
-	neighbourDir = plane->pointDirections.second;
+	neighbourDir = plane->pointDirections.first * -1;
 	break;
 	case 4:
 	neighbourDir = plane->pointDirections.second * -1;
@@ -793,7 +796,10 @@ Point* addNewPoint(Point* point, Point*& neighbour, Plane* plane, size_t addedCo
 		isnan(neighbourNewPointPos.y) || isnan(neighbourNewPointPos.z))
 		return nullptr;
 	Vec3<double> dirToNewNeighbour = neighbourNewPointPos - neighbour->position;
-	if (Vec3<double>::dot_product(Vec3<double>::normalize(neighbourDir), Vec3<double>::normalize(dirToNewNeighbour)) < newPointAcceptTreshold) 
+	if (Vec3<double>::dot_product(Vec3<double>::normalize(neighbourDir), Vec3<double>::normalize(dirToNewNeighbour)) < newPointAcceptTreshold &&
+		(neighbour->position - neighbourNewPointPos).length() > planeDistanceTreshold)
+		return nullptr;
+	if ((newPointPos - neighbourNewPointPos).length() > twoPointDifferenceTreshold)
 		return nullptr;
 	auto newPos = (newPointPos + neighbourNewPointPos) / 2;
 	bool isNeighbourEdge = false;
@@ -835,9 +841,13 @@ void findPlaneConnections()
 					points[getOffset(x, y - 1)] };
 				for (size_t i = 0; i < 4; i++) {
 					if ((y > 0 || direction != 3) && (y < verticalCount - 1 || direction != 1) && neighbourPoints[direction] && 
-						neighbourPoints[direction]->outlineId > 0 && neighbourPoints[direction]->outlineId != point->outlineId) {
+						neighbourPoints[direction]->outlineId > 0 && neighbourPoints[direction]->outlineId != point->outlineId && 
+						neighbourPoints[direction]->plane != point->plane) {
 						point->neighbourPlaneNeighbours.push_back(neighbourPoints[direction]);
 					}
+					else if((y == 0 && direction == 3) || (y == verticalCount - 1 && direction == 1) || !neighbourPoints[direction] ||
+						neighbourPoints[direction]->plane == nullptr)
+							point->neighbourPlaneNeighbours.push_back(nullptr);
 					direction += direction == 3 ? -3 : 1;
 				}
 			}
@@ -854,15 +864,21 @@ void connectPlanes()
 		for (size_t j = 0; j < planes[i]->edges.size(); j++) {
 			wasFirstGeneratedVec[i].push_back({false});
 			for (size_t k = 0; k < planes[i]->edges[j].second.size(); k++) {
-				if (planes[i]->edges[j].second[k].first->verticalIndex == verticalCount)
+				auto point = planes[i]->edges[j].second[k].first;
+				if (point->verticalIndex == verticalCount)
 				{
 					continue;
 				}
 				size_t addedCount = 0;
-				if(planes[i]->edges[j].second[k].first->isCorner && planes[i]->edges[j].second[k].first->neighbourPlaneNeighbours.size() > 0)
+				if(point->isCorner && point->neighbourPlaneNeighbours.size() > 0)
 				{
-					for (auto neighbour : planes[i]->edges[j].second[k].first->neighbourPlaneNeighbours) {
-						auto newPoint = addNewPoint(planes[i]->edges[j].second[k].first, neighbour, neighbour->plane, addedCount);
+					Plane* neighbourPlanes[4] = { nullptr, nullptr, nullptr, nullptr };
+					for (auto neighbour : point->neighbourPlaneNeighbours) {
+						if (neighbour && neighbour->verticalIndex < verticalCount && neighbour->plane)
+							neighbourPlanes[areNeighbours(point, neighbour) - 1] = neighbour->plane;
+						Point* newPoint = nullptr;
+						if(neighbour)
+							newPoint = addNewPoint(point, neighbour, neighbour->plane, addedCount);
 						if (newPoint) {
 							if (k == 0 && ((planes[i]->edges[j].second[k].first->horizontalIndex - neighbour->horizontalIndex + horizontalCount) %
 								horizontalCount == 1)) wasFirstGeneratedVec[i][wasFirstGeneratedVec[i].size() - 1] = true;
@@ -873,6 +889,31 @@ void connectPlanes()
 						else {
 							planes[i]->edges[j].second.insert(planes[i]->edges[j].second.begin() + k + 1 + addedCount, { nullptr, -1 });
 							addedCount++;
+						}
+					}
+					for (size_t i = 0; i < 4; i++) {
+						auto neighbourPlane1 = neighbourPlanes[i];
+						auto neighbourPlane2 = neighbourPlanes[i == 3 ? 0 : (i + 1)];
+						if (neighbourPlane1 && neighbourPlane2 && neighbourPlane1 != neighbourPlane2)
+						{
+							auto cross1 = Vec3<double>::crossProduct(neighbourPlane1->normal, neighbourPlane2->normal);
+							auto cross2 = Vec3<double>::crossProduct(point->plane->normal, neighbourPlane2->normal);
+							auto cross3 = Vec3<double>::crossProduct(point->plane->normal, neighbourPlane1->normal);
+
+
+							auto denom = Vec3<double>::dot_product(point->plane->normal, cross1);
+							denom = -1.0 / denom;
+
+							auto planeDist1 = Vec3<double>::dot_product(Vec3<double>({ 0,0,0 }), point->plane->normal);
+							auto planeDist2 = Vec3<double>::dot_product(Vec3<double>({ 0,0,0 }), neighbourPlane1->normal);
+							auto planeDist3 = Vec3<double>::dot_product(Vec3<double>({ 0,0,0 }), neighbourPlane2->normal);
+
+							cross1 = cross1 * planeDist1;
+							cross2 = cross2 * planeDist2;
+							cross3 = cross3 * planeDist3;
+
+							auto cornerPoint = (cross1 + cross2 + cross3) * denom;
+							addedPoints.push_back(new Point(cornerPoint, 0, 0, nullptr));
 						}
 					}
 					k += addedCount;
