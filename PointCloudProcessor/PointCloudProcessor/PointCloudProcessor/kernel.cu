@@ -702,9 +702,9 @@ void findCorners()
 	}
 }
 
-Point* createNewPoint(Vec3<double> newPointPos, Point* point, Point* neighbour, size_t addedCount)
+Point* createNewPoint(Vec3<double> newPointPos, Point* point, std::vector<Point*> neighbours, size_t addedCount, bool createBeforePoint = false)
 {
-	Point* newPoint = new Point(newPointPos, neighbour->horizontalIndex, verticalCount, point->plane);
+	Point* newPoint = new Point(newPointPos, neighbours[0]->horizontalIndex, verticalCount, point->plane);
 	addedPoints.push_back(newPoint);
 	newPoint->isCorner = true;
 	newPoint->outlineId = point->outlineId;
@@ -712,14 +712,18 @@ Point* createNewPoint(Vec3<double> newPointPos, Point* point, Point* neighbour, 
 		if (point->plane->edges[j].second[0].first->outlineId == point->outlineId) {
 			for (size_t k = 0; k < point->plane->edges[j].second.size(); k++) {
 				if (point->plane->edges[j].second[k].first == point) {
-					point->plane->edges[j].second.insert(point->plane->edges[j].second.begin() + k + 1 + addedCount, { newPoint, -1 });
+					point->plane->edges[j].second.insert(point->plane->edges[j].second.begin() + k + (createBeforePoint ? 0 : 1) + addedCount, 
+						{ newPoint, -1 });
 					break;
 				}
 			}
 			break;
 		}
 	}
-	newPoint->neighbourPlaneNeighbours.push_back(neighbour);
+	for (size_t i = 0; i < neighbours.size(); i++) {
+		newPoint->neighbourPlaneNeighbours.push_back(neighbours[i]);
+	}
+	std::cout << newPoint->neighbourPlaneNeighbours.size() << std::endl;
 	return newPoint;
 }
 
@@ -805,19 +809,19 @@ Point* addNewPoint(Point* point, Point*& neighbour, Plane* plane, size_t addedCo
 	bool isNeighbourEdge = false;
 	Point* newPoint;
 	Point* newNeighbourPoint;
-	newPoint = createNewPoint(newPos, point, neighbour, addedCount);
+	newPoint = createNewPoint(newPos, point, { neighbour }, addedCount);
 	for (size_t i = 0; i < neighbour->neighbourPlaneNeighbours.size(); i++) 
 	{
 		if (neighbour->neighbourPlaneNeighbours[i] == point) 		
 		{
 			isNeighbourEdge = true;
-			newNeighbourPoint = createNewPoint(newPos, neighbour, point, 0);
+			newNeighbourPoint = createNewPoint(newPos, neighbour, { point }, 0);
 			neighbour->neighbourPlaneNeighbours[i] = newNeighbourPoint;
 			break;
 		}
 	}
 	if (!isNeighbourEdge) {
-		newNeighbourPoint = createNewPoint(newPos, neighbour, point, 0);
+		newNeighbourPoint = createNewPoint(newPos, neighbour, { point }, 0);
 		neighbour->neighbourPlaneNeighbours.push_back(newNeighbourPoint);
 	}
 	newPoint->neighbourPlaneNeighbours.push_back(newNeighbourPoint);
@@ -855,6 +859,30 @@ void findPlaneConnections()
 	}
 }
 
+void createPlaneCorner(std::vector<Point*> point1, std::vector<Point*> point2, Plane* p2, Plane* p3)
+{
+	Plane* p1 = point1[0]->plane;
+	auto cross1 = Vec3<double>::crossProduct(p2->normal, p3->normal);
+	auto cross2 = Vec3<double>::crossProduct(p3->normal, p1->normal);
+	auto cross3 = Vec3<double>::crossProduct(p1->normal, p2->normal);
+
+	auto denom = Vec3<double>::dot_product(p1->normal, cross1);
+
+	auto planeDist1 = Vec3<double>::dot_product(p1->planePointPos, p1->normal);
+	auto planeDist2 = Vec3<double>::dot_product(p2->planePointPos, p2->normal);
+	auto planeDist3 = Vec3<double>::dot_product(p3->planePointPos, p3->normal);
+
+	cross1 = cross1 * planeDist1;
+	cross2 = cross2 * planeDist2;
+	cross3 = cross3 * planeDist3;
+
+	auto cornerPoint = (cross1 + cross2 + cross3) / denom;
+
+	createNewPoint(cornerPoint, point1[0], {point1[2], point2[2]}, 0);
+	createNewPoint(cornerPoint, point1[2], { point1[1] }, 0, true);
+	createNewPoint(cornerPoint, point2[2], { point2[1] }, 0);
+}
+
 void connectPlanes()
 {
 	std::vector<std::vector<bool>> wasFirstGeneratedVec;
@@ -872,48 +900,37 @@ void connectPlanes()
 				size_t addedCount = 0;
 				if(point->isCorner && point->neighbourPlaneNeighbours.size() > 0)
 				{
-					Plane* neighbourPlanes[4] = { nullptr, nullptr, nullptr, nullptr };
-					for (auto neighbour : point->neighbourPlaneNeighbours) {
-						if (neighbour && neighbour->verticalIndex < verticalCount && neighbour->plane)
-							neighbourPlanes[areNeighbours(point, neighbour) - 1] = neighbour->plane;
+					std::pair<Plane*, std::vector<Point*>> neighbourPlanes[4] = { {nullptr, {}}, {nullptr, {}}, {nullptr, {}} ,{nullptr, {}} };
+					for (size_t l = 0; l < point->neighbourPlaneNeighbours.size(); l++) {
 						Point* newPoint = nullptr;
-						if(neighbour)
-							newPoint = addNewPoint(point, neighbour, neighbour->plane, addedCount);
+						int neighbourType = -1;
+						if (point->neighbourPlaneNeighbours[l])
+						{
+							newPoint = addNewPoint(point, point->neighbourPlaneNeighbours[l], point->neighbourPlaneNeighbours[l]->plane, addedCount);
+							if (point->neighbourPlaneNeighbours[l]->verticalIndex < verticalCount && point->neighbourPlaneNeighbours[l]->plane) {
+								neighbourType = areNeighbours(point, point->neighbourPlaneNeighbours[l]) - 1;
+								neighbourPlanes[neighbourType] = { point->neighbourPlaneNeighbours[l]->plane,{ newPoint, 
+									point, point->neighbourPlaneNeighbours[l]} };
+							}
+						}
 						if (newPoint) {
-							if (k == 0 && ((planes[i]->edges[j].second[k].first->horizontalIndex - neighbour->horizontalIndex + horizontalCount) %
+							if (k == 0 && ((planes[i]->edges[j].second[k].first->horizontalIndex - point->neighbourPlaneNeighbours[l]->horizontalIndex 
+								+ horizontalCount) %
 								horizontalCount == 1)) wasFirstGeneratedVec[i][wasFirstGeneratedVec[i].size() - 1] = true;
 							planes[i]->edges[j].second[k].first->isCorner = false;
 							createdPoints.push_back(newPoint);
 							addedCount++;
+							if (neighbourType >= 0 && l > 0) {
+								auto neighbourPlane1 = neighbourPlanes[neighbourType == 0 ? 3 : (neighbourType - 1)];
+								auto neighbourPlane2 = neighbourPlanes[neighbourType];
+								if (neighbourPlane1.first && neighbourPlane2.first && neighbourPlane1.first != neighbourPlane2.first) {
+									createPlaneCorner(neighbourPlane1.second, neighbourPlane2.second, neighbourPlane1.first, neighbourPlane2.first);
+								}
+							}
 						}
 						else {
 							planes[i]->edges[j].second.insert(planes[i]->edges[j].second.begin() + k + 1 + addedCount, { nullptr, -1 });
 							addedCount++;
-						}
-					}
-					for (size_t i = 0; i < 4; i++) {
-						auto neighbourPlane1 = neighbourPlanes[i];
-						auto neighbourPlane2 = neighbourPlanes[i == 3 ? 0 : (i + 1)];
-						if (neighbourPlane1 && neighbourPlane2 && neighbourPlane1 != neighbourPlane2)
-						{
-							auto cross1 = Vec3<double>::crossProduct(neighbourPlane1->normal, neighbourPlane2->normal);
-							auto cross2 = Vec3<double>::crossProduct(point->plane->normal, neighbourPlane2->normal);
-							auto cross3 = Vec3<double>::crossProduct(point->plane->normal, neighbourPlane1->normal);
-
-
-							auto denom = Vec3<double>::dot_product(point->plane->normal, cross1);
-							denom = -1.0 / denom;
-
-							auto planeDist1 = Vec3<double>::dot_product(Vec3<double>({ 0,0,0 }), point->plane->normal);
-							auto planeDist2 = Vec3<double>::dot_product(Vec3<double>({ 0,0,0 }), neighbourPlane1->normal);
-							auto planeDist3 = Vec3<double>::dot_product(Vec3<double>({ 0,0,0 }), neighbourPlane2->normal);
-
-							cross1 = cross1 * planeDist1;
-							cross2 = cross2 * planeDist2;
-							cross3 = cross3 * planeDist3;
-
-							auto cornerPoint = (cross1 + cross2 + cross3) * denom;
-							addedPoints.push_back(new Point(cornerPoint, 0, 0, nullptr));
 						}
 					}
 					k += addedCount;
@@ -928,8 +945,12 @@ void connectPlanes()
 			cornersToDelete[i].push_back({});
 			for (size_t k = 0; k < planes[i]->edges[j].second.size(); k++) {
 				if (planes[i]->edges[j].second[k].first) {
-					if (planes[i]->edges[j].second[k].first->verticalIndex == verticalCount)
-						cornersToDelete[i][j].push_back({ k,  planes[i]->edges[j].second[k].first->neighbourPlaneNeighbours[0]->plane->id });
+					if (planes[i]->edges[j].second[k].first->verticalIndex == verticalCount) {
+						for (size_t l = 0; l < planes[i]->edges[j].second[k].first->neighbourPlaneNeighbours.size(); l++) {
+							if (planes[i]->edges[j].second[k].first->neighbourPlaneNeighbours[l]->verticalIndex < verticalCount)
+								cornersToDelete[i][j].push_back({ k,  planes[i]->edges[j].second[k].first->neighbourPlaneNeighbours[l]->plane->id });
+						}
+					}						
 				}
 				else 
 				{
