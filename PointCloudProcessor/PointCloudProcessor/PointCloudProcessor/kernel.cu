@@ -25,6 +25,8 @@ struct Point
 	bool isMarked2{ false };
 	std::vector<Point*> neighbourPlaneNeighbours;
 	std::vector<Point*> createdNeighbourPoints;
+	std::vector<size_t> convexId;
+	std::vector<size_t> convexIndex;
 	bool isCorner;
 	Point(Vec3<double> _position, size_t _horizontalIndex, size_t _verticalIndex, Plane* _plane) : position(_position), horizontalIndex(_horizontalIndex),
 		verticalIndex(_verticalIndex), plane(_plane)
@@ -32,6 +34,8 @@ struct Point
 		isCorner = false;
 		neighbourPlaneNeighbours = { nullptr, nullptr, nullptr, nullptr };
 		createdNeighbourPoints = { nullptr, nullptr, nullptr, nullptr };
+		convexId = {};
+		convexIndex = {};
 	};
 	std::string printCoordinates()
 	{
@@ -41,11 +45,12 @@ struct Point
 
 struct Plane {
 	std::vector<Point*> points;
-	std::vector<std::pair<Point*, std::vector<std::pair<Point*, int>>>> edges;
+	std::vector<std::pair<bool, std::pair<Point*, std::vector<std::pair<Point*, int>>>>> edges; //wasFirstGenerated, startpoint, points, direction
 	Vec3<double> planePointPos;
 	Vec3<double> normal;
 	std::pair<Vec3<double>, Vec3<double>> pointDirections;
 	size_t id;
+	std::vector<std::vector<Point*>> convexFaces;
 };
 
 std::vector<Point*> points;
@@ -111,10 +116,15 @@ void readData()
 void writePoints(const std::vector<Point*> points, std::ofstream& MyFile)
 {
 	for (size_t i = 0; i < points.size(); i++) {
-		if (points[i])
+		if (points[i]) {
 			MyFile << points[i]->position.to_string() << ';' << points[i]->horizontalIndex << ';' << points[i]->verticalIndex <<
-			';' << (points[i]->plane ? points[i]->plane->id : 0) << ';' << points[i]->outlineId << ';' << points[i]->cornerId
-			<< ';' << points[i]->cornerIndex << std::endl;
+				';' << (points[i]->plane ? points[i]->plane->id : 0) << ';' << points[i]->outlineId << ';' << points[i]->cornerId
+				<< ';' << points[i]->cornerIndex;
+			for (size_t j = 0; j < points[i]->convexId.size(); j++) {
+				MyFile << ";" << points[i]->convexId[j] << ";" << points[i]->convexIndex[j];
+			}
+			MyFile << std::endl;
+		}
 	}
 }
 
@@ -382,7 +392,6 @@ void findPlanes()
 	for (size_t j = 0; j < points.size(); j++) {
 		if (points[j] && points[j]->isMarked) {
 			nextStepPoints.push_back(points[j]);
-			calculateNormal(points[j]);
 			while (nextStepPoints.size() > 0) {
 				Plane* plane = new Plane();
 				bool planeMerged;
@@ -400,9 +409,6 @@ void findPlanes()
 								if (neighbourPoints[k]->isMarked) {
 									neighbourPoints[k]->isMarked = false;
 									tempNextStepPoints.push_back(neighbourPoints[k]);
-								}
-								if (neighbourPoints[k]->normal.length() == 0) {
-									calculateNormal(neighbourPoints[k]);
 								}
 								normals[k] = neighbourPoints[k]->normal;
 							}
@@ -428,7 +434,8 @@ void findPlanes()
 	}
 	for (size_t i = 0; i < points.size(); i++) if (points[i]) points[i]->isMarked = false;
 	for (size_t i = 0; i < points.size(); i++) if (points[i]) points[i]->isMarked2 = false;
-	for (size_t i = 0; i < planes.size(); i++) {
+	return;
+	/*for (size_t i = 0; i < planes.size(); i++) {
 		int originalSize = planes[i]->points.size();
 		while (isThereBridge(planes[i]->points)) {}		
 		if (originalSize != planes[i]->points.size() && planes[i]->points.size() > 0) //cutting plane		
@@ -457,19 +464,18 @@ void findPlanes()
 				}
 			}
 		}
-	}
-	/*for (size_t i = 0; i < planes.size(); i++) {
-		calculateBounds(planes[i]);	
-	}/**/	
+	}*/
 }
 
-void findNextPoint(Point*& startPoint, size_t direction, bool isPreviousSpike, bool wasThereNonSpike, /*out*/ 
+void findNextPoint(Point*& startPoint, size_t direction, /*out*/ 
 	std::vector<std::pair<Point*, int>>& currentEdge, size_t dbgPlaneIndex, std::vector<Plane*> dbgPlanes)
 {
 	Point* currentPoint = nullptr;
 	std::pair<Point*, size_t> previousSavedPoint = {nullptr, 0};
 	bool isFirstPoint = true;
 	bool comeFromDeadEnd = false;
+	bool isPreviousSpike = false;
+	bool wasThereNonSpike = false;
 	while (currentPoint != startPoint || comeFromDeadEnd)
 	{
 		if (!currentPoint)
@@ -488,6 +494,10 @@ void findNextPoint(Point*& startPoint, size_t direction, bool isPreviousSpike, b
 		currentPoint->isMarked2 = false;
 		isFirstPoint = false;
 		for (size_t i = 0; i < 4; i++) {
+			if (checkIfBridge(currentPoint)) {
+				i += 2;
+				direction += 2;
+			}
 			switch (direction) {
 			case 0: //to right
 			neighbourPoint = points[getOffset(x + 1, y)];
@@ -541,6 +551,9 @@ void findNextPoint(Point*& startPoint, size_t direction, bool isPreviousSpike, b
 			direction += direction == 3 ? -3 : 1;
 			if (i == 3) {
 				if (!wasThereNonSpike) {
+					for (auto point : currentEdge) {
+						point.first->plane = nullptr;
+					}
 					currentEdge.clear();
 					return;
 				}
@@ -621,10 +634,12 @@ void findEdgePoints()
 				direction = 3;
 			}
 			else if(startPoint->verticalIndex > 0 && points[getOffset(startPoint->horizontalIndex, startPoint->verticalIndex - 1)] &&
-				points[getOffset(startPoint->horizontalIndex, startPoint->verticalIndex - 1)]->isMarked2)
+				points[getOffset(startPoint->horizontalIndex, startPoint->verticalIndex - 1)]->isMarked2 && 
+				points[getOffset(startPoint->horizontalIndex - 1, startPoint->verticalIndex - 1)]->isMarked2 && 
+				points[getOffset(startPoint->horizontalIndex - 1, startPoint->verticalIndex)]->isMarked2)
 				direction = 1;
 			std::vector<std::pair<Point*, int>> currentEdge;
-			findNextPoint(startPoint, direction, false, false, currentEdge, i, planes);
+			findNextPoint(startPoint, direction, currentEdge, i, planes);
 			for (size_t j = 0; j < edgePointsInPlane.size(); j++) {
 				if (edgePointsInPlane[j]->isMarked) tempEdgePointsInPlane.push_back(edgePointsInPlane[j]);
 			}
@@ -638,7 +653,7 @@ void findEdgePoints()
 					currentEdge[k].first->outlineId = currentOutlineId;
 				}
 				currentOutlineId++;
-				planes[i]->edges.push_back({ startPoint, currentEdge });
+				planes[i]->edges.push_back({ false, { startPoint, currentEdge } });
 			}
 		}
 		for (size_t j = 0; j < planes[i]->points.size(); j++) planes[i]->points[j]->isMarked = false;
@@ -649,8 +664,10 @@ void findEdgePoints()
 const double newPointAcceptTreshold = 0.95;
 const double inf = 1000000;
 
-bool isStraightPoint(size_t pointIndex, std::pair<Point*, std::vector<std::pair<Point*, int>>>& edge, size_t& previousNeighbourCount)
+bool isStraightPoint(size_t pointIndex, std::pair<Point*, std::vector<std::pair<Point*, int>>>& edge, size_t& previousNeighbourCount, 
+	Vec3<double>& straigthDir)
 {
+	const double newDirTreshold = 0.1;
 	Point* point = edge.second[pointIndex].first;
 	if (point->isCorner) return false; // first point can modify last point
 	size_t previousNeighbourCountStore = previousNeighbourCount;
@@ -676,12 +693,25 @@ bool isStraightPoint(size_t pointIndex, std::pair<Point*, std::vector<std::pair<
 		(pointIndex > 0 ? edge.second[pointIndex - 1].first : edge.first)->isCorner = false;
 		(pointIndex > 0 ? edge.second[pointIndex - 2].first : edge.second[edge.second.size() - 1].first)->isCorner = true;
 		(pointIndex < (edge.second.size() - 1) ? edge.second[pointIndex + 1].first : edge.first)->isCorner = true;
+		straigthDir = { 0,0,0 };
 		return false;
 	}
 	if ((neighbourCount == 3 && (neighbourEdgeCount == 2 && (pointIndex == edge.second.size() - 1 || areNeighbours(point, edge.second[pointIndex + 1].first)
-		> 0)))) {
+		> 0)))) 
+	{
+		if (straigthDir.length() == 0)
+			straigthDir = Vec3<double>::normalize(point->position - edge.second[pointIndex - 1].first->position);
+		else
+		{
+			auto newDir = Vec3<double>::normalize(point->position - edge.second[pointIndex - 1].first->position);
+			if ((straigthDir - newDir).length() > newDirTreshold) {
+				straigthDir = newDir;
+				return false;
+			}
+		}
 		return true;
 	}
+	straigthDir = { 0,0,0 };
 	if (neighbourCount == 4 && (pointIndex == 0 ? edge.second[edge.second.size() - 1].first : edge.second[pointIndex - 1].first)->isCorner &&
 		previousNeighbourCountStore == 2)
 		return true;
@@ -696,9 +726,10 @@ void findCorners()
 	for (size_t k = 0; k < planes.size(); k++) {
 		for (size_t i = 0; i < planes[k]->edges.size(); i++) {
 			size_t previousNeighbourCount = 0;
-			for (size_t j = 0; j < planes[k]->edges[i].second.size(); j++) {
-				if (!isStraightPoint(j, planes[k]->edges[i], previousNeighbourCount)) {
-					planes[k]->edges[i].second[j].first->isCorner = true;
+			Vec3<double> straightDir = { 0,0,0 };
+			for (size_t j = 0; j < planes[k]->edges[i].second.second.size(); j++) {
+				if (!isStraightPoint(j, planes[k]->edges[i].second, previousNeighbourCount, straightDir)) {
+					planes[k]->edges[i].second.second[j].first->isCorner = true;
 				}
 			}
 		}
@@ -712,10 +743,10 @@ Point* createNewPoint(Vec3<double> newPointPos, Point* point, std::vector<Point*
 	newPoint->isCorner = true;
 	newPoint->outlineId = point->outlineId;
 	for (size_t j = 0; j < point->plane->edges.size(); j++) {
-		if (point->plane->edges[j].second[0].first->outlineId == point->outlineId) {
-			for (size_t k = 0; k < point->plane->edges[j].second.size(); k++) {
-				if (point->plane->edges[j].second[k].first == point) {
-					point->plane->edges[j].second.insert(point->plane->edges[j].second.begin() + k + (createBeforePoint ? 0 : 1) + addedCount, 
+		if (point->plane->edges[j].second.second[0].first->outlineId == point->outlineId) {
+			for (size_t k = 0; k < point->plane->edges[j].second.second.size(); k++) {
+				if (point->plane->edges[j].second.second[k].first == point) {
+					point->plane->edges[j].second.second.insert(point->plane->edges[j].second.second.begin() + k + (createBeforePoint ? 0 : 1) + addedCount, 
 						{ newPoint, -1 });
 					break;
 				}
@@ -736,14 +767,15 @@ Point* addNewPoint(Point* point, Point*& neighbour, Plane* plane, size_t addedCo
 	if (point->createdNeighbourPoints[neighbourIndex] != nullptr) { //created by other plane
 		auto createdNeighbour = point->createdNeighbourPoints[neighbourIndex];
 		for (size_t j = 0; j < point->plane->edges.size(); j++) {
-			if (point->plane->edges[j].second[0].first->outlineId == point->outlineId) {
-				for (size_t k = 0; k < point->plane->edges[j].second.size(); k++) {
-					if (point->plane->edges[j].second[k].first == point) {
+			if (point->plane->edges[j].second.second[0].first->outlineId == point->outlineId) {
+				for (size_t k = 0; k < point->plane->edges[j].second.second.size(); k++) {
+					if (point->plane->edges[j].second.second[k].first == point) {
 						for (size_t l = 0; l < 4; l++) 
 						{
-							if (point->plane->edges[j].second[k + l + 1].first == createdNeighbour) {
-								point->plane->edges[j].second.insert(point->plane->edges[j].second.begin() + k + 1 + addedCount, { createdNeighbour, -1 });
-								point->plane->edges[j].second.erase(point->plane->edges[j].second.begin() + k + l + 2);
+							if (point->plane->edges[j].second.second[k + l + 1].first == createdNeighbour) {
+								point->plane->edges[j].second.second.insert(point->plane->edges[j].second.second.begin() + k + 1 + addedCount, 
+									{ createdNeighbour, -1 });
+								point->plane->edges[j].second.second.erase(point->plane->edges[j].second.second.begin() + k + l + 2);
 								break;
 							}
 						}
@@ -839,10 +871,10 @@ void findPlaneConnections()
 	{
 		for (size_t j = 0; j < planes[i]->edges.size(); j++) 
 		{
-			for (size_t k = 0; k < planes[i]->edges[j].second.size(); k++)
+			for (size_t k = 0; k < planes[i]->edges[j].second.second.size(); k++)
 			{
-				Point* point = planes[i]->edges[j].second[k].first;
-				int direction = planes[i]->edges[j].second[k].second;
+				Point* point = planes[i]->edges[j].second.second[k].first;
+				int direction = planes[i]->edges[j].second.second[k].second;
 				size_t x = point->horizontalIndex;
 				size_t y = point->verticalIndex;
 				Point* neighbourPoints[4] = { points[getOffset(x + 1, y)], points[getOffset(x, y + 1)], points[getOffset(x - 1, y)],
@@ -891,14 +923,11 @@ void createPlaneCorner(Point* point, std::vector<Point*> point1, std::vector<Poi
 
 void connectPlanes()
 {
-	std::vector<std::vector<bool>> wasFirstGeneratedVec;
 	std::vector<Point*> createdPoints;
 	for (size_t i = 0; i < planes.size(); i++) {
-		wasFirstGeneratedVec.push_back({});
 		for (size_t j = 0; j < planes[i]->edges.size(); j++) {
-			wasFirstGeneratedVec[i].push_back({false});
-			for (size_t k = 0; k < planes[i]->edges[j].second.size(); k++) {
-				auto point = planes[i]->edges[j].second[k].first;
+			for (size_t k = 0; k < planes[i]->edges[j].second.second.size(); k++) {
+				auto point = planes[i]->edges[j].second.second[k].first;
 				if (point->verticalIndex == verticalCount)
 				{
 					continue;
@@ -912,15 +941,15 @@ void connectPlanes()
 						{
 							newPoint = addNewPoint(point, point->neighbourPlaneNeighbours[l], point->neighbourPlaneNeighbours[l]->plane, addedCount, l);
 							if (newPoint) {
-								if (k == 0 && ((planes[i]->edges[j].second[k].first->horizontalIndex -
+								if (k == 0 && ((planes[i]->edges[j].second.second[k].first->horizontalIndex -
 									point->neighbourPlaneNeighbours[l]->horizontalIndex + horizontalCount) %
-									horizontalCount == 1)) wasFirstGeneratedVec[i][wasFirstGeneratedVec[i].size() - 1] = true;
-								planes[i]->edges[j].second[k].first->isCorner = false;
+									horizontalCount == 1)) planes[i]->edges[planes[i]->edges.size() - 1].first = true;
+								planes[i]->edges[j].second.second[k].first->isCorner = false;
 								createdPoints.push_back(newPoint);
 								addedCount++;
 							}
 							else {
-								planes[i]->edges[j].second.insert(planes[i]->edges[j].second.begin() + k + 1 + addedCount, { nullptr, -1 });
+								planes[i]->edges[j].second.second.insert(planes[i]->edges[j].second.second.begin() + k + 1 + addedCount, { nullptr, -1 });
 								addedCount++;
 							}
 						}						
@@ -930,18 +959,28 @@ void connectPlanes()
 			}			
 		}
 	}
+}
 
+void createCorners()
+{
+	const double normalDiffTreshold = 0.1;
 	for (size_t i = 0; i < planes.size(); i++) {
 		for (size_t j = 0; j < planes[i]->edges.size(); j++) {
-			for (size_t k = 0; k < planes[i]->edges[j].second.size(); k++) {
-				auto point = planes[i]->edges[j].second[k].first;
+			for (size_t k = 0; k < planes[i]->edges[j].second.second.size(); k++) {
+				auto point = planes[i]->edges[j].second.second[k].first;
 				if (point) {
-					for (size_t l = 0; l < planes[i]->edges[j].second[k].first->createdNeighbourPoints.size(); l++) {
-						auto createdPoint1 = planes[i]->edges[j].second[k].first->createdNeighbourPoints[l];
-						auto createdPoint2 = planes[i]->edges[j].second[k].first->createdNeighbourPoints[l == 3 ? 0 : (l + 1)];
+					for (size_t l = 0; l < planes[i]->edges[j].second.second[k].first->createdNeighbourPoints.size(); l++) {
+						auto createdPoint1 = planes[i]->edges[j].second.second[k].first->createdNeighbourPoints[l];
+						auto createdPoint2 = planes[i]->edges[j].second.second[k].first->createdNeighbourPoints[l == 3 ? 0 : (l + 1)];
 						if (createdPoint1 && createdPoint2 && createdPoint1->neighbourPlaneNeighbours[1]->plane !=
-							createdPoint2->neighbourPlaneNeighbours[1]->plane) {
-							createPlaneCorner(planes[i]->edges[j].second[k].first, { createdPoint1, createdPoint1->neighbourPlaneNeighbours[1],
+							createdPoint2->neighbourPlaneNeighbours[1]->plane
+							&& (planes[i]->edges[j].second.second[k].first->plane->normal -
+							createdPoint1->neighbourPlaneNeighbours[1]->plane->normal).length() > normalDiffTreshold && 
+							(planes[i]->edges[j].second.second[k].first->plane->normal -
+								createdPoint2->neighbourPlaneNeighbours[1]->plane->normal).length() > normalDiffTreshold && 
+							(createdPoint1->neighbourPlaneNeighbours[1]->plane->normal -
+									createdPoint2->neighbourPlaneNeighbours[1]->plane->normal).length() > normalDiffTreshold) {
+							createPlaneCorner(planes[i]->edges[j].second.second[k].first, { createdPoint1, createdPoint1->neighbourPlaneNeighbours[1],
 								point->neighbourPlaneNeighbours[l] }, { createdPoint2, createdPoint2->neighbourPlaneNeighbours[1],
 								point->neighbourPlaneNeighbours[l == 3 ? 0 : (l + 1)] });
 						}
@@ -950,30 +989,32 @@ void connectPlanes()
 			}
 		}
 	}
+}
 
+void filterEdgePoints()
+{
 	std::vector<std::vector<std::vector<std::pair<size_t, size_t>>>> cornersToDelete;
 	for (size_t i = 0; i < planes.size(); i++) {
 		cornersToDelete.push_back({});
 		for (size_t j = 0; j < planes[i]->edges.size(); j++) {
 			cornersToDelete[i].push_back({});
-			for (size_t k = 0; k < planes[i]->edges[j].second.size(); k++) {
-				if (planes[i]->edges[j].second[k].first) {
-					if (planes[i]->edges[j].second[k].first->verticalIndex == verticalCount) {
-						for (size_t l = 0; l < planes[i]->edges[j].second[k].first->neighbourPlaneNeighbours.size(); l++) {
-							if (planes[i]->edges[j].second[k].first->neighbourPlaneNeighbours[l] &&
-								planes[i]->edges[j].second[k].first->neighbourPlaneNeighbours[l]->verticalIndex < verticalCount)
-								cornersToDelete[i][j].push_back({ k,  planes[i]->edges[j].second[k].first->neighbourPlaneNeighbours[l]->plane->id });
+			for (size_t k = 0; k < planes[i]->edges[j].second.second.size(); k++) {
+				if (planes[i]->edges[j].second.second[k].first) {
+					if (planes[i]->edges[j].second.second[k].first->verticalIndex == verticalCount) {
+						for (size_t l = 0; l < planes[i]->edges[j].second.second[k].first->neighbourPlaneNeighbours.size(); l++) {
+							if (planes[i]->edges[j].second.second[k].first->neighbourPlaneNeighbours[l] &&
+								planes[i]->edges[j].second.second[k].first->neighbourPlaneNeighbours[l]->verticalIndex < verticalCount)
+								cornersToDelete[i][j].push_back({ k,  planes[i]->edges[j].second.second[k].first->neighbourPlaneNeighbours[l]->plane->id });
 						}
-					}						
+					}
 				}
-				else 
-				{
+				else {
 					cornersToDelete[i][j].push_back({ 0, 0 });
-					planes[i]->edges[j].second.erase(planes[i]->edges[j].second.begin() + k);
+					planes[i]->edges[j].second.second.erase(planes[i]->edges[j].second.second.begin() + k);
 					k--;
 				}
 			}
-			int newPointStartIndex = wasFirstGeneratedVec[i][j] ? 1 : 0;
+			int newPointStartIndex = planes[i]->edges[j].first ? 1 : 0;
 			int newPointEndIndex = newPointStartIndex;
 			while (newPointEndIndex < (int)cornersToDelete[i][j].size() - 1) {
 				if (cornersToDelete[i][j][newPointStartIndex].second > 0) {
@@ -982,20 +1023,27 @@ void connectPlanes()
 						newPointEndIndex++;
 					}
 					for (size_t k = cornersToDelete[i][j][newPointStartIndex].first + 1; k < cornersToDelete[i][j][newPointEndIndex].first; k++) {
-						planes[i]->edges[j].second[k].first->isCorner = false;
+						planes[i]->edges[j].second.second[k].first->isCorner = false;
 					}
-					if(newPointEndIndex == cornersToDelete[i][j].size() - 1 && newPointStartIndex != newPointEndIndex && wasFirstGeneratedVec[i][j] 
+					if (newPointEndIndex == cornersToDelete[i][j].size() - 1 && newPointStartIndex != newPointEndIndex && planes[i]->edges[j].first
 						&& cornersToDelete[i][j][0].second == cornersToDelete[i][j][newPointStartIndex].second)
-						planes[i]->edges[j].second[cornersToDelete[i][j][cornersToDelete[i][j].size() - 1].first].first->isCorner = false;
+						planes[i]->edges[j].second.second[cornersToDelete[i][j][cornersToDelete[i][j].size() - 1].first].first->isCorner = false;
 				}
 				newPointStartIndex = newPointEndIndex + 1;
 				newPointEndIndex = newPointStartIndex;
 			}
 		}
 	}
-	for (size_t i = 0; i < createdPoints.size(); i++) {
-		if (createdPoints[i]->isCorner)
-			createdPoints[i]->neighbourPlaneNeighbours[1]->isCorner = true;
+	for (size_t i = 0; i < planes.size(); i++) {
+		for (size_t j = 0; j < planes[i]->edges.size(); j++) {
+			for (size_t k = 0; k < planes[i]->edges[j].second.second.size(); k++) {
+				if (planes[i]->edges[j].second.second[k].first->verticalIndex == verticalCount && planes[i]->edges[j].second.second[k].first->isCorner
+					&& planes[i]->edges[j].second.second[k].first->neighbourPlaneNeighbours[1] && 
+					planes[i]->edges[j].second.second[k].first->neighbourPlaneNeighbours[1]->verticalIndex == verticalCount) {
+					planes[i]->edges[j].second.second[k].first->neighbourPlaneNeighbours[1]->isCorner = true;
+				}
+			}
+		}
 	}
 }
 
@@ -1009,6 +1057,157 @@ void egoCarSegmentation()
 	}
 }
 
+const double PI = 3.14159265359;
+
+double angleOfVectors(Vec3<double> v1, Vec3<double> v2, bool isBackward)
+{
+	auto angle = (atan2(v2.x, v2.y) - atan2(v1.x, v1.y)) / PI;
+	if (angle < 0)
+		angle += 2;
+	angle -= 1;
+	if (isBackward) angle *= -1;
+	return angle;
+}
+
+bool isPointInsidePolygon(std::vector<std::pair<Point*, size_t>>polygon /*std::vector<Vec3<double>> polygon*/,
+	Vec3<double> /*Vec3<double>*/ pointTemp, std::pair<double, double> xBounds, std::pair<double, double> yBounds)
+{
+	auto point = pointTemp;
+	if (point.x > xBounds.first && point.x < xBounds.second &&
+		point.y > yBounds.first && point.y < yBounds.second) 
+	{
+		int rigthCounter = 0;
+		for (size_t i = 0; i < polygon.size(); i++) 
+		{
+			auto p1 = polygon[i].first->position;
+			auto p2 = polygon[(i + 1) % polygon.size()].first->position;
+			if ((p1.x < point.x && p2.x < point.x) || (p1.y > point.y && p2.y > point.y) || (p1.y < point.y && p2.y < point.y))
+				continue;
+			else
+			{
+				auto dir = p2 - p1;
+				double R = (point.y - p1.y) / (dir.y);
+				auto x = p1.x + R * dir.x;
+				auto y = p1.y + R * dir.y;
+				if (x < point.x)
+					continue;
+				else
+				{
+					rigthCounter++;
+					if (p2.y == point.y)
+						i++;
+				}
+			}
+		}
+		return rigthCounter % 2 == 1;
+	}
+	return false;
+}
+
+void convexSegmentation()
+{
+	size_t currentConvexId = 1;
+	for (size_t i = 0; i < planes.size(); i++) {
+		//std::vector<Vec3<double>> remainingPoints;
+		std::vector<std::pair<Point*, size_t>> remainingPoints;
+		size_t counter = 0;
+		for (size_t j = 0; j < planes[i]->edges[0].second.second.size(); j++) {
+			if (planes[i]->edges[0].second.second[j].first->isCorner) {
+				remainingPoints.push_back({ planes[i]->edges[0].second.second[j].first, counter });
+				counter++;
+			}
+		}
+		while (remainingPoints.size() > 2)
+		{
+			//std::vector<Vec3<double>> remainingPointsHelper(remainingPoints);
+			//std::vector<Vec3<double>> L = { remainingPointsHelper[0], remainingPointsHelper[1] };
+
+			std::vector<std::pair<Point*, size_t>> remainingPointsHelper(remainingPoints);
+			std::vector<std::pair<Point*, size_t>> L = { remainingPointsHelper[0], remainingPointsHelper[1] };
+
+			remainingPointsHelper.erase(remainingPointsHelper.begin(), remainingPointsHelper.begin() + 2);
+			std::pair<double, double> xBounds = { std::min(L[0].first->position.x, L[1].first->position.x), std::max(L[0].first->position.x,
+				L[1].first->position.x) };
+			std::pair<double, double> yBounds = { std::min(L[0].first->position.y, L[1].first->position.y), std::max(L[0].first->position.y,
+				L[1].first->position.y) };
+			for (size_t j = 0; j < 2; j++) 
+			{
+				bool isForward = j == 0;
+				while (remainingPointsHelper.size() > 0) {
+					auto newPoint = isForward ? remainingPointsHelper[0] : remainingPointsHelper[remainingPointsHelper.size() - 1];
+					auto v1 = isForward ? L[L.size() - 1].first->position - L[L.size() - 2].first->position : (L[0].first->position - L[1].first->position);
+					auto v2 = isForward ? newPoint.first->position - L[L.size() - 1].first->position : (newPoint.first->position - L[0].first->position);
+					auto vecToBegin = isForward ? L[0].first->position - newPoint.first->position : (L[L.size() - 1].first->position - newPoint.first->position);
+					auto vecAtBegin = isForward ? L[1].first->position - L[0].first->position : (L[L.size() - 2].first->position - L[L.size() - 1].first->position);
+					auto temp = angleOfVectors(v1, v2, !isForward);
+					auto temp2 = angleOfVectors(v2, vecToBegin, !isForward);
+					auto temp3 = angleOfVectors(vecToBegin, vecAtBegin, !isForward);
+					if (angleOfVectors(v1, v2, !isForward) >= 0 && angleOfVectors(v2, vecToBegin, !isForward) >= 0 && 
+						angleOfVectors(vecToBegin, vecAtBegin, !isForward) >= 0) {
+						L.insert(isForward ? L.end() : L.begin(), newPoint);
+						remainingPointsHelper.erase(isForward ? remainingPointsHelper.begin() : remainingPointsHelper.end() - 1);
+						if (newPoint.first->position.x < xBounds.first)
+							xBounds.first = newPoint.first->position.x;
+						if (newPoint.first->position.x > xBounds.second)
+							xBounds.second = newPoint.first->position.x;
+						if (newPoint.first->position.y < yBounds.first)
+							yBounds.first = newPoint.first->position.y;
+						if (newPoint.first->position.y < yBounds.second)
+							yBounds.second = newPoint.first->position.y;
+					}
+					else {
+						if (L.size() > 2) {
+							bool containsCorner = true;
+							while (containsCorner) {
+								containsCorner = false;
+								for (size_t k = 0; k < remainingPointsHelper.size(); k++) {
+									if (isPointInsidePolygon(L, remainingPointsHelper[k].first->position, xBounds, yBounds)) {
+										containsCorner = true;
+										break;
+									}
+								}
+								if (containsCorner) {
+									remainingPointsHelper.insert(isForward ? remainingPointsHelper.begin() : remainingPointsHelper.end(), 
+										isForward ? L[L.size() - 1] : L[0]);
+									L.erase(isForward ? L.end() : L.begin());
+								}
+							}
+						}
+						if (!isForward) 
+						{
+							if (L.size() > 2)
+							{
+								remainingPointsHelper.insert(remainingPointsHelper.begin(), L[L.size() - 1]);
+								if(L[0].second > L[L.size() - 1].second)
+									remainingPointsHelper.insert(remainingPointsHelper.end(), L[0]);
+							}
+							else
+							{
+								L.clear();
+								remainingPoints.push_back(remainingPoints[0]);
+								remainingPoints.erase(remainingPoints.begin());
+								remainingPointsHelper = remainingPoints;
+							}
+						}
+						break;
+					}
+				}
+			}
+			std::vector<Point*> convexFace;
+			for (size_t x = 0; x < L.size(); x++) {
+				std::cout << L[x].second << " ";
+				L[x].first->convexId.push_back(currentConvexId);
+				L[x].first->convexIndex.push_back(x);
+				convexFace.push_back(L[x].first);
+			}
+			std::cout << std::endl;
+			planes[i]->convexFaces.push_back(convexFace);
+			remainingPoints = remainingPointsHelper;
+			currentConvexId++;
+		}
+	}
+}
+
 void exportObjects()
 {
 	for (size_t i = 0; i < planes.size(); i++) {
@@ -1018,25 +1217,29 @@ void exportObjects()
 			MyFile << "o Mesh" << std::endl;
 			std::vector<Point*> corners;
 			currentCornerIndex = 0;
-			for (size_t k = 0; k < planes[i]->edges[j].second.size(); k++) {
-				if (planes[i]->edges[j].second[k].first->isCorner) {
-					planes[i]->edges[j].second[k].first->cornerId = currentCornerId;
-					planes[i]->edges[j].second[k].first->cornerIndex = currentCornerIndex;
-					corners.push_back(planes[i]->edges[j].second[k].first);
+			for (size_t k = 0; k < planes[i]->edges[j].second.second.size(); k++) {
+				if (planes[i]->edges[j].second.second[k].first->isCorner) {
+					planes[i]->edges[j].second.second[k].first->cornerId = currentCornerId;
+					planes[i]->edges[j].second.second[k].first->cornerIndex = currentCornerIndex;
+					corners.push_back(planes[i]->edges[j].second.second[k].first);
 					currentCornerIndex++;
 				}
 			}
 			for (size_t k = 0; k < corners.size(); k++) {
 				MyFile << "v " << -corners[k]->position.x << " " << corners[k]->position.y << " " << corners[k]->position.z << std::endl;
 			}
-			MyFile << "f ";
-			for (size_t j = 1; j < corners.size() + 1; j++) {
-				MyFile << j << " ";
-			}
-			MyFile << std::endl;
-			MyFile << "f ";
-			for (size_t j = corners.size(); j > 0; j--) {
-				MyFile << j << " ";
+			
+			for (size_t j = 0; j < planes[i]->convexFaces.size(); j++) {
+				MyFile << "f ";
+				for (size_t k = 0; k < planes[i]->convexFaces[j].size(); k++) {
+					MyFile << planes[i]->convexFaces[j][k]->cornerIndex + 1 << " ";
+				}
+				MyFile << std::endl;
+				MyFile << "f ";
+				for (int k = planes[i]->convexFaces[j].size() - 1; k >=0 ; k--) {
+					MyFile << planes[i]->convexFaces[j][k]->cornerIndex + 1 << " ";
+				}
+				MyFile << std::endl;
 			}
 			MyFile << std::endl;
 			MyFile.close();
@@ -1053,6 +1256,9 @@ void processData() {
 	findCorners();
 	findPlaneConnections();
 	connectPlanes();
+	createCorners();
+	filterEdgePoints();
+	convexSegmentation();
 	exportObjects();
 	writeData();
 }

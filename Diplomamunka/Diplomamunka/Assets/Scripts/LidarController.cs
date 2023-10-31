@@ -19,8 +19,10 @@ public class LidarController : MonoBehaviour
     List<Point> processedPoints;
     List<List<Point>> pointsById;
     List<List<Vector3>> linePoints;
+    List<List<Vector3>> convexLinePoints;
     List<int> verticalCount;
     List<GameObject> lines;
+    List<GameObject> convexLines;
     Color[] pointColors;
     const float maxDistance = 200f;
     int verticalCounter = 0;
@@ -36,8 +38,10 @@ public class LidarController : MonoBehaviour
         scannedPoints = new List<Point>();
         pointsById = new List<List<Point>>();
         linePoints = new List<List<Vector3>>();
+        convexLinePoints= new List<List<Vector3>>();
         verticalCount = new List<int>();
         lines = new List<GameObject>();
+        convexLines = new List<GameObject>();
         particleSystem = GetComponent<ParticleSystem>();
         horizontalCount = pointCount / verticalPointCount;
         if(cont != null)
@@ -79,7 +83,6 @@ public class LidarController : MonoBehaviour
                     float.Parse(parts[2].Replace('.', ','))), Quaternion.LookRotation(new Vector3(float.Parse(parts[3].Replace('.', ',')), 
                     float.Parse(parts[4].Replace('.', ',')), float.Parse(parts[5].Replace('.', ',')))));
         }
-        int currentId = 1;
         List<Vector3> currentPointGroup = new List<Vector3>();
         while ((line = reader.ReadLine()) != null)
         {
@@ -100,13 +103,25 @@ public class LidarController : MonoBehaviour
                 {                    
                     while (linePoints[lineId - 1].Count < lineIndex + 1) linePoints[lineId - 1].Add(Vector3.zero);
                     linePoints[lineId - 1][lineIndex] = newPoint.Position;
-                }                    
+                }
+                for (int i = 0; i < (parts.Length - 9) / 2; i++)
+                {
+                    int convexLineId = int.Parse(parts[9 + i * 2]);
+                    int convexLineIndex = int.Parse(parts[10 + i * 2]);
+                    while (convexLinePoints.Count < convexLineId) convexLinePoints.Add(new List<Vector3>());
+                    while (convexLinePoints[convexLineId - 1].Count < convexLineIndex + 1) convexLinePoints[convexLineId - 1].Add(Vector3.zero);
+                    convexLinePoints[convexLineId - 1][convexLineIndex] = newPoint.Position;
+                }
             }
         }
         for (int i = 0; i < linePoints.Count; i++)
         {
             print(linePoints[i].Count);
-            DrawLines(linePoints[i], i);
+            DrawLines(linePoints[i], i, false);
+        }
+        for (int i = 0; i < convexLinePoints.Count; i++)
+        {
+            DrawLines(convexLinePoints[i], i, true);
         }
         reader.Close();
     }
@@ -124,7 +139,7 @@ public class LidarController : MonoBehaviour
         }
     }
 
-    void DrawLines(List<Vector3> points, int id)
+    void DrawLines(List<Vector3> points, int id, bool isConvexLine)
     {
         var lineRenderer = Instantiate(linePrefab).GetComponent<LineRenderer>();
         lineRenderer.startColor = pointColors[id % pointColors.Length];
@@ -135,12 +150,13 @@ public class LidarController : MonoBehaviour
             lineRenderer.SetPosition(i, points[i]);
         }
         lineRenderer.SetPosition(points.Count, points[0]);
-        lines.Add(lineRenderer.gameObject);
+        (isConvexLine ? convexLines : lines).Add(lineRenderer.gameObject);
     }
 
-    public void DisplayLines(bool display)
+    public void DisplayLines(bool display, bool isConvexLine)
     {
-        foreach (var line in lines) line.SetActive(display);
+        foreach (var line in isConvexLine ? convexLines : lines) line.SetActive(display);
+        foreach (var line in isConvexLine ? lines : convexLines) line.SetActive(false);
     }
 
     public void Display(bool processed, int type)
