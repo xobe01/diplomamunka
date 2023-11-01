@@ -116,12 +116,13 @@ public class LidarController : MonoBehaviour
         }
         for (int i = 0; i < linePoints.Count; i++)
         {
-            print(linePoints[i].Count);
-            DrawLines(linePoints[i], i, false);
+            if (linePoints[i].Count > 0)
+                DrawLines(linePoints[i], i, false);
         }
         for (int i = 0; i < convexLinePoints.Count; i++)
         {
-            DrawLines(convexLinePoints[i], i, true);
+            if (convexLinePoints[i].Count > 0)
+                DrawLines(convexLinePoints[i], i, true);
         }
         reader.Close();
     }
