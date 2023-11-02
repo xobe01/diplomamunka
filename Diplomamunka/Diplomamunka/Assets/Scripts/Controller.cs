@@ -64,7 +64,7 @@ public class Controller : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.I))
         {
             displayedById = !displayedById;
-            if (displayedById) lidarCont.DisplayById(0);
+            if (displayedById) lidarCont.DisplayById(0, displayedById);
             else lidarCont.Display(processedShowed, 0);
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
@@ -92,10 +92,10 @@ public class Controller : MonoBehaviour
         }
         if (displayedById)
         {
-            if (Input.GetKeyDown(KeyCode.LeftArrow)) lidarCont.DisplayById(-1);
-            if (Input.GetKeyDown(KeyCode.RightArrow)) lidarCont.DisplayById(1);
-            if (Input.GetKeyDown(KeyCode.UpArrow)) lidarCont.DisplayById(10);
-            if (Input.GetKeyDown(KeyCode.DownArrow)) lidarCont.DisplayById(-10);
+            if (Input.GetKeyDown(KeyCode.LeftArrow)) lidarCont.DisplayById(-1, displayedById);
+            if (Input.GetKeyDown(KeyCode.RightArrow)) lidarCont.DisplayById(1, displayedById);
+            if (Input.GetKeyDown(KeyCode.UpArrow)) lidarCont.DisplayById(10, displayedById);
+            if (Input.GetKeyDown(KeyCode.DownArrow)) lidarCont.DisplayById(-10, displayedById);
         }
     }
 

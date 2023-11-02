@@ -30,6 +30,7 @@ public class LidarController : MonoBehaviour
     int horizontalCount;
 
     int scenesGenerated = 0;
+    bool showById = false;
 
     void Awake()
     {
@@ -162,12 +163,13 @@ public class LidarController : MonoBehaviour
 
     public void Display(bool processed, int type)
     {
-        if (processed) DisplayPoints(processedPoints, type);
+        if (processed) DisplayPoints(showById ? pointsById[currentIdShowed] : processedPoints, type);
         else DisplayPoints(scannedPoints, 0);
     }
 
-    public void DisplayById(int step)
+    public void DisplayById(int step, bool showById)
     {
+        this.showById = showById;
         currentIdShowed += step;
         if (currentIdShowed == pointsById.Count) currentIdShowed = 0;
         else if (currentIdShowed == -1) currentIdShowed = pointsById.Count - 1;
@@ -176,6 +178,7 @@ public class LidarController : MonoBehaviour
 
     void DisplayPoints(List<Point> points, int type)
     {
+        print(showById);
         cloud = new ParticleSystem.Particle[points.Count];
         for (int i = 0; i < points.Count; ++i)
         {

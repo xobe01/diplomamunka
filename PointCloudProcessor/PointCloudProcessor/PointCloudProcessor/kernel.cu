@@ -78,9 +78,9 @@ const double planeDistanceTreshold = 0.05;
 
 size_t getOffset(int horizontalIndex, int verticalIndex)
 {
-	if (horizontalIndex < 0) horizontalIndex = horizontalCount - 1 + horizontalIndex;
+	if (horizontalIndex < 0) horizontalIndex = horizontalCount + horizontalIndex;
 	else if (horizontalIndex > horizontalCount - 1) horizontalIndex = horizontalIndex - horizontalCount;
-	if (verticalIndex < 0) verticalIndex = verticalCount - 1 + verticalIndex;
+	if (verticalIndex < 0) verticalIndex = verticalCount + verticalIndex;
 	else if (verticalIndex > verticalCount - 1) verticalIndex = verticalIndex - verticalCount;
 	return horizontalIndex * verticalCount + verticalIndex;
 }
@@ -374,7 +374,7 @@ void choosePoints(const Vec3<Point*> planePoints, Plane* basePlane, /*out*/ Plan
 						neighbourPoints[j]->plane = plane;
 						tempNextStepPoints.push_back(neighbourPoints[j]);
 						if ((neighbourPoints[j]->normal - plane->normal).length() < 0.05) {
-							plane->normal = ((plane->normal * (plane->points.size() - 1) + neighbourPoints[j]->normal)) / plane->points.size();
+							plane->normal = Vec3<double>::normalize(plane->normal * (plane->points.size() - 1) + neighbourPoints[j]->normal);
 						}
 					}
 				}
@@ -428,6 +428,8 @@ void findPlanes()
 								break;
 							}
 						}
+						if (plane->points.size() > 0)
+							break;
 					}
 				}
 				if (plane->points.size() > 0)
@@ -482,27 +484,26 @@ void findNextPoint(Point*& startPoint, size_t direction, /*out*/
 	bool comeFromDeadEnd = false;
 	bool isPreviousSpike = false;
 	bool wasThereNonSpike = false;
+	bool isHole = direction == 1;
 	while (currentPoint != startPoint || comeFromDeadEnd)
 	{
-		
 		if (!currentPoint)
 			currentPoint = startPoint;
-		if (currentPoint->horizontalIndex == 161 && currentPoint->verticalIndex == 16) {
+		if (currentPoint->horizontalIndex == 380 && currentPoint->verticalIndex == 67) {
 			std::cout << "asd";
 		}
 		Point* neighbourPoint = nullptr;
 		size_t x = currentPoint->horizontalIndex;
 		size_t y = currentPoint->verticalIndex;
-		if (spikeType(currentPoint, isFirstPoint ? -1 : ((direction + 1) % 4), false) == 0)
-			isPreviousSpike = true;
-		else {
+		isPreviousSpike = spikeType(currentPoint, isFirstPoint ? -1 : ((direction + 1) % 4), false) == 0;
+		if(!isPreviousSpike || currentEdge.size() == 0)
+		{
 			if (currentPoint->isMarked) {
 				currentEdge.push_back({ currentPoint, direction });				
 			}
 		}
 		currentPoint->isMarked = false;
-		currentPoint->isMarked2 = false;
-		isFirstPoint = false;
+		if(!isHole) currentPoint->isMarked2 = false;		
 		for (size_t i = 0; i < 4; i++) {
 			/*if (checkIfBridge(currentPoint)) {
 				i += 2;
@@ -532,7 +533,11 @@ void findNextPoint(Point*& startPoint, size_t direction, /*out*/
 			if (neighbourPoint && neighbourPoint->plane == startPoint->plane && neighbourPoint->plane != nullptr && neighbourPoint->isMarked 
 				&& (isPreviousSpike || spikeType(neighbourPoint, -1, false) <= 1 || spikeType(currentPoint, direction, false) > 0))
 			{
-					if (!wasThereNonSpike && spikeType(currentPoint, -1, false) > 1) {
+				if (isFirstPoint) {
+					currentEdge[0].second = direction;
+					isFirstPoint = false;
+				}
+				if (!wasThereNonSpike && spikeType(currentPoint, -1, false) > 1) {
 					startPoint = currentPoint;
 					isPreviousSpike = false;
 					wasThereNonSpike = true;
@@ -629,7 +634,7 @@ void findEdgePoints()
 					startPoint = edgePointsInPlane[j];
 				}
 			}
-			size_t direction = 0;
+			size_t direction = 2;
 			if (spikeType(startPoint, -1, true) == -1) {
 				size_t x = startPoint->horizontalIndex;
 				size_t y = startPoint->verticalIndex;
@@ -645,13 +650,18 @@ void findEdgePoints()
 				direction = 3;
 			}
 			else if (startPoint->verticalIndex > 0 && points[getOffset(startPoint->horizontalIndex, startPoint->verticalIndex - 1)] &&
-				points[getOffset(startPoint->horizontalIndex, startPoint->verticalIndex - 1)]->isMarked2 &&
-				points[getOffset(startPoint->horizontalIndex - 1, startPoint->verticalIndex - 1)]->isMarked2 &&
-				points[getOffset(startPoint->horizontalIndex - 1, startPoint->verticalIndex)]->isMarked2)
+				points[getOffset(startPoint->horizontalIndex, startPoint->verticalIndex - 1)]->plane == startPoint->plane &&
+				points[getOffset(startPoint->horizontalIndex - 1, startPoint->verticalIndex - 1)] &&
+				points[getOffset(startPoint->horizontalIndex - 1, startPoint->verticalIndex - 1)]->plane == startPoint->plane &&
+				points[getOffset(startPoint->horizontalIndex - 1, startPoint->verticalIndex)] &&
+				points[getOffset(startPoint->horizontalIndex - 1, startPoint->verticalIndex)]->plane == startPoint->plane)
 			{
 				direction = 1;
 				currentEdge->isHole = true;
 			}			
+			if (i == 9) {
+				std::cout << "asd";
+			}
 			findNextPoint(startPoint, direction, currentEdge->pointsWithDir, i, planes);
 			for (size_t j = 0; j < edgePointsInPlane.size(); j++) {
 				if (edgePointsInPlane[j]->isMarked) tempEdgePointsInPlane.push_back(edgePointsInPlane[j]);
@@ -706,7 +716,7 @@ bool isStraightPoint(size_t pointIndex, Edge* edge, size_t& previousNeighbourCou
 	previousNeighbourCount = neighbourCount;
 	if (areNeighbours(pointIndex < (edge->pointsWithDir.size() - 1) ? edge->pointsWithDir[pointIndex + 1].first : edge->startPoint, point) == 0 && neighbourCount < 3) {
 		(pointIndex > 0 ? edge->pointsWithDir[pointIndex - 1].first : edge->startPoint)->isCorner = false;
-		(pointIndex > 0 ? edge->pointsWithDir[pointIndex - 2].first : edge->pointsWithDir[edge->pointsWithDir.size() - 1].first)->isCorner = true;
+		(pointIndex > 1 ? edge->pointsWithDir[pointIndex - 2].first : edge->pointsWithDir[edge->pointsWithDir.size() - 1].first)->isCorner = true;
 		(pointIndex < (edge->pointsWithDir.size() - 1) ? edge->pointsWithDir[pointIndex + 1].first : edge->startPoint)->isCorner = true;
 		straigthDir = { 0,0,0 };
 		return false;
@@ -1113,6 +1123,8 @@ bool isPointInsidePolygon(std::vector<std::pair<Vec3<double>, Point*>>polygon, V
 			auto p2 = polygon[(i + 1) % polygon.size()].first;
 			if ((p1.x < point.x && p2.x < point.x) || (p1.y > point.y && p2.y > point.y) || (p1.y < point.y && p2.y < point.y))
 				continue;
+			else if (point == p1)
+				return false;
 			else
 			{
 				auto intersection = intersectionOfLines(point, p1, { 1,0,0 }, p2 - p1);
@@ -1131,10 +1143,15 @@ bool isPointInsidePolygon(std::vector<std::pair<Vec3<double>, Point*>>polygon, V
 	return false;
 }
 
-Vec3<double> rotateToXY(Vec3<double> pivotPoint, Vec3<double> point)
+void changeBaseTo2D(std::vector<std::pair<Vec3<double>, Point*>>& points)
 {
-	auto diff = point - pivotPoint;
-	return { sqrt(pow(diff.x, 2) + pow(diff.z, 2)) * (diff.z < 0 ? -1 : 1), diff.y, 0 };
+	auto normal = points[0].second->plane->normal;
+	auto x = points[0].second->plane->pointDirections.first;
+	x = Vec3<double>::normalize(x - normal * Vec3<double>::dot_product(x, normal));
+	auto y = Vec3<double>::crossProduct(x, normal);
+	for (size_t i = 0; i < points.size(); i++) {
+		points[i].first = { Vec3<double>::dot_product(points[i].second->position, x), Vec3<double>::dot_product(points[i].second->position, y), 0 };
+	}
 }
 
 void convexSegmentation()
@@ -1150,13 +1167,16 @@ void convexSegmentation()
 				size_t counter = 0;
 				for (size_t k = 0; k < planes[i]->edges[j]->pointsWithDir.size(); k++) {
 					if (planes[i]->edges[j]->pointsWithDir[k].first->isCorner) {
-						holeEdge.push_back({ rotateToXY(planes[i]->edges[0]->pointsWithDir[0].first->position,
-							planes[i]->edges[j]->pointsWithDir[k].first->position), planes[i]->edges[j]->pointsWithDir[k].first });
+						holeEdge.push_back({ {0,0,0}, planes[i]->edges[j]->pointsWithDir[k].first });
 						counter++;
 					}
 				}
+				changeBaseTo2D(holeEdge);
 				holeEdges.push_back(holeEdge);
 			}
+		}
+		if (i == 9) 			{
+			std::cout << "ad";
 		}
 		for (size_t x = 0; x < planes[i]->edges.size(); x++) {
 			if (!planes[i]->edges[x]->isHole) {
@@ -1170,11 +1190,11 @@ void convexSegmentation()
 						{
 							pivotPoint = planes[i]->edges[x]->pointsWithDir[j].first->position;
 						}
-						remainingPoints.push_back({ rotateToXY(pivotPoint,	planes[i]->edges[x]->pointsWithDir[j].first->position),
-							planes[i]->edges[x]->pointsWithDir[j].first });
+						remainingPoints.push_back({ {},	planes[i]->edges[x]->pointsWithDir[j].first });
 						counter++;
 					}
 				}
+				changeBaseTo2D(remainingPoints);
 				while (remainingPoints.size() > 2) {
 					//std::vector<Vec3<double>> remainingPointsHelper(remainingPoints);
 					//std::vector<Vec3<double>> L = { remainingPointsHelper[0], remainingPointsHelper[1] };
@@ -1199,12 +1219,6 @@ void convexSegmentation()
 							auto temp = angleOfVectors(v1 * -1, v2, !isForward);
 							auto temp2 = angleOfVectors(v2 * -1, vecToBegin, !isForward);
 							auto temp3 = angleOfVectors(vecToBegin * -1, vecAtBegin, !isForward);
-							if (i == 3) {
-								std::cout << "asd";
-							}
-							if (planes[i]->convexFaces.size() == 3) {
-								std::cout << "asd";
-							}
 							if (angleOfVectors(v1 * -1, v2, !isForward) <= 180 && angleOfVectors(v2 * -1, vecToBegin, !isForward) <= 180 &&
 								angleOfVectors(vecToBegin * -1, vecAtBegin, !isForward) <= 180) {
 								L.insert(isForward ? L.end() : L.begin(), newPoint);
@@ -1312,6 +1326,35 @@ void convexSegmentation()
 							}
 						}
 					}
+					if (remainingPointsHelper.size() == 0) //last convex polygon hole test
+					{
+						double minDistance = 1000;
+						int closestEdgeIndex = -1;
+						size_t closestPointIndex = 0;
+						for (size_t l = 0; l < holeEdges.size(); l++) {
+							auto edgePoints = holeEdges[l];
+							for (size_t m = 0; m < edgePoints.size(); m++) {
+								if (isPointInsidePolygon(L, edgePoints[m].first, xBounds, yBounds) && minDistance >
+									(L[0].first - edgePoints[m].first).length()) {
+									minDistance = (L[0].first - edgePoints[m].first).length();
+									closestEdgeIndex = l;
+									closestPointIndex = m;
+								}
+							}
+						}
+						if (closestEdgeIndex >= 0) {
+							remainingPointsHelper.insert(remainingPointsHelper.begin(), L[0]);
+							for (size_t l = 0; l < holeEdges[closestEdgeIndex].size() + 1; l++) {
+								remainingPointsHelper.insert(remainingPointsHelper.begin() + l + 1,
+									holeEdges[closestEdgeIndex][(closestPointIndex + l) % holeEdges[closestEdgeIndex].size()]);
+							}
+							for (size_t l = 0; l < L.size(); l++) {
+								remainingPointsHelper.insert(remainingPointsHelper.end(), L[l]);
+							}
+							L.clear();
+							remainingPoints = remainingPointsHelper;
+						}
+					}
 					if (L.size() > 0) {
 						std::vector<Point*> convexFace;
 						for (size_t j = 0; j < L.size(); j++) {
@@ -1322,6 +1365,9 @@ void convexSegmentation()
 						planes[i]->convexFaces.push_back(convexFace);
 						remainingPoints = remainingPointsHelper;
 						currentConvexId++;
+						if (i == 35 && planes[i]->convexFaces.size() == 13) {
+							return;
+						}
 					}
 				}
 			}
@@ -1333,7 +1379,7 @@ void exportObjects()
 {
 	for (size_t i = 0; i < planes.size(); i++) {
 		std::ofstream MyFile("C:/Users/ungbo/Desktop/BME/_Diplomamunka/Diplomamunka/Diplomamunka/Assets/Resources/Generated_Models/processed_obj_"
-			+ std::to_string(currentCornerId - 1) + ".obj");
+			+ std::to_string(i) + ".obj");
 		MyFile << "o Mesh" << std::endl;
 		std::vector<Point*> corners;
 		currentCornerIndex = 0;
