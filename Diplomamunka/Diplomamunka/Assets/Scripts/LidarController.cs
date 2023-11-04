@@ -173,7 +173,9 @@ public class LidarController : MonoBehaviour
         currentIdShowed += step;
         if (currentIdShowed == pointsById.Count) currentIdShowed = 0;
         else if (currentIdShowed == -1) currentIdShowed = pointsById.Count - 1;
-        DisplayPoints(pointsById[currentIdShowed], 0);
+        if (showById)
+            DisplayPoints(pointsById[currentIdShowed], 0);
+        else Display(true, 0);
     }
 
     void DisplayPoints(List<Point> points, int type)

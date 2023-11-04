@@ -64,8 +64,7 @@ public class Controller : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.I))
         {
             displayedById = !displayedById;
-            if (displayedById) lidarCont.DisplayById(0, displayedById);
-            else lidarCont.Display(processedShowed, 0);
+            lidarCont.DisplayById(0, displayedById);
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
