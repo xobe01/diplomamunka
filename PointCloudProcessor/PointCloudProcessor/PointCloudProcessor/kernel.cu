@@ -824,13 +824,12 @@ void findCorners()
 }
 
 Point* createNewPoint(Vec3<double> newPointPos, Point* point, std::vector<Point*> neighbours, size_t addedCount, bool createBeforePoint = false, 
-	bool isNeighboursPoint = false)
+	bool isCornerPoint = false)
 {
 	double deleteDurroundingCornersTreshold = 0.1;
-	Point* newPoint = new Point(newPointPos, neighbours[0]->horizontalIndex, verticalCount, point->plane);
+	Point* newPoint = new Point(newPointPos, neighbours[0]->horizontalIndex, isCornerPoint ? verticalCount + 1 : verticalCount, point->plane);
 	addedPoints.push_back(newPoint);
-	//if(!isNeighboursPoint)
-		newPoint->isCorner = true;
+	newPoint->isCorner = true;
 	newPoint->outlineId = point->outlineId;
 	for (size_t j = 0; j < point->plane->edges.size(); j++) {
 		if (point->plane->edges[j]->pointsWithDir[0].first->outlineId == point->outlineId) {
@@ -838,16 +837,6 @@ Point* createNewPoint(Vec3<double> newPointPos, Point* point, std::vector<Point*
 				if (point->plane->edges[j]->pointsWithDir[k].first == point) {
 					auto index = k + (createBeforePoint ? 0 : 1) + addedCount;
 					point->plane->edges[j]->pointsWithDir.insert(point->plane->edges[j]->pointsWithDir.begin() + index, { newPoint, -1 });
-					if (point->plane->edges[j]->pointsWithDir[index == 0 ? point->plane->edges[j]->pointsWithDir.size() - 1 : (index - 1)].first &&
-						(point->plane->edges[j]->pointsWithDir[index == 0 ? point->plane->edges[j]->pointsWithDir.size() - 1 : (index - 1)].first->position
-						- point->plane->edges[j]->pointsWithDir[index].first->position).length() < deleteDurroundingCornersTreshold)
-						point->plane->edges[j]->pointsWithDir[index == 0 ? point->plane->edges[j]->pointsWithDir.size() - 1 :
-							(index - 1)].first->isCorner = false;
-					if (point->plane->edges[j]->pointsWithDir[index == point->plane->edges[j]->pointsWithDir.size() - 1 ? 0 : (index + 1)].first &&
-						(point->plane->edges[j]->pointsWithDir[index == point->plane->edges[j]->pointsWithDir.size() - 1 ? 0 : (index + 1)].first->position
-						- point->plane->edges[j]->pointsWithDir[index].first->position).length() < deleteDurroundingCornersTreshold)
-						point->plane->edges[j]->pointsWithDir[index == 0 ? point->plane->edges[j]->pointsWithDir.size() - 1 :
-						(index + 1)].first->isCorner = false;
 					break;
 				}
 			}
@@ -942,7 +931,6 @@ Point* addNewPoint(Point* point, Point*& neighbour, Plane* plane, size_t addedCo
 	if ((newPointPos - neighbourNewPointPos).length() > twoPointDifferenceTreshold)
 		return nullptr;
 	auto newPos = (newPointPos + neighbourNewPointPos) / 2;
-	//bool isNeighbourEdge = false;
 	Point* newPoint;
 	Point* newNeighbourPoint;
 	newPoint = createNewPoint(newPos, point, { neighbour }, addedCount);
@@ -951,16 +939,11 @@ Point* addNewPoint(Point* point, Point*& neighbour, Plane* plane, size_t addedCo
 	{
 		if (neighbour->neighbourPlaneNeighbours[i] == point) 		
 		{
-			//isNeighbourEdge = true;
-			newNeighbourPoint = createNewPoint(newPos, neighbour, { point }, 0, false, true);
+			newNeighbourPoint = createNewPoint(newPos, neighbour, { point }, 0, false);
 			neighbour->createdNeighbourPoints[i] = newNeighbourPoint;
 			break;
 		}
 	}
-	/*if (!isNeighbourEdge) {
-		newNeighbourPoint = createNewPoint(newPos, neighbour, { point }, 0);
-		neighbour->neighbourPlaneNeighbours.push_back(newNeighbourPoint);
-	}*/
 	newPoint->neighbourPlaneNeighbours[1] = newNeighbourPoint;
 	newNeighbourPoint->neighbourPlaneNeighbours[1] = newPoint;
 	return newPoint;
@@ -1021,9 +1004,9 @@ void createPlaneCorner(Point* point, std::vector<Point*> point1, std::vector<Poi
 
 	auto cornerPoint = (cross1 + cross2 + cross3) / denom;
 
-	createNewPoint(cornerPoint, point1[0], {point1[2], point2[2]}, 0);
-	createNewPoint(cornerPoint, point1[1], { point }, 0, true);
-	createNewPoint(cornerPoint, point2[1], { point }, 0);
+	createNewPoint(cornerPoint, point1[0], {point1[2], point2[2]}, 0, false, true);
+	createNewPoint(cornerPoint, point1[1], { point }, 0, true, true);
+	createNewPoint(cornerPoint, point2[1], { point }, 0, false, true);
 }
 
 void connectPlanes()
@@ -1071,7 +1054,7 @@ void createCorners()
 {
 	const double normalDiffTreshold = 0.1;
 	for (size_t i = 0; i < planes.size(); i++) {
-		for (size_t j = 0; j < planes[i]->edges.size(); j++) {
+		for (size_t j = 0; j < planes[i]->edges.size(); j++) {	
 			for (size_t k = 0; k < planes[i]->edges[j]->pointsWithDir.size(); k++) {
 				auto point = planes[i]->edges[j]->pointsWithDir[k].first;
 				if (point) {
@@ -1089,6 +1072,7 @@ void createCorners()
 							createPlaneCorner(planes[i]->edges[j]->pointsWithDir[k].first, { createdPoint1, createdPoint1->neighbourPlaneNeighbours[1],
 								point->neighbourPlaneNeighbours[l] }, { createdPoint2, createdPoint2->neighbourPlaneNeighbours[1],
 								point->neighbourPlaneNeighbours[l == 3 ? 0 : (l + 1)] });
+							break;
 						}
 					}
 				}
@@ -1099,67 +1083,87 @@ void createCorners()
 
 void filterEdgePoints()
 {
-	std::vector<std::vector<std::vector<std::pair<size_t, size_t>>>> cornersToDelete;
+
+	std::vector<std::vector<std::vector< std::pair<bool, std::pair<size_t, size_t>>>>> cornersToDelete;
 	for (size_t i = 0; i < planes.size(); i++) {
 		cornersToDelete.push_back({});
 		for (size_t j = 0; j < planes[i]->edges.size(); j++) {
 			cornersToDelete[i].push_back({});
 			for (size_t k = 0; k < planes[i]->edges[j]->pointsWithDir.size(); k++) {
 				if (planes[i]->edges[j]->pointsWithDir[k].first) {
-					if (planes[i]->edges[j]->pointsWithDir[k].first->verticalIndex == verticalCount) {
+					if (planes[i]->edges[j]->pointsWithDir[k].first->verticalIndex >= verticalCount) {
 						for (size_t l = 0; l < planes[i]->edges[j]->pointsWithDir[k].first->neighbourPlaneNeighbours.size(); l++) {
 							if (planes[i]->edges[j]->pointsWithDir[k].first->neighbourPlaneNeighbours[l] &&
 								planes[i]->edges[j]->pointsWithDir[k].first->neighbourPlaneNeighbours[l]->verticalIndex < verticalCount)
-								cornersToDelete[i][j].push_back({ k,  planes[i]->edges[j]->pointsWithDir[k].first->neighbourPlaneNeighbours[l]->plane->id });
+								cornersToDelete[i][j].push_back({ planes[i]->edges[j]->pointsWithDir[k].first->verticalIndex > verticalCount,
+									{ k,  planes[i]->edges[j]->pointsWithDir[k].first->neighbourPlaneNeighbours[l]->plane->id } });
 						}
 					}
 				}
 				else {
-					cornersToDelete[i][j].push_back({ 0, 0 });
+					cornersToDelete[i][j].push_back({ false, { 0, 0 } });
 					planes[i]->edges[j]->pointsWithDir.erase(planes[i]->edges[j]->pointsWithDir.begin() + k);
 					k--;
 				}
 			}
+			for (int k = 0; k < cornersToDelete[i][j].size(); k++) 
+			{
+				if (k < ((int)cornersToDelete[i][j].size() - 2) && cornersToDelete[i][j][k + 1].first && cornersToDelete[i][j][k + 2].first) 
+				{
+					cornersToDelete[i][j][k + 1].second = { cornersToDelete[i][j][k + 1].second.first, cornersToDelete[i][j][k].second.second };
+					size_t index = k + 2;
+					while (index < cornersToDelete[i][j].size() && cornersToDelete[i][j][index].first)
+					{
+						cornersToDelete[i][j].erase(cornersToDelete[i][j].begin() + index);
+					}
+					cornersToDelete[i][j].insert(cornersToDelete[i][j].begin() + index, { true, {cornersToDelete[i][j][k + 1].second.first,
+						index < cornersToDelete[i][j].size() ? cornersToDelete[i][j][index].second.second : cornersToDelete[i][j][0].second.second} });
+				}
+			}
 			int newPointStartIndex = planes[i]->edges[j]->wasFirstGenerated ? 1 : 0;
 			int newPointEndIndex = newPointStartIndex;
-			if (i == 87) {
+			if (i == 5) {
 				std::cout << "asd";
 			}
 			while (newPointEndIndex < (int)cornersToDelete[i][j].size() - 1) {
-				if (cornersToDelete[i][j][newPointStartIndex].second > 0) {
+				if (cornersToDelete[i][j][newPointStartIndex].second.second > 0) {
 					while (newPointEndIndex + 1 < cornersToDelete[i][j].size()
-						&& cornersToDelete[i][j][newPointStartIndex].second == cornersToDelete[i][j][newPointEndIndex + 1].second) {
+						&& cornersToDelete[i][j][newPointStartIndex].second.second == cornersToDelete[i][j][newPointEndIndex + 1].second.second) {
 						newPointEndIndex++;
 					}
-					for (size_t k = cornersToDelete[i][j][newPointStartIndex].first + 1; k < cornersToDelete[i][j][newPointEndIndex].first; k++) {
+					for (size_t k = cornersToDelete[i][j][newPointStartIndex].second.first + 1; k <
+						cornersToDelete[i][j][newPointEndIndex].second.first; k++) {
 						planes[i]->edges[j]->pointsWithDir[k].first->isCorner = false;
 					}
+					auto startPoint = planes[i]->edges[j]->pointsWithDir[cornersToDelete[i][j][newPointStartIndex].second.first].first;
+					auto endPoint = planes[i]->edges[j]->pointsWithDir[cornersToDelete[i][j][newPointEndIndex].second.first].first;
+					if ((startPoint->position - endPoint->position).length() < 0.1) {
+						if (startPoint->verticalIndex == verticalCount + 1 && endPoint->verticalIndex != verticalCount + 1)
+							endPoint->isCorner = false;
+						else if (endPoint->verticalIndex == verticalCount + 1 && startPoint->verticalIndex != verticalCount + 1)
+							startPoint->isCorner = false;
+					}
 					if (newPointEndIndex == cornersToDelete[i][j].size() - 1 && newPointStartIndex != newPointEndIndex && 
-						planes[i]->edges[j]->wasFirstGenerated && cornersToDelete[i][j][0].second == cornersToDelete[i][j][newPointStartIndex].second)
-						planes[i]->edges[j]->pointsWithDir[cornersToDelete[i][j][cornersToDelete[i][j].size() - 1].first].first->isCorner = false;
+						planes[i]->edges[j]->wasFirstGenerated && cornersToDelete[i][j][0].second.second ==
+						cornersToDelete[i][j][newPointStartIndex].second.second)
+						planes[i]->edges[j]->pointsWithDir[cornersToDelete[i][j][cornersToDelete[i][j].size() - 1].second.first].first->isCorner = false;
 				}
 				newPointStartIndex = newPointEndIndex + 1;
 				newPointEndIndex = newPointStartIndex;
 			}
 		}
 	}
-	for (size_t i = 0; i < planes.size(); i++) {
+	/*for (size_t i = 0; i < planes.size(); i++) {
 		for (size_t j = 0; j < planes[i]->edges.size(); j++) {
 			for (size_t k = 0; k < planes[i]->edges[j]->pointsWithDir.size(); k++) {
-				if (k < planes[i]->edges[j]->pointsWithDir.size() - 1 && planes[i]->edges[j]->pointsWithDir[k].first->isCorner && 
-					planes[i]->edges[j]->pointsWithDir[k + 1].first->isCorner &&
-					(planes[i]->edges[j]->pointsWithDir[k].first->position - planes[i]->edges[j]->pointsWithDir[k + 1].first->position).length() <
-					0.0001) {
-					planes[i]->edges[j]->pointsWithDir[k].first->isCorner = false;
-				}
-				/*if (planes[i]->edges[j]->pointsWithDir[k].first->verticalIndex == verticalCount && planes[i]->edges[j]->pointsWithDir[k].first->isCorner
+				if (planes[i]->edges[j]->pointsWithDir[k].first->verticalIndex == verticalCount && planes[i]->edges[j]->pointsWithDir[k].first->isCorner
 					&& planes[i]->edges[j]->pointsWithDir[k].first->neighbourPlaneNeighbours[1] &&
 					planes[i]->edges[j]->pointsWithDir[k].first->neighbourPlaneNeighbours[1]->verticalIndex == verticalCount) {
 					planes[i]->edges[j]->pointsWithDir[k].first->neighbourPlaneNeighbours[1]->isCorner = true;
-				}*/
+				}
 			}
 		}
-	}
+	}*/
 }
 
 void egoCarSegmentation()
@@ -1450,7 +1454,7 @@ void convexSegmentation()
 						planes[i]->convexFaces.push_back(convexFace);
 						remainingPoints = remainingPointsHelper;
 						currentConvexId++;
-						if (i == 104 && planes[i]->convexFaces.size() == 50) {
+						if (i == 104 && planes[i]->convexFaces.size() == 54) {
 							int a = 1;
 							//return;
 						}
@@ -1463,6 +1467,19 @@ void convexSegmentation()
 
 void exportObjects()
 {
+	std::string name = "C:\\Users\\ungbo\\Desktop\\BME\\_Diplomamunka\\Diplomamunka\\Diplomamunka\\Assets\\Resources\\Generated_Models\\processed_obj_0.obj";
+	std::ifstream f(name);
+	size_t counter = 0;
+	while (f.good())
+	{
+		f.close();
+		remove(name.c_str());
+		counter++;
+		name = "C:\\Users\\ungbo\\Desktop\\BME\\_Diplomamunka\\Diplomamunka\\Diplomamunka\\Assets\\Resources\\Generated_Models\\processed_obj_"
+			+ std::to_string(counter) + ".obj";
+		f = std::ifstream(name.c_str());
+	}
+	std::cout << f.good() << std::endl;
 	size_t objCounter = 0;
 	for (size_t i = 0; i < planes.size(); i++) {
 		std::vector<Point*> corners;
@@ -1478,8 +1495,6 @@ void exportObjects()
 			}
 			currentCornerId++;
 		}
-		if (corners.size() == 2)
-			continue;
 		if (corners.size() == 0)
 			continue;
 		std::ofstream MyFile("C:/Users/ungbo/Desktop/BME/_Diplomamunka/Diplomamunka/Diplomamunka/Assets/Resources/Generated_Models/processed_obj_"
@@ -1518,6 +1533,7 @@ void exportObjects()
 }
 
 void processData() {
+	
 	groundSegmentation();
 	egoCarSegmentation();
 	findPlanes();
