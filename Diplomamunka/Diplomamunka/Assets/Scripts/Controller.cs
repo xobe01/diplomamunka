@@ -5,12 +5,15 @@ using UnityEngine;
 
 public class Controller : MonoBehaviour
 {
+    [SerializeField] Transform egoCar;
     [SerializeField] Material pointCloudSkybox;
     [SerializeField] Material objMaterial;
     [SerializeField] Color[] pointColors;
 
     [SerializeField] bool dontScan;
-    [SerializeField] bool isGeneratorScene; 
+    [SerializeField] bool isGeneratorScene;
+    [SerializeField] int moveAndScanCount;
+    [SerializeField] int displayFrame;
 
     Material defaultSkybox;
     LidarController lidarCont;
@@ -37,14 +40,32 @@ public class Controller : MonoBehaviour
         }
         else if(!dontScan) 
         {
-            lidarCont.Scan(false);
+            if(moveAndScanCount > 0)
+            {
+                StartCoroutine(MultipleScan());
+            }
+            else
+                lidarCont.Scan(false, -1);
+        }
+        if (dontScan)
+        {
+            lidarCont.ReadRawData(displayFrame);
         }
         lidarCont.ReadProcessedData();
         ImportObjects();
         //lidarCont.Display(false);
     }
 
-    // Update is called once per frame
+    IEnumerator MultipleScan()
+    {
+        float carSpeed = 50f / 36f;
+        for (int i = 0; i < moveAndScanCount; i++)
+        {
+            lidarCont.Scan(false, i);
+            if (i < moveAndScanCount - 1) egoCar.transform.position += Vector3.back * carSpeed;
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.X))
@@ -101,7 +122,7 @@ public class Controller : MonoBehaviour
     void ImportObjects()
     {
         int counter = 0;
-        GameObject obj = Resources.Load<GameObject>("Generated_Models/processed_obj_0");
+        GameObject obj = Resources.Load<GameObject>("Generated_Models_test/processed_obj_0");
         while (obj != null)
         {
             var instance = (Instantiate(obj));
@@ -115,7 +136,7 @@ public class Controller : MonoBehaviour
             generatedModels.Add(instance);
             instance.SetActive(false);
             counter++;
-            obj = Resources.Load<GameObject>("Generated_Models/processed_obj_" + counter);
+            obj = Resources.Load<GameObject>("Generated_Models_test/processed_obj_" + counter);
         }
     }
 

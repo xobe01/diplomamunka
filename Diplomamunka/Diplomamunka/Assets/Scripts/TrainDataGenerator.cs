@@ -45,7 +45,7 @@ public class TrainDataGenerator : MonoBehaviour
                 streetObjectClearer.TurnOffCollder();
             }
             yield return new WaitForSeconds(1);
-            lidarCont.Scan(false);
+            lidarCont.Scan(false, -1);
         }        
     }
 

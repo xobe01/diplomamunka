@@ -49,7 +49,7 @@ public class LidarController : MonoBehaviour
             pointColors = cont.GetColors();
     }
 
-    public void Scan(bool isGeneratorScene)
+    public void Scan(bool isGeneratorScene, int scanIndex)
     {
         verticalCount.Clear();
         scannedPoints.Clear();
@@ -64,15 +64,31 @@ public class LidarController : MonoBehaviour
             }
             verticalCount.Add(verticalCounter);
         }
-        DisplayPoints(scannedPoints, 0);
-        SaveToFile(isGeneratorScene);
-        if(!isGeneratorScene) TurnOffColliders(false);
+        if(scanIndex == -1)
+            DisplayPoints(scannedPoints, 0);
+        SaveToFile(isGeneratorScene, scanIndex);
+        print("Scan done: " + scanIndex);
+        if(!isGeneratorScene && scanIndex == -1) TurnOffColliders(false);
+    }
+
+    public void ReadRawData(int index)
+    {
+        string line;
+        TextAsset data = Resources.Load<TextAsset>("points_raw_" + index);
+        StreamReader reader = new StreamReader(new MemoryStream(data.bytes));
+        line = reader.ReadLine();
+        while(reader.ReadLine() != line) { }
+        while ((line = reader.ReadLine()) != null)
+        {
+            string[] parts = line.Split(';');
+            scannedPoints.Add(new Point(new Vector3(float.Parse(parts[0]), float.Parse(parts[1]), float.Parse(parts[2])),0, 0, 0, 0, 0));
+        }
     }
 
     public void ReadProcessedData()
     {
         string line;
-        TextAsset data = Resources.Load<TextAsset>("points_processed");
+        TextAsset data = Resources.Load<TextAsset>("points_processed_test");
         StreamReader reader = new StreamReader(new MemoryStream(data.bytes));
         line = reader.ReadLine();
         int planeCount = int.Parse(line);
@@ -196,9 +212,10 @@ public class LidarController : MonoBehaviour
         particleSystem.SetParticles(cloud, cloud.Length);
     }
 
-    void SaveToFile(bool isGeneratorScene)
+    void SaveToFile(bool isGeneratorScene, int scanIndex)
     {
-        string fileName = Application.dataPath + (isGeneratorScene ? "/Resources/Train_Data/points_"+ scenesGenerated + ".txt" : "/Resources/points_raw.txt");
+        string fileName = Application.dataPath + (isGeneratorScene ? "/Resources/Train_Data/points_"+ scenesGenerated + ".txt" : "/Resources/points_raw_" +
+            (scanIndex == -1 ? "test" : scanIndex) + ".txt");
         if (isGeneratorScene) scenesGenerated++;
         if (File.Exists(fileName))
         {
