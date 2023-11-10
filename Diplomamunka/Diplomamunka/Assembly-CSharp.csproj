@@ -68,12 +68,17 @@
     <Compile Include="Assets\Scripts\TrainDataGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Resources\points_processed_12.txt" />
     <None Include="Assets\Resources\points_raw_77.txt" />
+    <None Include="Assets\Resources\points_processed_3.txt" />
     <None Include="Assets\Resources\points_raw_3.txt" />
     <None Include="Assets\Resources\points_raw_95.txt" />
     <None Include="Assets\Resources\points_raw_98.txt" />
     <None Include="Assets\Resources\points_raw_99.txt" />
+    <None Include="Assets\Resources\points_processed_4.txt" />
+    <None Include="Assets\Resources\points_processed_13.txt" />
     <None Include="Assets\Resources\points_raw_97.txt" />
+    <None Include="Assets\Resources\points_processed_8.txt" />
     <None Include="Assets\Resources\points_raw_6.txt" />
     <None Include="Assets\Resources\points_raw_22.txt" />
     <None Include="Assets\Resources\points_raw_43.txt" />
@@ -83,6 +88,9 @@
     <None Include="Assets\Resources\points_raw_9.txt" />
     <None Include="Assets\Resources\points_raw_85.txt" />
     <None Include="Assets\Resources\points_raw_16.txt" />
+    <None Include="Assets\Resources\points_processed_15.txt" />
+    <None Include="Assets\Resources\points_processed_10.txt" />
+    <None Include="Assets\Resources\points_processed_2.txt" />
     <None Include="Assets\Resources\points_raw_75.txt" />
     <None Include="Assets\Resources\points_raw_96.txt" />
     <None Include="Assets\Resources\points_raw_62.txt" />
@@ -90,17 +98,24 @@
     <None Include="Assets\Resources\points_processed_test.txt" />
     <None Include="Assets\Resources\points_raw_25.txt" />
     <None Include="Assets\Resources\points_raw_24.txt" />
+    <None Include="Assets\Resources\points_processed_24.txt" />
+    <None Include="Assets\Resources\points_processed_17.txt" />
     <None Include="Assets\Resources\points_raw_80.txt" />
     <None Include="Assets\Resources\points_raw_61.txt" />
     <None Include="Assets\Resources\points_raw_11.txt" />
+    <None Include="Assets\Resources\points_processed_28.txt" />
     <None Include="Assets\Resources\points_raw_32.txt" />
     <None Include="Assets\Resources\points_raw_65.txt" />
+    <None Include="Assets\Resources\points_processed_16.txt" />
     <None Include="Assets\Resources\points_raw_48.txt" />
     <None Include="Assets\Resources\points_raw_84.txt" />
     <None Include="Assets\Resources\points_raw_5.txt" />
+    <None Include="Assets\Resources\points_processed_19.txt" />
     <None Include="Assets\Resources\points_raw_81.txt" />
+    <None Include="Assets\Resources\points_processed_26.txt" />
     <None Include="Assets\Resources\points_raw_10.txt" />
     <None Include="Assets\Resources\points_raw_38.txt" />
+    <None Include="Assets\Resources\points_processed_7.txt" />
     <None Include="Assets\Resources\points_raw_21.txt" />
     <None Include="Assets\Resources\points_raw_1.txt" />
     <None Include="Assets\Resources\points_raw_55.txt" />
@@ -117,6 +132,8 @@
     <None Include="Assets\Resources\points_raw_46.txt" />
     <None Include="Assets\Resources\points_raw_83.txt" />
     <None Include="Assets\Resources\points_raw_68.txt" />
+    <None Include="Assets\Resources\points_processed_27.txt" />
+    <None Include="Assets\Resources\points_processed_11.txt" />
     <None Include="Assets\Resources\points_raw_4.txt" />
     <None Include="Assets\Resources\points_raw_8.txt" />
     <None Include="Assets\Resources\points_raw_2.txt" />
@@ -125,7 +142,10 @@
     <None Include="Assets\Resources\points_raw_29.txt" />
     <None Include="Assets\Resources\points_raw_89.txt" />
     <None Include="Assets\Resources\points_raw_53.txt" />
+    <None Include="Assets\Resources\points_processed_14.txt" />
     <None Include="Assets\Resources\points_raw_44.txt" />
+    <None Include="Assets\Resources\points_processed_20.txt" />
+    <None Include="Assets\Resources\points_processed_18.txt" />
     <None Include="Assets\Resources\points_raw_12.txt" />
     <None Include="Assets\Resources\points_raw_45.txt" />
     <None Include="Assets\Resources\points_raw_91.txt" />
@@ -134,11 +154,16 @@
     <None Include="Assets\Resources\points_raw_73.txt" />
     <None Include="Assets\Resources\points_raw_15.txt" />
     <None Include="Assets\Resources\points_raw_23.txt" />
+    <None Include="Assets\Resources\points_processed_5.txt" />
+    <None Include="Assets\Resources\points_processed_29.txt" />
     <None Include="Assets\Resources\points_raw_92.txt" />
+    <None Include="Assets\Resources\points_processed_21.txt" />
     <None Include="Assets\Resources\points_raw_7.txt" />
+    <None Include="Assets\Resources\points_processed_6.txt" />
     <None Include="Assets\Resources\points_raw_18.txt" />
     <None Include="Assets\Resources\points_raw_94.txt" />
     <None Include="Assets\Resources\points_raw_19.txt" />
+    <None Include="Assets\Resources\points_processed_9.txt" />
     <None Include="Assets\Resources\points_raw_52.txt" />
     <None Include="Assets\Resources\points_raw_34.txt" />
     <None Include="Assets\Resources\points_raw_13.txt" />
@@ -151,7 +176,9 @@
     <None Include="Assets\Resources\points_raw_76.txt" />
     <None Include="Assets\Resources\points_raw_57.txt" />
     <None Include="Assets\Resources\points_raw_58.txt" />
+    <None Include="Assets\Resources\points_processed_22.txt" />
     <None Include="Assets\Resources\points_raw_17.txt" />
+    <None Include="Assets\Resources\points_processed_23.txt" />
     <None Include="Assets\Resources\points_raw_28.txt" />
     <None Include="Assets\Resources\points_raw_72.txt" />
     <None Include="Assets\Resources\points_processed_0.txt" />
@@ -160,6 +187,7 @@
     <None Include="Assets\Resources\points_raw_54.txt" />
     <None Include="Assets\Resources\points_raw_26.txt" />
     <None Include="Assets\Resources\points_raw_86.txt" />
+    <None Include="Assets\Resources\points_processed_25.txt" />
     <None Include="Assets\Resources\points_raw_test.txt" />
     <None Include="Assets\Resources\points_raw_71.txt" />
     <None Include="Assets\Resources\points_raw_42.txt" />

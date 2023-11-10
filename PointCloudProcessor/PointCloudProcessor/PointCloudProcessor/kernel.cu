@@ -555,7 +555,7 @@ void findNextPoint(Point*& startPoint, size_t direction, /*out*/
 		Point* neighbourPoint = nullptr;
 		size_t x = currentPoint->horizontalIndex;
 		size_t y = currentPoint->verticalIndex;
-		isPreviousSpike = spikeType(currentPoint, !wasThereNonSpike ? -1 : ((direction + 1) % 4), false) == 0;
+		isPreviousSpike = spikeType(currentPoint, (!wasThereNonSpike || currentPoint == startPoint) ? -1 : ((direction + 1) % 4), false) == 0;
 		if (!isPreviousSpike || currentEdge.size() == 0) {
 			if (currentPoint->isMarked2) {
 				currentEdge.push_back({ currentPoint, direction });
@@ -622,7 +622,7 @@ void findNextPoint(Point*& startPoint, size_t direction, /*out*/
 				if ((!isHole && checkIfBridge(neighbourPoint, true)) || neighbourSpikeType == -1 || neighbourSpikeType == 1 || (wasThereNonSpike && 
 					currentEdge.size() > 1 && isPreviousSpike &&  neighbourSpikeType == 2 && neighbourPoint->isMarked)) {
 					auto savedPoint = neighbourSpikeType == 1 ? neighbourPoint : currentPoint;
-					if(savedPoint != currentEdge[currentEdge.size() - 1].first)
+					if(savedPoint->isMarked2)
 						currentEdge.push_back({ savedPoint, (direction + 3) % 4 });
 					if (neighbourSpikeType == -1 || (!isHole && checkIfBridge(neighbourPoint, true)))
 					{
@@ -751,7 +751,7 @@ void findEdgePoints()
 				direction = 1;
 				currentEdge->isHole = true;
 			}			
-			if (i == 11 && planes[i]->edges.size() == 6) {
+			if (i == 28) {
 				std::cout << "asd";
 			}
 			std::vector<Point*> spikePoints;
@@ -1185,8 +1185,11 @@ void filterEdgePoints()
 				}
 			}
 			int newPointStartIndex = planes[i]->edges[j]->wasFirstGenerated ? 1 : 0;
+			if (planes[i]->edges[j]->pointsWithDir[newPointStartIndex + 1].first->horizontalIndex < planes[i]->edges[j]->startPoint->horizontalIndex &&
+				planes[i]->edges[j]->pointsWithDir[newPointStartIndex + 1].first->createdNeighbourPoints[0])
+				newPointStartIndex++;
 			int newPointEndIndex = newPointStartIndex;
-			if (i == 41) {
+			if (i == 165) {
 				std::cout << "asd";
 			}
 			while (newPointEndIndex < (int)cornersToDelete[i][j].size() - 1) {
@@ -1252,15 +1255,24 @@ double angleOfVectors(Vec3<double> v1, Vec3<double> v2, bool isBackward)
 	return angle * 180;
 }
 
-Vec3<double> intersectionOfLines(Vec3<double> p1, Vec3<double> p2, Vec3<double> dir1, Vec3<double> dir2)
+Vec3<double> intersectionOfLines(Vec3<double> p1, Vec3<double> p2, Vec3<double> q1, Vec3<double> q2, bool& isOnEdge)
 {
-	double R = (p1.y * dir1.x + p2.x * dir1.y - p1.x * dir1.y - p2.y * dir1.x) / (dir2.y * dir1.x - dir1.y * dir2.x);
-	return { p2.x + R * dir2.x, p2.y + R * dir2.y, 0 };
+	auto dir1 = p2 - p1;
+	auto dir2 = q2 - q1;
+	double R = (p1.y * dir1.x + q1.x * dir1.y - p1.x * dir1.y - q1.y * dir1.x) / (dir2.y * dir1.x - dir1.y * dir2.x);
+	Vec3<double> intersectionPos = { q1.x + R * dir2.x, q1.y + R * dir2.y, 0 };
+	auto side1Length = (p2 - p1).length();
+	auto side2Length = (q2 - q1).length();
+	if ((intersectionPos - p1).length() < side1Length && (intersectionPos - p2).length() < side1Length &&
+		(intersectionPos - q1).length() < side2Length && (intersectionPos - q2).length() < side2Length)
+		isOnEdge = true;
+	return intersectionPos;
 }
 
 bool isPointInsidePolygon(std::vector<std::pair<Vec3<double>, Point*>>polygon, Vec3<double> point, std::pair<double, double> xBounds,
 	std::pair<double, double> yBounds)
 {
+	bool notInUse = false;
 	if (point.x > xBounds.first && point.x < xBounds.second &&
 		point.y > yBounds.first && point.y < yBounds.second) 
 	{
@@ -1279,7 +1291,7 @@ bool isPointInsidePolygon(std::vector<std::pair<Vec3<double>, Point*>>polygon, V
 				auto biggerAngle = (p1.x < p2.x ? p2 - point : (p1 - point));
 				if((p1.x > point.x && p2.x > point.x) || angleOfVectors(smallerAngle, biggerAngle, smallerAngle.y > point.y || biggerAngle.y < point.y)
 					< 180)*/
-				auto intersection = intersectionOfLines(point, p1, { 1,0,0 }, p2 - p1);
+				auto intersection = intersectionOfLines(point, point + Vec3<double>({ 1,0,0 }), p1, p2, notInUse);
 				if (intersection.x <= point.x)
 					continue;
 				else
@@ -1303,28 +1315,38 @@ void changeBaseTo2D(std::vector<std::pair<Vec3<double>, Point*>>& points)
 	auto y = Vec3<double>::crossProduct(x, normal);
 	for (size_t i = 0; i < points.size(); i++) {
 		points[i].first = { Vec3<double>::dot_product(points[i].second->position, x), Vec3<double>::dot_product(points[i].second->position, y), 0 };
-		if (i > 2) {
-			for (size_t j = 0; j < i - 2; j++) {
-				auto intersection = intersectionOfLines(points[j].first, points[i].first, points[j].first - points[j + 1].first, points[i].first -
-					points[i - 1].first);
-				auto side1Length = (points[i].first - points[i - 1].first).length();
-				auto side2Length = (points[j].first - points[j + 1].first).length();
-				if ((intersection - points[i].first).length() <= side1Length && (intersection - points[i - 1].first).length() <= side1Length &&
-					(intersection - points[j].first).length() <= side2Length && (intersection - points[j + 1].first).length() <= side2Length) 
-				{
-					points[i - 1].second->isCorner = false;
-					points.erase(points.begin() + i - 1);
-					i--;
-					break;
-				}
+	}
+	for (int i = 0; i < points.size(); i++) {
+		for (int j = (i == (points.size() - 1) ? 1 : 0); j < i - 1; j++) {
+			bool isOnEdge = false;
+			auto intersection = intersectionOfLines(points[j].first, points[(j + 1) % points.size()].first, points[i].first,
+				points[(i + 1) % points.size()].first, isOnEdge);
+			if(isOnEdge)
+			{
+				points[i].second->isCorner = false;
+				points.erase(points.begin() + i);
+				i-= 2;
+				break;
 			}
 		}
 	}
 }
 
+bool isClockwise(std::vector<std::pair<Vec3<double>, Point*>>& points)
+{
+	double angleSum = 0;
+	for (size_t i = 0; i < points.size(); i++) {
+		auto  a = angleOfVectors(points[(i + points.size() - 1) % points.size()].first - points[i].first,
+			points[(i + 1) % points.size()].first - points[i].first, false);
+		angleSum += angleOfVectors(points[(i + points.size() - 1) % points.size()].first - points[i].first,
+			points[(i + 1) % points.size()].first - points[i].first, false);
+	}
+	return angleSum < (double)points.size() * 360.0 / 2;
+}
+
 void convexSegmentation()
 {
-	const double acceptAngle = 181;
+	const std::pair<double, double> acceptAngle = { 181, 359 };
 	size_t currentConvexId = 1;
 	for (size_t i = 0; i < planes.size(); i++) {
 		std::vector<std::vector<std::pair<Vec3<double>, Point*>>> holeEdges;
@@ -1351,9 +1373,10 @@ void convexSegmentation()
 				}
 			}
 		}
-		if (i == 9) 			
+		if (i == 51) 			
 		{
-			//std::cout << "asd";
+			std::cout << "asd";
+			//return;
 		}
 		for (size_t x = 0; x < planes[i]->edges.size(); x++) {
 			if (!planes[i]->edges[x]->isHole) {
@@ -1376,9 +1399,20 @@ void convexSegmentation()
 						remainingPoints[k].second->isCorner = false;
 					}
 					continue;
-				}
+				}				
 				changeBaseTo2D(remainingPoints);
-				while (remainingPoints.size() > 2) {
+				if (!isClockwise(remainingPoints)) 
+				{
+					for (size_t k = 0; k < remainingPoints.size(); k++) 
+					{
+						remainingPoints.push_back(remainingPoints[remainingPoints.size() - 1 - k]);
+						remainingPoints.erase(remainingPoints.begin() + remainingPoints.size() - 2 - k);
+					}
+				}
+				while (remainingPoints.size() > 3) {
+					if (i == 16) {
+						int a = 1;
+					}
 					//std::vector<Vec3<double>> remainingPointsHelper(remainingPoints);
 					//std::vector<Vec3<double>> L = { remainingPointsHelper[0], remainingPointsHelper[1] };
 
@@ -1402,8 +1436,12 @@ void convexSegmentation()
 							auto temp = angleOfVectors(v1 * -1, v2, !isForward);
 							auto temp2 = angleOfVectors(v2 * -1, vecToBegin, !isForward);
 							auto temp3 = angleOfVectors(vecToBegin * -1, vecAtBegin, !isForward);
-							if (angleOfVectors(v1 * -1, v2, !isForward) <= acceptAngle && angleOfVectors(v2 * -1, vecToBegin, !isForward) <= acceptAngle &&
-								angleOfVectors(vecToBegin * -1, vecAtBegin, !isForward) <= acceptAngle) {
+							if ((angleOfVectors(v1 * -1, v2, !isForward) <= acceptAngle.first || angleOfVectors(v1 * -1, v2, !isForward) >= 
+								acceptAngle.second) &&
+								(angleOfVectors(v2 * -1, vecToBegin, !isForward) <= acceptAngle.first || angleOfVectors(v2 * -1, vecToBegin, !isForward) >=
+								acceptAngle.second) && 
+								(angleOfVectors(vecToBegin * -1, vecAtBegin, !isForward) <= acceptAngle.first || angleOfVectors(vecToBegin * -1, vecAtBegin, !isForward) >=
+								acceptAngle.second)) {
 								L.insert(isForward ? L.end() : L.begin(), newPoint);
 								remainingPointsHelper.erase(isForward ? remainingPointsHelper.begin() : remainingPointsHelper.end() - 1);
 								if (newPoint.first.x < xBounds.first)
@@ -1418,7 +1456,7 @@ void convexSegmentation()
 							else {
 								if (L.size() > 2) {
 									bool containsCorner = true;
-									while (containsCorner) {
+									while (containsCorner && L.size() > 2) {
 										containsCorner = false;
 										for (size_t k = 0; k < remainingPointsHelper.size(); k++) {
 											if (isPointInsidePolygon(L, remainingPointsHelper[k].first, xBounds, yBounds)) {
@@ -1434,80 +1472,80 @@ void convexSegmentation()
 									}
 									int absoluteClosestEdgeIndex = -1;
 									size_t absoluteClosestPointIndex = 0;
-									double minHolePointDistance = 1000;
 									bool isNewPointFound = true;
 									auto lastPointPos = L[L.size() - 1].first;
-									if (i == 35 && planes[i]->convexFaces.size() == 1) {
-										int a = 1;
-									}
-									while (isNewPointFound) {
-										double minIntersectionDistance = 1000;
-										int closestEdgeIndex = -1;
-										size_t closestPointIndex = 0;
-										auto LTemp = L;
-										if (absoluteClosestEdgeIndex != -1)
-											LTemp.insert(LTemp.begin(), holeEdges[absoluteClosestEdgeIndex][absoluteClosestPointIndex]);
-										isNewPointFound = false;
-										for (size_t l = 0; l < holeEdges.size(); l++) {
-											std::vector<bool> isPointsInside;
-											auto edgePoints = holeEdges[l];
-											size_t holeType = 0;
-											for (size_t m = 0; m < edgePoints.size(); m++) {
-												bool isHolePointInside = isPointInsidePolygon(LTemp, edgePoints[m].first, xBounds, yBounds);
-												isPointsInside.push_back(isHolePointInside);
-												if (isHolePointInside && holeType == 0)
-													holeType = 1;
-												if (m > 0 && isPointsInside[m - 1] != isPointsInside[m])
-													holeType = 2;
-											}
-											if (holeType > 0) {
+									if (L.size() > 2) {
+										while (isNewPointFound) {
+											double minIntersectionDistance = 1000;
+											int closestEdgeIndex = -1;
+											size_t closestPointIndex = 0;
+											auto LTemp = L;
+											if (absoluteClosestEdgeIndex != -1)
+												LTemp.insert(LTemp.begin(), holeEdges[absoluteClosestEdgeIndex][absoluteClosestPointIndex]);
+											isNewPointFound = false;
+											for (size_t l = 0; l < holeEdges.size(); l++) {
+												std::vector<bool> isPointsInside;
+												auto edgePoints = holeEdges[l];
+												size_t holeType = 0;
 												for (size_t m = 0; m < edgePoints.size(); m++) {
-													if (holeType == 2 && isPointsInside[m] != isPointsInside[(m + 1) % isPointsInside.size()]) {
-														auto intersection = intersectionOfLines(LTemp[0].first,
-															edgePoints[m].first, LTemp[0].first -
-															lastPointPos, edgePoints[(m + 1) %
-															isPointsInside.size()].first - edgePoints[m].first);
-														if ((intersection - lastPointPos).length() < minIntersectionDistance) 
-														{
-															minIntersectionDistance = (intersection - lastPointPos).length();
-															closestEdgeIndex = l;
-															closestPointIndex = (edgePoints[m].first - lastPointPos).length() <
-																(edgePoints[(m + 1) % isPointsInside.size()].first - lastPointPos).length()
-																? m : ((m + 1) % isPointsInside.size());
+													bool isHolePointInside = isPointInsidePolygon(LTemp, edgePoints[m].first, xBounds, yBounds);
+													isPointsInside.push_back(isHolePointInside);
+													if (isHolePointInside && holeType == 0)
+														holeType = 1;
+													if (m > 0 && isPointsInside[m - 1] != isPointsInside[m])
+														holeType = 2;
+												}
+												if (holeType > 0) {
+													for (size_t m = 0; m < edgePoints.size(); m++) {
+														if (holeType == 2 && isPointsInside[m] != isPointsInside[(m + 1) % isPointsInside.size()]) {
+															bool isOnEdge = false;
+															auto intersection = intersectionOfLines(LTemp[0].first, lastPointPos, edgePoints[m].first,
+																edgePoints[(m + 1) % isPointsInside.size()].first, isOnEdge);
+															if (isOnEdge && (intersection - lastPointPos).length() < minIntersectionDistance) {
+																minIntersectionDistance = (intersection - lastPointPos).length();
+																closestEdgeIndex = l;
+																if (((edgePoints[m].first - lastPointPos).length() <
+																	(edgePoints[(m + 1) % isPointsInside.size()].first - lastPointPos).length() &&
+																	isPointInsidePolygon(LTemp, edgePoints[m].first, xBounds, yBounds)) ||
+																	((edgePoints[m].first - lastPointPos).length() >=
+																		(edgePoints[(m + 1) % isPointsInside.size()].first - lastPointPos).length() &&
+																		!isPointInsidePolygon(LTemp, edgePoints[(m + 1) % isPointsInside.size()].first,
+																			xBounds, yBounds)))
+																	closestPointIndex = m;
+																else
+																	closestPointIndex = ((m + 1) % isPointsInside.size());
+															}
 														}
-													}
-													else if (holeType == 1) {
-														if ((edgePoints[m].first - lastPointPos).length() < minIntersectionDistance) {
-															minIntersectionDistance = (edgePoints[m].first - lastPointPos).length();
-															closestEdgeIndex = l;
-															closestPointIndex = m;
+														else if (holeType == 1 && absoluteClosestEdgeIndex == -1) {
+															if ((edgePoints[m].first - lastPointPos).length() < minIntersectionDistance) {
+																minIntersectionDistance = (edgePoints[m].first - lastPointPos).length();
+																closestEdgeIndex = l;
+																closestPointIndex = m;
+															}
 														}
 													}
 												}
 											}
+											if (closestEdgeIndex != -1) {
+												absoluteClosestEdgeIndex = closestEdgeIndex;
+												absoluteClosestPointIndex = closestPointIndex;
+												isNewPointFound = true;
+											}
 										}
-										if (closestEdgeIndex != -1 &&
-											(holeEdges[closestEdgeIndex][closestPointIndex].first - lastPointPos).length() < minHolePointDistance) 	
-										{
-											minHolePointDistance = (holeEdges[closestEdgeIndex][closestPointIndex].first - lastPointPos).length();
-											absoluteClosestEdgeIndex = closestEdgeIndex;
-											absoluteClosestPointIndex = closestPointIndex;
-											isNewPointFound = true;
+										if (absoluteClosestEdgeIndex >= 0) {
+											if (!isForward) {
+												remainingPointsHelper = remainingPointsHelperSave;
+												L = LSave;
+											}
+											remainingPointsHelper.insert(remainingPointsHelper.begin(), L[L.size() - 1]);
+											for (size_t l = 0; l < holeEdges[absoluteClosestEdgeIndex].size() + 1; l++) {
+												remainingPointsHelper.insert(remainingPointsHelper.begin() + l,
+													holeEdges[absoluteClosestEdgeIndex][(absoluteClosestPointIndex + l) % holeEdges[absoluteClosestEdgeIndex].size()]);
+											}
+											holeEdges.erase(holeEdges.begin() + absoluteClosestEdgeIndex);
+											j = -1;
+											break;
 										}
-									}
-									if (absoluteClosestEdgeIndex >= 0) {
-										if (!isForward) {
-											remainingPointsHelper = remainingPointsHelperSave;
-											L = LSave;
-										}
-										remainingPointsHelper.insert(remainingPointsHelper.begin(), L[L.size() - 1]);
-										for (size_t l = 0; l < holeEdges[absoluteClosestEdgeIndex].size() + 1; l++) {
-											remainingPointsHelper.insert(remainingPointsHelper.begin() + l,
-												holeEdges[absoluteClosestEdgeIndex][(absoluteClosestPointIndex + l) % holeEdges[absoluteClosestEdgeIndex].size()]);
-										}
-										holeEdges.erase(holeEdges.begin() + absoluteClosestEdgeIndex);
-										j = -1;
-										break;
 									}
 								}
 								if (isForward) {
@@ -1567,13 +1605,24 @@ void convexSegmentation()
 							convexFace.push_back(L[j].second);
 						}
 						planes[i]->convexFaces.push_back(convexFace);
-						remainingPoints = remainingPointsHelper;
-						currentConvexId++;
-						if (i == 35 && planes[i]->convexFaces.size() == 6) {
+						if (i == 51 && planes[i]->convexFaces.size() == 9) {
 							int a = 1;
 							//return;
 						}
+						remainingPoints = remainingPointsHelper;
+						currentConvexId++;
 					}
+				}
+				if (remainingPoints.size() == 3) 
+				{
+					std::vector<Point*> convexFace;
+					for (size_t j = 0; j < remainingPoints.size(); j++) {
+						remainingPoints[j].second->convexId.push_back(currentConvexId);
+						remainingPoints[j].second->convexIndex.push_back(j);
+						convexFace.push_back(remainingPoints[j].second);
+					}
+					planes[i]->convexFaces.push_back(convexFace);
+					currentConvexId++;
 				}
 			}
 		}
@@ -1603,6 +1652,7 @@ void exportObjects(size_t pointCloudIndex)
 		}
 		std::vector<Point*> corners;
 		currentCornerIndex = 0;
+		
 		for (size_t j = 0; j < planes[i]->edges.size(); j++) {
 			for (size_t k = 0; k < planes[i]->edges[j]->pointsWithDir.size(); k++) {
 				if (planes[i]->edges[j]->pointsWithDir[k].first->isCorner) {
@@ -1636,6 +1686,7 @@ void exportObjects(size_t pointCloudIndex)
 			}
 			MyFile << std::endl;
 		}
+		
 		for (size_t j = 0; j < planes[i]->edges.size(); j++) {
 			int indexShift = -1;
 			for (size_t k = 0; k < planes[i]->edges[j]->pointsWithDir.size(); k++) {
@@ -1667,7 +1718,7 @@ void processData(size_t frameIndex) {
 
 int main()
 {
-	for (size_t i = 0; i < (pointCloudTestIndex == -1 ? std::max<size_t>(1, pointCloudCount) : 1); i++) {
+	for (size_t i = (pointCloudTestIndex == -1 ? pointCloudBeginIndex : 0); i < (pointCloudTestIndex == -1 ? std::max<size_t>(1, pointCloudCount) : 1); i++) {
 		readData(i);
 		auto start = std::chrono::steady_clock::now();
 		processData(std::max<int>(pointCloudTestIndex, i));
