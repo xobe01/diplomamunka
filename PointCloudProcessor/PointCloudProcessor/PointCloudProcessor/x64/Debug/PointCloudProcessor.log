@@ -13,25 +13,23 @@ C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor
   
 C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(558): warning #68-D: integer conversion resulted in a change of sign
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(811): warning #550-D: variable "isNeighbour" was set but never used
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(812): warning #550-D: variable "isNeighbour" was set but never used
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(893): warning #177-D: variable "deleteDurroundingCornersTreshold" was declared but never referenced
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(895): warning #177-D: variable "deleteDurroundingCornersTreshold" was declared but never referenced
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(961): warning #461-D: initial value of reference to non-const must be an lvalue
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(963): warning #461-D: initial value of reference to non-const must be an lvalue
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(966): warning #461-D: initial value of reference to non-const must be an lvalue
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(968): warning #461-D: initial value of reference to non-const must be an lvalue
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(966): warning #461-D: initial value of reference to non-const must be an lvalue
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(968): warning #461-D: initial value of reference to non-const must be an lvalue
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(986): warning #461-D: initial value of reference to non-const must be an lvalue
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(988): warning #461-D: initial value of reference to non-const must be an lvalue
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(992): warning #461-D: initial value of reference to non-const must be an lvalue
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(994): warning #461-D: initial value of reference to non-const must be an lvalue
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(992): warning #461-D: initial value of reference to non-const must be an lvalue
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(994): warning #461-D: initial value of reference to non-const must be an lvalue
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(1414): warning #177-D: variable "a" was declared but never referenced
-  
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(1609): warning #177-D: variable "a" was declared but never referenced
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(1616): warning #177-D: variable "a" was declared but never referenced
   
 C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(76): warning #177-D: variable "objectPointDistance" was declared but never referenced
   
@@ -41,17 +39,17 @@ C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor
   
 C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(558): warning #68-D: integer conversion resulted in a change of sign
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(961): warning #461-D: initial value of reference to non-const must be an lvalue
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(963): warning #461-D: initial value of reference to non-const must be an lvalue
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(966): warning #461-D: initial value of reference to non-const must be an lvalue
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(968): warning #461-D: initial value of reference to non-const must be an lvalue
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(966): warning #461-D: initial value of reference to non-const must be an lvalue
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(968): warning #461-D: initial value of reference to non-const must be an lvalue
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(986): warning #461-D: initial value of reference to non-const must be an lvalue
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(988): warning #461-D: initial value of reference to non-const must be an lvalue
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(992): warning #461-D: initial value of reference to non-const must be an lvalue
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(994): warning #461-D: initial value of reference to non-const must be an lvalue
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(992): warning #461-D: initial value of reference to non-const must be an lvalue
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(994): warning #461-D: initial value of reference to non-const must be an lvalue
   
   kernel.cu
 C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(83): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
@@ -112,21 +110,21 @@ C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor
 C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(685): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
 C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(735): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
 C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(744): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(812): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(812): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(812): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(812): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(1032): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(1032): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(1032): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(1032): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(1238): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(1506): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(1522): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(1582): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(1684): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(1695): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(1724): warning C4267: 'argument': conversion from 'size_t' to 'const _Ty', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(813): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(813): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(813): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(813): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(1034): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(1034): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(1034): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(1034): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(1243): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(1513): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(1529): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(1589): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(1693): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(1704): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\PointCloudProcessor\kernel.cu(1733): warning C4267: 'argument': conversion from 'size_t' to 'const _Ty', possible loss of data
           with
           [
               _Ty=int

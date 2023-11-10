@@ -270,7 +270,7 @@ bool checkIfBridge(Point* p, bool onlyMarked)
 				points[getOffset(x + 1, y)] };
 	for (size_t j = 0; j < 4; j++) {
 		if (neighbourPoints[j] && neighbourPoints[j]->plane == p->plane && (j > 0 || y > 0) && (j < 3 || y < verticalCount - 1) &&
-			spikeType(neighbourPoints[j], -1, false) > 1 && (!onlyMarked || neighbourPoints[j]->isMarked))
+			spikeType(neighbourPoints[j], -1, onlyMarked) > 1 && (!onlyMarked || neighbourPoints[j]->isMarked))
 			neighbourCount++;
 	}
 	bool diagIsNeighbour[4] = { false, false, false, false };
@@ -549,13 +549,13 @@ void findNextPoint(Point*& startPoint, size_t direction, /*out*/
 		
 		if (!currentPoint)
 			currentPoint = startPoint;
-		if (currentPoint->horizontalIndex == 77 && currentPoint->verticalIndex == 95) {
+		if (currentPoint->horizontalIndex == 48 && currentPoint->verticalIndex == 99 && currentEdge.size() == 12) {
 			std::cout << "asd";
 		}
 		Point* neighbourPoint = nullptr;
 		size_t x = currentPoint->horizontalIndex;
 		size_t y = currentPoint->verticalIndex;
-		isPreviousSpike = spikeType(currentPoint, (!wasThereNonSpike || currentPoint == startPoint) ? -1 : ((direction + 1) % 4), false) == 0;
+		isPreviousSpike = spikeType(currentPoint, (!wasThereNonSpike || currentPoint == startPoint) ? -1 : ((direction + 1) % 4), !isHole) == 0;
 		if (!isPreviousSpike || currentEdge.size() == 0) {
 			if (currentPoint->isMarked2) {
 				currentEdge.push_back({ currentPoint, direction });
@@ -591,13 +591,13 @@ void findNextPoint(Point*& startPoint, size_t direction, /*out*/
 				break;
 			}
 			if (neighbourPoint && neighbourPoint->plane == startPoint->plane && neighbourPoint->plane != nullptr && neighbourPoint->isMarked2
-				&& (isPreviousSpike || spikeType(neighbourPoint, -1, false) <= 1 || spikeType(currentPoint, direction, false) > 0))
+				&& (isPreviousSpike || spikeType(neighbourPoint, -1, !isHole) <= 1 || spikeType(currentPoint, direction, !isHole) > 0))
 			{
 				if (isFirstPoint) {
 					currentEdge[0].second = (direction + 1) % 4 ;
 					isFirstPoint = false;
 				}
-				if (!wasThereNonSpike && spikeType(currentPoint, -1, false) > 1) {
+				if (!wasThereNonSpike && spikeType(currentPoint, -1, !isHole) > 1) {
 					if (currentEdge.size() > 1) 
 					{
 						auto helper = currentEdge[0];
@@ -618,11 +618,11 @@ void findNextPoint(Point*& startPoint, size_t direction, /*out*/
 				}
 				if (!isPreviousSpike)
 					previousSavedPoint = { currentPoint, (direction + (4 - i)) % 4 };
-				auto neighbourSpikeType = spikeType(neighbourPoint, -1, false);
+				auto neighbourSpikeType = spikeType(neighbourPoint, -1, !isHole);
 				if ((!isHole && checkIfBridge(neighbourPoint, true)) || neighbourSpikeType == -1 || neighbourSpikeType == 1 || (wasThereNonSpike && 
 					currentEdge.size() > 1 && isPreviousSpike &&  neighbourSpikeType == 2 && neighbourPoint->isMarked)) {
 					auto savedPoint = neighbourSpikeType == 1 ? neighbourPoint : currentPoint;
-					if(savedPoint->isMarked2)
+					if(savedPoint->isMarked2 || isPreviousSpike)
 						currentEdge.push_back({ savedPoint, (direction + 3) % 4 });
 					if (neighbourSpikeType == -1 || (!isHole && checkIfBridge(neighbourPoint, true)))
 					{
@@ -751,8 +751,9 @@ void findEdgePoints()
 				direction = 1;
 				currentEdge->isHole = true;
 			}			
-			if (i == 28) {
+			if (i == 21 && planes[i]->edges.size() == 2){
 				std::cout << "asd";
+				//return;
 			}
 			std::vector<Point*> spikePoints;
 			setPointsMarked(currentEdge->isHole ? holeConnectedEdgePoints : outerConnectedEdgePoints, false, false);
@@ -836,6 +837,7 @@ bool isStraightPoint(size_t pointIndex, Edge*& edge, size_t& previousNeighbourCo
 			point->isCorner = true;
 			edge->pointsWithDir[pointIndex - 1] = edge->pointsWithDir[pointIndex];
 			edge->pointsWithDir[pointIndex] = previousPoint;
+			if (pointIndex > 1) edge->pointsWithDir[pointIndex - 2].first->isCorner = true;
 			return true;
 		}
 		return false;
@@ -1147,7 +1149,6 @@ void createCorners()
 
 void filterEdgePoints()
 {
-
 	std::vector<std::vector<std::vector< std::pair<bool, std::pair<size_t, size_t>>>>> cornersToDelete;
 	for (size_t i = 0; i < planes.size(); i++) {
 		cornersToDelete.push_back({});
@@ -1189,9 +1190,10 @@ void filterEdgePoints()
 				planes[i]->edges[j]->pointsWithDir[newPointStartIndex + 1].first->createdNeighbourPoints[0])
 				newPointStartIndex++;
 			int newPointEndIndex = newPointStartIndex;
-			if (i == 165) {
+			if (i == 27) {
 				std::cout << "asd";
 			}
+			Point* endPoint = nullptr;
 			while (newPointEndIndex < (int)cornersToDelete[i][j].size() - 1) {
 				if (cornersToDelete[i][j][newPointStartIndex].second.second > 0) {
 					while (newPointEndIndex + 1 < cornersToDelete[i][j].size()
@@ -1202,14 +1204,17 @@ void filterEdgePoints()
 						cornersToDelete[i][j][newPointEndIndex].second.first; k++) {
 						planes[i]->edges[j]->pointsWithDir[k].first->isCorner = false;
 					}
+
 					auto startPoint = planes[i]->edges[j]->pointsWithDir[cornersToDelete[i][j][newPointStartIndex].second.first].first;
-					auto endPoint = planes[i]->edges[j]->pointsWithDir[cornersToDelete[i][j][newPointEndIndex].second.first].first;
-					if ((startPoint->position - endPoint->position).length() < 0.1) {
-						if (startPoint->verticalIndex == verticalCount + 1 && endPoint->verticalIndex != verticalCount + 1)
-							endPoint->isCorner = false;
-						else if (endPoint->verticalIndex == verticalCount + 1 && startPoint->verticalIndex != verticalCount + 1)
-							startPoint->isCorner = false;
-					}
+					for (size_t k = 0; k < 2; k++) {
+						if (endPoint && (startPoint->position - endPoint->position).length() < 0.1) {
+							if (startPoint->verticalIndex == verticalCount + 1 && endPoint->verticalIndex != verticalCount + 1)
+								endPoint->isCorner = false;
+							else if (endPoint->verticalIndex == verticalCount + 1 && startPoint->verticalIndex != verticalCount + 1)
+								startPoint->isCorner = false;
+						}
+						endPoint = planes[i]->edges[j]->pointsWithDir[cornersToDelete[i][j][newPointEndIndex].second.first].first;
+					}				
 					if (newPointEndIndex == cornersToDelete[i][j].size() - 1 && newPointStartIndex != newPointEndIndex && 
 						planes[i]->edges[j]->wasFirstGenerated && cornersToDelete[i][j][0].second.second ==
 						cornersToDelete[i][j][newPointStartIndex].second.second)
@@ -1373,11 +1378,7 @@ void convexSegmentation()
 				}
 			}
 		}
-		if (i == 51) 			
-		{
-			std::cout << "asd";
-			//return;
-		}
+		
 		for (size_t x = 0; x < planes[i]->edges.size(); x++) {
 			if (!planes[i]->edges[x]->isHole) {
 				//std::vector<Vec3<double>> remainingPoints;
@@ -1400,6 +1401,9 @@ void convexSegmentation()
 					}
 					continue;
 				}				
+				if (i == 27) 					{
+					std::cout << "asd";
+				}
 				changeBaseTo2D(remainingPoints);
 				if (!isClockwise(remainingPoints)) 
 				{
@@ -1410,8 +1414,9 @@ void convexSegmentation()
 					}
 				}
 				while (remainingPoints.size() > 3) {
-					if (i == 16) {
-						int a = 1;
+					if (i == 186 && planes[i]->convexFaces.size() == 2) {
+						std::cout << "asd";
+						//return;
 					}
 					//std::vector<Vec3<double>> remainingPointsHelper(remainingPoints);
 					//std::vector<Vec3<double>> L = { remainingPointsHelper[0], remainingPointsHelper[1] };
@@ -1497,7 +1502,9 @@ void convexSegmentation()
 												}
 												if (holeType > 0) {
 													for (size_t m = 0; m < edgePoints.size(); m++) {
-														if (holeType == 2 && isPointsInside[m] != isPointsInside[(m + 1) % isPointsInside.size()]) {
+														if (holeType == 2 && isPointsInside[m] != isPointsInside[(m + 1) % isPointsInside.size()] &&
+															LTemp[0].second != edgePoints[m].second && LTemp[0].second != 
+															edgePoints[(m + 1) % isPointsInside.size()].second) {
 															bool isOnEdge = false;
 															auto intersection = intersectionOfLines(LTemp[0].first, lastPointPos, edgePoints[m].first,
 																edgePoints[(m + 1) % isPointsInside.size()].first, isOnEdge);
@@ -1605,7 +1612,7 @@ void convexSegmentation()
 							convexFace.push_back(L[j].second);
 						}
 						planes[i]->convexFaces.push_back(convexFace);
-						if (i == 51 && planes[i]->convexFaces.size() == 9) {
+						if (i == 186 && planes[i]->convexFaces.size() == 2) {
 							int a = 1;
 							//return;
 						}
@@ -1666,9 +1673,11 @@ void exportObjects(size_t pointCloudIndex)
 		}
 		if (corners.size() == 0)
 			continue;
-		std::ofstream MyFile("C:/Users/ungbo/Desktop/BME/_Diplomamunka/Diplomamunka/Diplomamunka/Assets/Resources/Generated_Models_" +
-			((pointCloudCount == 0 || pointCloudTestIndex != -1) ? "test" : std::to_string(pointCloudIndex)) + "/processed_obj_"
+		std::ofstream MyFile("C:/Users/ungbo/Desktop/BME/_Diplomamunka/Diplomamunka/Diplomamunka/Assets/Resources/Generated_Models_test/processed_obj_"
 			+ std::to_string(objCounter) + ".obj");
+		//std::ofstream MyFile("C:/Users/ungbo/Desktop/BME/_Diplomamunka/Diplomamunka/Diplomamunka/Assets/Resources/Generated_Models_" +
+			//((pointCloudCount == 0 || pointCloudTestIndex != -1) ? "test" : std::to_string(pointCloudIndex)) + "/processed_obj_"
+			//+ std::to_string(objCounter) + ".obj");
 		MyFile << "o Mesh" << std::endl;
 		for (size_t k = 0; k < corners.size(); k++) {
 			MyFile << "v " << -corners[k]->position.x << " " << corners[k]->position.y << " " << corners[k]->position.z << std::endl;

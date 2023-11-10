@@ -7223,7 +7223,7 @@ MonoBehaviour:
   dontScan: 1
   isGeneratorScene: 0
   moveAndScanCount: 0
-  displayFrame: 3
+  displayFrame: 4
 --- !u!1001 &1910080556
 PrefabInstance:
   m_ObjectHideFlags: 0
