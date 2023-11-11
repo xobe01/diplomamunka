@@ -4,7 +4,7 @@ struct Point;
 
 struct Plane;
 
-const size_t pointCloudBeginIndex = 35;
-const int pointCloudTestIndex = 35;
+const size_t pointCloudBeginIndex = 0;
+const int pointCloudTestIndex = -1;
 
 bool checkIfBridge(Point* p, bool onlyMarked);

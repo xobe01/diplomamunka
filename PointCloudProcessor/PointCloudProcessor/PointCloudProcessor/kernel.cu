@@ -1035,13 +1035,10 @@ void findPlaneConnections()
 					points[getOffset(x, y - 1)] };
 				for (size_t i = 0; i < 4; i++) {
 					if ((y > 0 || direction != 3) && (y < verticalCount - 1 || direction != 1) && neighbourPoints[direction] && 
-						neighbourPoints[direction]->outlineId > 0 && neighbourPoints[direction]->outlineId != point->outlineId && 
-						neighbourPoints[direction]->plane != point->plane) {
+						((neighbourPoints[direction]->outlineId > 0 && neighbourPoints[direction]->outlineId != point->outlineId && 
+						neighbourPoints[direction]->plane != point->plane) || neighbourPoints[direction]->plane == nullptr)) {
 						point->neighbourPlaneNeighbours[i] = neighbourPoints[direction];
 					}
-					else if((y == 0 && direction == 3) || (y == verticalCount - 1 && direction == 1) || !neighbourPoints[direction] ||
-						neighbourPoints[direction]->plane == nullptr)
-						point->neighbourPlaneNeighbours[i] = nullptr;
 					direction += direction == 3 ? -3 : 1;
 				}
 			}
@@ -1094,16 +1091,20 @@ void connectPlanes()
 				{					
 					for (size_t l = 0; l < point->neighbourPlaneNeighbours.size(); l++) {
 						Point* newPoint = nullptr;
-						if (point->neighbourPlaneNeighbours[l])
+						auto neighbourPoint = point->neighbourPlaneNeighbours[l];
+						if (neighbourPoint)
 						{
-							newPoint = addNewPoint(point, point->neighbourPlaneNeighbours[l], point->neighbourPlaneNeighbours[l]->plane, addedCount, l);
-							if (newPoint) {
-								if (k == 0 && l == 0) planes[i]->edges[planes[i]->edges.size() - 1]->wasFirstGenerated = true;
-								planes[i]->edges[j]->pointsWithDir[k].first->isCorner = false;
-								createdPoints.push_back(newPoint);
-								addedCount++;
+							if (neighbourPoint->plane) {
+								newPoint = addNewPoint(point, neighbourPoint, neighbourPoint->plane, addedCount, l);
+								if (newPoint) {
+									if (k == 0 && l == 0) planes[i]->edges[planes[i]->edges.size() - 1]->wasFirstGenerated = true;
+									planes[i]->edges[j]->pointsWithDir[k].first->isCorner = false;
+									createdPoints.push_back(newPoint);
+									addedCount++;
+								}
 							}
-							else {
+							if(!neighbourPoint->plane || !newPoint)
+							{
 								planes[i]->edges[j]->pointsWithDir.insert(planes[i]->edges[j]->pointsWithDir.begin() + k + 1 + addedCount, { nullptr, -1 });
 								addedCount++;
 							}
@@ -1673,11 +1674,11 @@ void exportObjects(size_t pointCloudIndex)
 		}
 		if (corners.size() == 0)
 			continue;
-		std::ofstream MyFile("C:/Users/ungbo/Desktop/BME/_Diplomamunka/Diplomamunka/Diplomamunka/Assets/Resources/Generated_Models_test/processed_obj_"
-			+ std::to_string(objCounter) + ".obj");
-		//std::ofstream MyFile("C:/Users/ungbo/Desktop/BME/_Diplomamunka/Diplomamunka/Diplomamunka/Assets/Resources/Generated_Models_" +
-			//((pointCloudCount == 0 || pointCloudTestIndex != -1) ? "test" : std::to_string(pointCloudIndex)) + "/processed_obj_"
+		//std::ofstream MyFile("C:/Users/ungbo/Desktop/BME/_Diplomamunka/Diplomamunka/Diplomamunka/Assets/Resources/Generated_Models_test/processed_obj_"
 			//+ std::to_string(objCounter) + ".obj");
+		std::ofstream MyFile("C:/Users/ungbo/Desktop/BME/_Diplomamunka/Diplomamunka/Diplomamunka/Assets/Resources/Generated_Models_" +
+			((pointCloudCount == 0 || pointCloudTestIndex != -1) ? "test" : std::to_string(pointCloudIndex)) + "/processed_obj_"
+			+ std::to_string(objCounter) + ".obj");
 		MyFile << "o Mesh" << std::endl;
 		for (size_t k = 0; k < corners.size(); k++) {
 			MyFile << "v " << -corners[k]->position.x << " " << corners[k]->position.y << " " << corners[k]->position.z << std::endl;

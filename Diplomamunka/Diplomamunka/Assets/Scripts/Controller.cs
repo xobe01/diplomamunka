@@ -27,6 +27,31 @@ public class Controller : MonoBehaviour
     bool linesShowed;
     bool objectsShowed;
 
+    void temp()
+    {
+        for (int i = 0; i < 100; i++)
+        {
+            int counter = 0;
+            GameObject obj = Resources.Load<GameObject>("Generated_Models_" + i + "/processed_obj_0");
+            while (obj != null)
+            {
+                var instance = (Instantiate(obj));
+                instance.AddComponent<MeshFilter>();
+                instance.GetComponent<MeshFilter>().mesh = obj.transform.GetChild(0)
+                        .GetComponent<MeshFilter>().sharedMesh;
+                instance.AddComponent<MeshRenderer>();
+                Material m = Instantiate(objMaterial);
+                m.color = pointColors[(counter + 1) % pointColors.Length];
+                instance.GetComponent<MeshRenderer>().material = m;
+                generatedModels.Add(instance);
+                //instance.SetActive(false);
+                counter++;
+                obj = Resources.Load<GameObject>("Generated_Models_" + i + "/processed_obj_" + counter);
+            }
+            print(i + " " + counter);
+        }
+    }
+
     void Start()
     {
         traindataGen = FindObjectOfType<TrainDataGenerator>();
@@ -34,6 +59,8 @@ public class Controller : MonoBehaviour
         defaultSkybox = RenderSettings.skybox;
         lidarCont = FindObjectOfType<LidarController>();
         humanRenderers = FindObjectsOfType<SkinnedMeshRenderer>();
+        temp();
+        return;
         if (isGeneratorScene)
         {
             traindataGen.GenerateSceneTrigger();
