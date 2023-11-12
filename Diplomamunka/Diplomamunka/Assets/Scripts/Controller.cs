@@ -14,53 +14,27 @@ public class Controller : MonoBehaviour
     [SerializeField] bool isGeneratorScene;
     [SerializeField] int moveAndScanCount;
     [SerializeField] int displayFrame;
+    [SerializeField] int generatedModelsIndex;
 
     Material defaultSkybox;
     LidarController lidarCont;
     MeshRenderer[] renderers;
     SkinnedMeshRenderer[] humanRenderers;
     TrainDataGenerator traindataGen;
-    List<GameObject> generatedModels;
+    List<List<GameObject>> generatedModels;
     bool renderersTurnedOff;
     bool processedShowed;
     bool displayedById;
     bool linesShowed;
-    bool objectsShowed;
-
-    void temp()
-    {
-        for (int i = 0; i < 100; i++)
-        {
-            int counter = 0;
-            GameObject obj = Resources.Load<GameObject>("Generated_Models_" + i + "/processed_obj_0");
-            while (obj != null)
-            {
-                var instance = (Instantiate(obj));
-                instance.AddComponent<MeshFilter>();
-                instance.GetComponent<MeshFilter>().mesh = obj.transform.GetChild(0)
-                        .GetComponent<MeshFilter>().sharedMesh;
-                instance.AddComponent<MeshRenderer>();
-                Material m = Instantiate(objMaterial);
-                m.color = pointColors[(counter + 1) % pointColors.Length];
-                instance.GetComponent<MeshRenderer>().material = m;
-                generatedModels.Add(instance);
-                //instance.SetActive(false);
-                counter++;
-                obj = Resources.Load<GameObject>("Generated_Models_" + i + "/processed_obj_" + counter);
-            }
-            print(i + " " + counter);
-        }
-    }
+    bool objectsShowed;    
 
     void Start()
     {
         traindataGen = FindObjectOfType<TrainDataGenerator>();
-        generatedModels = new List<GameObject>();
+        generatedModels = new List<List<GameObject>>();
         defaultSkybox = RenderSettings.skybox;
         lidarCont = FindObjectOfType<LidarController>();
         humanRenderers = FindObjectsOfType<SkinnedMeshRenderer>();
-        temp();
-        return;
         if (isGeneratorScene)
         {
             traindataGen.GenerateSceneTrigger();
@@ -135,7 +109,23 @@ public class Controller : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha6))
         {
             objectsShowed = !objectsShowed;
-            foreach (var obj in generatedModels) obj.SetActive(objectsShowed);
+            foreach (var obj in generatedModels[generatedModelsIndex]) obj.SetActive(objectsShowed);
+        }
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            foreach (var obj in generatedModels[generatedModelsIndex]) obj.SetActive(false);
+            generatedModelsIndex++;
+            if (generatedModelsIndex > generatedModels.Count - 1) generatedModelsIndex = 0;
+            if (objectsShowed)
+                foreach (var obj in generatedModels[generatedModelsIndex]) obj.SetActive(true);
+        }
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            foreach (var obj in generatedModels[generatedModelsIndex]) obj.SetActive(false);
+            generatedModelsIndex--;
+            if (generatedModelsIndex < 0) generatedModelsIndex = generatedModels.Count - 1;
+            if (objectsShowed)
+                foreach (var obj in generatedModels[generatedModelsIndex]) obj.SetActive(true);
         }
         if (displayedById)
         {
@@ -148,22 +138,26 @@ public class Controller : MonoBehaviour
 
     void ImportObjects()
     {
-        int counter = 0;
-        GameObject obj = Resources.Load<GameObject>("Generated_Models_test/processed_obj_0");
-        while (obj != null)
+        for (int i = 0; i < 100; i++)
         {
-            var instance = (Instantiate(obj));
-            instance.AddComponent<MeshFilter>();
-            instance.GetComponent<MeshFilter>().mesh = obj.transform.GetChild(0)
-                    .GetComponent<MeshFilter>().sharedMesh;
-            instance.AddComponent<MeshRenderer>();
-            Material m = Instantiate(objMaterial);
-            m.color = pointColors[(counter + 1) % pointColors.Length];
-            instance.GetComponent<MeshRenderer>().material = m;
-            generatedModels.Add(instance);
-            instance.SetActive(false);
-            counter++;
-            obj = Resources.Load<GameObject>("Generated_Models_test/processed_obj_" + counter);
+            int counter = 0;
+            GameObject obj = Resources.Load<GameObject>("Generated_Models_" + i + "/processed_obj_0");
+            generatedModels.Add(new List<GameObject>());
+            while (obj != null)
+            {
+                var instance = (Instantiate(obj));
+                instance.AddComponent<MeshFilter>();
+                instance.GetComponent<MeshFilter>().mesh = obj.transform.GetChild(0)
+                        .GetComponent<MeshFilter>().sharedMesh;
+                instance.AddComponent<MeshRenderer>();
+                Material m = Instantiate(objMaterial);
+                m.color = pointColors[(counter + 1) % pointColors.Length];
+                instance.GetComponent<MeshRenderer>().material = m;
+                generatedModels[i].Add(instance);
+                instance.SetActive(false);
+                counter++;
+                obj = Resources.Load<GameObject>("Generated_Models_" + i + "/processed_obj_" + counter);
+            }
         }
     }
 
