@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
 using UnityEngine;
 
@@ -15,10 +16,11 @@ public class Controller : MonoBehaviour
     [SerializeField] int moveAndScanCount;
     [SerializeField] int displayFrame;
     [SerializeField] int generatedModelsIndex;
+    [SerializeField] int visualizeFrameCount;
 
     Material defaultSkybox;
     LidarController lidarCont;
-    MeshRenderer[] renderers;
+    List<MeshRenderer> renderers;
     SkinnedMeshRenderer[] humanRenderers;
     TrainDataGenerator traindataGen;
     List<List<GameObject>> generatedModels;
@@ -27,6 +29,7 @@ public class Controller : MonoBehaviour
     bool displayedById;
     bool linesShowed;
     bool objectsShowed;    
+    const float carSpeed = 50f / 36f;
 
     void Start()
     {
@@ -35,6 +38,7 @@ public class Controller : MonoBehaviour
         defaultSkybox = RenderSettings.skybox;
         lidarCont = FindObjectOfType<LidarController>();
         humanRenderers = FindObjectsOfType<SkinnedMeshRenderer>();
+        renderers = new List<MeshRenderer>(FindObjectsOfType<MeshRenderer>());
         if (isGeneratorScene)
         {
             traindataGen.GenerateSceneTrigger();
@@ -54,12 +58,36 @@ public class Controller : MonoBehaviour
         }
         lidarCont.ReadProcessedData();
         ImportObjects();
+        if (visualizeFrameCount > 0)
+            StartCoroutine(VisualizeModels());
         //lidarCont.Display(false);
+    }
+
+    IEnumerator VisualizeModels()
+    {
+        foreach(MeshRenderer r in egoCar.GetComponentsInChildren<MeshRenderer>())
+        {
+            renderers.Remove(r);
+        }
+        while (true) 
+        {
+            egoCar.transform.position = Vector3.zero;
+            generatedModelsIndex = 0;
+            foreach (var obj in generatedModels[generatedModelsIndex]) obj.SetActive(true);
+            for (int i = 0; i < visualizeFrameCount; i++)
+            {
+                yield return new WaitForSeconds(0.1f);
+                foreach (var obj in generatedModels[generatedModelsIndex]) obj.SetActive(false);
+                generatedModelsIndex++;
+                foreach (var obj in generatedModels[generatedModelsIndex]) obj.SetActive(true);
+                egoCar.transform.position += Vector3.back * carSpeed;
+            }
+            yield return new WaitForSeconds(1);
+        }
     }
 
     IEnumerator MultipleScan()
     {
-        float carSpeed = 50f / 36f;
         for (int i = 0; i < moveAndScanCount; i++)
         {
             lidarCont.Scan(false, i);
@@ -164,7 +192,7 @@ public class Controller : MonoBehaviour
     void TurnOnOffRenderers(bool on)
     {
         if(renderers == null)
-            renderers = FindObjectsOfType<MeshRenderer>();
+            renderers = new List<MeshRenderer>(FindObjectsOfType<MeshRenderer>());
         RenderSettings.skybox = on ? defaultSkybox : pointCloudSkybox;
         foreach (MeshRenderer m in renderers) m.enabled = on;
         foreach (SkinnedMeshRenderer m in humanRenderers) m.enabled = on;
