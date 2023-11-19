@@ -77,7 +77,8 @@ public class LidarController : MonoBehaviour
         TextAsset data = Resources.Load<TextAsset>("points_raw_" + index);
         StreamReader reader = new StreamReader(new MemoryStream(data.bytes));
         line = reader.ReadLine();
-        while(reader.ReadLine() != line) { }
+        line = reader.ReadLine();
+        while (reader.ReadLine() != line) { }
         while ((line = reader.ReadLine()) != null)
         {
             string[] parts = line.Split(';');
@@ -96,7 +97,7 @@ public class LidarController : MonoBehaviour
         {
             line = reader.ReadLine();
             string[] parts = line.Split(';');
-            if(false)
+            //if(false)
                 Instantiate(normalArrow, new Vector3(float.Parse(parts[0].Replace('.', ',')), float.Parse(parts[1].Replace('.', ',')),
                     float.Parse(parts[2].Replace('.', ','))), Quaternion.LookRotation(new Vector3(float.Parse(parts[3].Replace('.', ',')), 
                     float.Parse(parts[4].Replace('.', ',')), float.Parse(parts[5].Replace('.', ',')))));
@@ -197,7 +198,6 @@ public class LidarController : MonoBehaviour
 
     void DisplayPoints(List<Point> points, int type)
     {
-        print(showById);
         cloud = new ParticleSystem.Particle[points.Count];
         for (int i = 0; i < points.Count; ++i)
         {
@@ -223,6 +223,7 @@ public class LidarController : MonoBehaviour
             File.Delete(fileName);
         }
         StreamWriter writer = new StreamWriter(fileName, true);
+        writer.WriteLine(transform.position.x + ";" + transform.position.y + ";" + transform.position.z);
         writer.WriteLine(scannedPoints.Count);
         writer.WriteLine(horizontalCount);
         writer.WriteLine(verticalPointCount);

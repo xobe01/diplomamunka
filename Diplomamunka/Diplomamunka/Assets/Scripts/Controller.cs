@@ -74,7 +74,7 @@ public class Controller : MonoBehaviour
             egoCar.transform.position = Vector3.zero;
             generatedModelsIndex = 0;
             foreach (var obj in generatedModels[generatedModelsIndex]) obj.SetActive(true);
-            for (int i = 0; i < visualizeFrameCount; i++)
+            for (int i = 0; i < visualizeFrameCount - 1; i++)
             {
                 yield return new WaitForSeconds(0.1f);
                 foreach (var obj in generatedModels[generatedModelsIndex]) obj.SetActive(false);
