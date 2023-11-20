@@ -178,9 +178,9 @@ public class Controller : MonoBehaviour
                 instance.GetComponent<MeshFilter>().mesh = obj.transform.GetChild(0)
                         .GetComponent<MeshFilter>().sharedMesh;
                 instance.AddComponent<MeshRenderer>();
-                Material m = Instantiate(objMaterial);
-                m.color = pointColors[(counter + 1) % pointColors.Length];
-                instance.GetComponent<MeshRenderer>().material = m;
+                //Material m = Instantiate(objMaterial);
+                //m.color = pointColors[(counter + 1) % pointColors.Length];
+                //instance.GetComponent<MeshRenderer>().material = m;
                 generatedModels[i].Add(instance);
                 instance.SetActive(false);
                 counter++;
