@@ -113,6 +113,9 @@ public class LidarController : MonoBehaviour
                     int.Parse(parts[6]), int.Parse(parts[7]));
                 int id = int.Parse(parts[5]);
                 int lineId = int.Parse(parts[7]);
+                double temp = double.Parse(parts[8]);
+                if (temp > 100000)
+                    continue;
                 int lineIndex = int.Parse(parts[8]);
                 while (pointsById.Count < id + 1) pointsById.Add(new List<Point>());
                 pointsById[id].Add(newPoint);

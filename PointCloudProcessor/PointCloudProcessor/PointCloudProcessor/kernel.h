@@ -50,6 +50,7 @@ struct Edge
 	std::vector<std::pair<Point*, int>> pointsWithDir;
 	std::pair<double, double> xBounds2D;
 	std::pair<double, double> yBounds2D;
+	std::vector<Edge*> intersectedEdges;
 	Edge() : isHole(false), wasFirstGenerated(false), xBounds2D(100000, -100000), yBounds2D(100000, -100000) {}
 	bool canIntersectWithEdge(Edge* edge)
 	{
@@ -86,10 +87,11 @@ struct Plane {
 const double PI = 3.14159265359;
 const std::pair<double, double> rayAngles = { -18, 20 };
 
-const size_t pointCloudCount = 16;
+const size_t pointCloudCount = 2;
 const size_t pointCloudBeginIndex = 0;
 const int pointCloudTestIndex = -1;
 Vec3<double> egoCarPos;
 size_t currentFrame = 0;
 
 bool checkIfBridge(Point* p, bool onlyMarked);
+void writeData(size_t pointCloudIndex);
