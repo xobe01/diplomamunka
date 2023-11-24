@@ -1313,21 +1313,51 @@ void deleteSelfIntersections()
 				for (int j = (i == (planes[k]->edges[l]->pointsWithDir.size() - 1) ? 1 : 0); j < i - 1; j++) {
 					size_t onEdgeType = 0;
 					auto intersection = intersectionOfLines(planes[k]->edges[l]->pointsWithDir[j].first->projected2DPosition,
-						planes[k]->edges[l]->pointsWithDir[(j + 1) % planes[k]->edges[l]->pointsWithDir.size()].first->projected2DPosition,
+						planes[k]->edges[l]->pointsWithDir[j + 1].first->projected2DPosition,
 						planes[k]->edges[l]->pointsWithDir[i].first->projected2DPosition, planes[k]->edges[l]->pointsWithDir[(i + 1) % 
 						planes[k]->edges[l]->pointsWithDir.size()].first->projected2DPosition,
 						onEdgeType, notInUseRatio);
 					if (onEdgeType > 0) {
-						if (planes[k]->edges[l]->isHole) {
-							planes[k]->edges[l]->pointsWithDir[j].first->isCorner = false;
-							planes[k]->edges[l]->pointsWithDir.erase(planes[k]->edges[l]->pointsWithDir.begin() + j);
-							i--;
+						double routeLength1 = 0;
+						for (size_t m = j + 1; m < i; m++) 
+						{
+							routeLength1 += (planes[k]->edges[l]->pointsWithDir[m + 1].first->projected2DPosition -
+								planes[k]->edges[l]->pointsWithDir[m].first->projected2DPosition).length();
+						}
+						double routeLength2 = 0;
+						size_t m = (i + 1) % planes[k]->edges[l]->pointsWithDir.size();
+						while (m != j) 
+						{
+							routeLength2 += (planes[k]->edges[l]->pointsWithDir[(m + 1) % planes[k]->edges[l]->pointsWithDir.size()].first->projected2DPosition -
+								planes[k]->edges[l]->pointsWithDir[m].first->projected2DPosition).length();
+							m = (m + 1) % planes[k]->edges[l]->pointsWithDir.size();
+						}
+						if (routeLength1 < routeLength2) 
+						{
+							if (planes[k]->edges[l]->pointsWithDir[j + 1].first->verticalIndex == verticalCount + 1) 
+							{
+								planes[k]->edges[l]->pointsWithDir[i].first->isCorner = false;
+								planes[k]->edges[l]->pointsWithDir.erase(planes[k]->edges[l]->pointsWithDir.begin() + i);
+							}
+							else 
+							{
+								planes[k]->edges[l]->pointsWithDir[j + 1].first->isCorner = false;
+								planes[k]->edges[l]->pointsWithDir.erase(planes[k]->edges[l]->pointsWithDir.begin() + j + 1);
+							}
 						}
 						else {
-							planes[k]->edges[l]->pointsWithDir[i].first->isCorner = false;
-							planes[k]->edges[l]->pointsWithDir.erase(planes[k]->edges[l]->pointsWithDir.begin() + i);
-							i -= 2;
-						}
+							if (planes[k]->edges[l]->pointsWithDir[j].first->verticalIndex == verticalCount + 1) 
+							{
+								planes[k]->edges[l]->pointsWithDir[(i + 1) % planes[k]->edges[l]->pointsWithDir.size()].first->isCorner = false;
+								planes[k]->edges[l]->pointsWithDir.erase(planes[k]->edges[l]->pointsWithDir.begin() + ((i + 1) % planes[k]->edges[l]->pointsWithDir.size()));
+							}
+							else 
+							{
+								planes[k]->edges[l]->pointsWithDir[j].first->isCorner = false;
+								planes[k]->edges[l]->pointsWithDir.erase(planes[k]->edges[l]->pointsWithDir.begin() + j);
+							}
+						}	
+						i--;
 						break;
 					}
 				}
@@ -1376,11 +1406,9 @@ bool isDesiredEdge(std::vector<Point*> savedEdge, std::vector<Point*> newEdge, s
 	return false;
 }
 
-Point* decideIfDesiredEdgeGood(Edge* savedEdge, Edge* newEdge, Point* currentPoint, bool isOnSavedEdge, bool checkForInsidePoints,
-	std::vector<std::pair<Vec3<double>, Vec3<double>>> allNeighbours, /*out*/ std::vector<Point*>& pointsOnDesiredEdge)
+Point* decideIfDesiredEdgeGood(Edge* savedEdge, Edge* newEdge, Point* currentPoint, std::vector<Point*> savedEdgePoints, std::vector<Point*> newEdgePoints,
+	bool isOnSavedEdge, bool checkForInsidePoints, std::vector<std::pair<Vec3<double>, Vec3<double>>> allNeighbours, /*out*/ std::vector<Point*>& pointsOnDesiredEdge)
 {
-	std::vector<Point*> savedEdgePoints = savedEdge->getPoints();
-	std::vector<Point*> newEdgePoints = newEdge->getPoints();
 	std::pair<double, double> xBounds = { 100000, -1000000 };
 	std::pair<double, double> yBounds = { 100000, -1000000 };
 	std::vector<Point*> pointsOnAddedPolygonPart;
@@ -1548,9 +1576,9 @@ void mergePolygons(Plane* savedPlane, Edge* savedEdge, Edge* newEdge, std::vecto
 		for (size_t i = 0; i < savedEdgePoints.size(); i++) {
 			size_t onEdgeType = 0;
 			double distanceRatio = 0;
-			if((newEdgePoints[j]->isMarked2 && (newEdgePoints[j] == savedEdgePoints[i] || newEdgePoints[j] == savedEdgePoints[(i + 1) % savedEdgePoints.size()])) || (newEdgePoints[(j + 1) % 
-				newEdgePoints.size()]->isMarked2 && (newEdgePoints[(j + 1) % newEdgePoints.size()] == savedEdgePoints[i] || newEdgePoints[(j + 1) % newEdgePoints.size()] == savedEdgePoints[(i + 1) % 
-					savedEdgePoints.size()])))
+			if((newEdgePoints[j]->isMarked2 && (newEdgePoints[j] == savedEdgePoints[i] || newEdgePoints[j] == savedEdgePoints[(i + 1) % savedEdgePoints.size()])) ||
+				(newEdgePoints[(j + 1) % newEdgePoints.size()]->isMarked2 && (newEdgePoints[(j + 1) % newEdgePoints.size()] == savedEdgePoints[i] ||
+					newEdgePoints[(j + 1) % newEdgePoints.size()] == savedEdgePoints[(i + 1) % savedEdgePoints.size()])))
 				continue;
 			auto intersectionPos = intersectionOfLines(savedEdgePoints[i]->projected2DPosition, savedEdgePoints[(i + 1) %
 				savedEdgePoints.size()]->projected2DPosition, newEdgePoints[j]->projected2DPosition,
@@ -1647,12 +1675,13 @@ void mergePolygons(Plane* savedPlane, Edge* savedEdge, Edge* newEdge, std::vecto
 			std::vector<Point*> pointsOnNextEdge;
 			auto helperPoint = currentPoint;
 			bool helperIsOnEdge = isOnSavedEdge;
-			currentPoint = decideIfDesiredEdgeGood(savedEdge, newEdge, currentPoint, isOnSavedEdge, true, allNeighbours, pointsOnNextEdge);
+			currentPoint = decideIfDesiredEdgeGood(savedEdge, newEdge, currentPoint, savedEdgePoints, newEdgePoints, isOnSavedEdge, true, allNeighbours, pointsOnNextEdge);
 			if (!currentPoint)
 			{
 				pointsOnNextEdge.clear();
 				isOnSavedEdge = !isOnSavedEdge;
-				currentPoint = decideIfDesiredEdgeGood(savedEdge, newEdge, helperPoint, isOnSavedEdge, false, allNeighbours, pointsOnNextEdge);
+				currentPoint = decideIfDesiredEdgeGood(savedEdge, newEdge, helperPoint, savedEdgePoints, newEdgePoints, isOnSavedEdge, false, allNeighbours,
+					pointsOnNextEdge);
 			}
 			for (size_t i = 0; i < pointsOnNextEdge.size(); i++) {
 				pointsOnNextEdge[i]->isMarked = false;
@@ -1714,6 +1743,8 @@ void mergePolygons(Plane* savedPlane, Edge* savedEdge, Edge* newEdge, std::vecto
 					unionPolygon->startPoint = acceptedEdge->startPoint;
 					unionPolygon->isHole = acceptedEdge->isHole;
 					unionPolygon->pointsWithDir = acceptedEdge->pointsWithDir;
+					unionPolygon->xBounds2D = acceptedEdge->xBounds2D;
+					unionPolygon->yBounds2D = acceptedEdge->yBounds2D;
 					outputEdges.push_back(unionPolygon);
 					break;
 				}
@@ -1743,33 +1774,33 @@ void mergePolygons(Plane* savedPlane, Edge* savedEdge, Edge* newEdge, std::vecto
 			}
 		}
 	}
-	setPointsMarked(savedEdge->getPoints(), false, false);
-	setPointsMarked(newEdge->getPoints(), false, false);
+	setPointsMarked(savedEdgePoints, false, false);
+	setPointsMarked(newEdgePoints, false, false);
 }
 
-bool mergeTwoPlanes(Plane* newPlane, Plane* savedPlane, std::vector<Edge*>& newEdge, std::vector<Edge*>& savedEdge, bool isOuter)
+bool mergeTwoPlanes(Plane* newPlane, Plane* savedPlane, std::vector<Edge*>& newEdges, std::vector<Edge*>& savedEdges, bool isOuter)
 {
 	bool hasFoundIntersection = false;
 	bool hasRelocatedNeighbours = false;
 	
-	for (int k = 0; k < newEdge.size(); k++) {
-		for (int l = 0; l < savedEdge.size(); l++) {
-			if (newEdge[k]->isHole == savedEdge[l]->isHole &&
-				newEdge[k]->canIntersectWithEdge(savedEdge[l])) {
+	for (int k = 0; k < newEdges.size(); k++) {
+		for (int l = 0; l < savedEdges.size(); l++) {
+			if (newEdges[k]->isHole == savedEdges[l]->isHole &&
+				newEdges[k]->canIntersectWithEdge(savedEdges[l])) {
 				std::vector<Edge*> createdEdges;
-				if (areEdgesIntersect(savedPlane, newPlane, savedEdge[l], newEdge[k], hasRelocatedNeighbours)) 
+				if (areEdgesIntersect(savedPlane, newPlane, savedEdges[l], newEdges[k], hasRelocatedNeighbours)) 
 				{
 					bool createdNewPolygon = true;
 					std::vector<Edge*> tempCreatedEdges;
-					if (hasNewEdgeNeighbourInsideSavedEdge(savedEdge[l], newEdge[k])) 
+					if (hasNewEdgeNeighbourInsideSavedEdge(savedEdges[l], newEdges[k])) 
 					{
 						std::vector<std::pair<Vec3<double>, Vec3<double>>> neighbours;
-						neighbours.reserve(savedEdge[l]->closestNeighbourPoints.size() + newEdge[k]->closestNeighbourPoints.size());
-						neighbours.insert(neighbours.end(), savedEdge[l]->closestNeighbourPoints.begin(), savedEdge[l]->closestNeighbourPoints.end());
-						neighbours.insert(neighbours.end(), newEdge[k]->closestNeighbourPoints.begin(), newEdge[k]->closestNeighbourPoints.end());
+						neighbours.reserve(savedEdges[l]->closestNeighbourPoints.size() + newEdges[k]->closestNeighbourPoints.size());
+						neighbours.insert(neighbours.end(), savedEdges[l]->closestNeighbourPoints.begin(), savedEdges[l]->closestNeighbourPoints.end());
+						neighbours.insert(neighbours.end(), newEdges[k]->closestNeighbourPoints.begin(), newEdges[k]->closestNeighbourPoints.end());
 						
-						createdEdges = savedEdge[l]->intersectedEdges;
-						createdEdges.push_back(newEdge[k]);
+						createdEdges = savedEdges[l]->intersectedEdges;
+						createdEdges.push_back(newEdges[k]);
 						bool foundNewIntersection = true;
 						int counter = 0;
 						while (foundNewIntersection) {
@@ -1778,7 +1809,7 @@ bool mergeTwoPlanes(Plane* newPlane, Plane* savedPlane, std::vector<Edge*>& newE
 								createdNewPolygon = true;
 								for (size_t i = 1; i < createdEdges.size(); i++) {
 									std::vector<Edge*> innerCreatedEdges;
-									if (currentFrame == 4 && savedEdge[l]->isHole && counter == 0)
+									if (false && currentFrame == 4 && savedEdges[l]->isHole && counter == 2)
 									{
 										savedPoints.clear();
 										addedPoints.clear();
@@ -1836,18 +1867,18 @@ bool mergeTwoPlanes(Plane* newPlane, Plane* savedPlane, std::vector<Edge*>& newE
 					}
 					else 
 					{
-						mergePolygons(savedPlane, savedEdge[l], newEdge[k], {}, createdEdges, createdNewPolygon);
+						mergePolygons(savedPlane, savedEdges[l], newEdges[k], {}, createdEdges, createdNewPolygon);
 					}
 					if (createdNewPolygon) {
-						savedEdge.erase(savedEdge.begin() + l);
-						newEdge.erase(newEdge.begin() + k);
+						savedEdges.erase(savedEdges.begin() + l);
+						newEdges.erase(newEdges.begin() + k);
 						l--;
 						k--;
 						if (isOuter)
-							mergeTwoPlanes(savedPlane, newPlane, createdEdges, newEdge, false);
+							mergeTwoPlanes(savedPlane, newPlane, createdEdges, newEdges, false);
 						hasFoundIntersection = true;
 						for (size_t m = 0; m < createdEdges.size(); m++) {
-							newEdge.push_back(createdEdges[m]);
+							newEdges.push_back(createdEdges[m]);
 						}
 						break;
 					}
@@ -1860,13 +1891,17 @@ bool mergeTwoPlanes(Plane* newPlane, Plane* savedPlane, std::vector<Edge*>& newE
 
 void filterFittedPlanes()
 {
+	int dbgCounter = 0;
 	double normalDistTreshold = 0.1;
 	double distTreshold = 0.01;
+	double newDirectionTreshold = 0.1;
 	for (size_t i = 0; i < savedPlanes.size(); i++) {
 		for (size_t j = 0; j < savedPlanes[i]->edges.size(); j++) {
 			bool deletedPoint = true;
+			dbgCounter = 0;
 			while (deletedPoint)
 			{
+				dbgCounter++;
 				deletedPoint = false;
 				auto normal = Vec3<double>::normalize(savedPlanes[i]->edges[j]->pointsWithDir[0].first->projected2DPosition -
 					savedPlanes[i]->edges[j]->pointsWithDir[savedPlanes[i]->edges[j]->pointsWithDir.size() - 1].first->projected2DPosition);
@@ -1888,9 +1923,17 @@ void filterFittedPlanes()
 						continue;
 					}
 					double normalDist = abs(Vec3<double>::dot_product(normal, savedPlanes[i]->edges[j]->pointsWithDir[k].first->projected2DPosition - linePoint));
-					if (normalDist < normalDistTreshold && (previousVerticalIndex < verticalCount || verticalIndex >= previousVerticalIndex))
+					if (normalDist < normalDistTreshold)
 					{
-						savedPlanes[i]->edges[j]->pointsWithDir.erase(savedPlanes[i]->edges[j]->pointsWithDir.begin() + k - 1);
+						if (previousVerticalIndex < verticalCount || verticalIndex >= previousVerticalIndex)
+							savedPlanes[i]->edges[j]->pointsWithDir.erase(savedPlanes[i]->edges[j]->pointsWithDir.begin() + k - 1);
+						else if ((Vec3<double>::normalize(savedPlanes[i]->edges[j]->pointsWithDir[(k + 1) % savedPlanes[i]->edges[j]->pointsWithDir.size()].first->projected2DPosition -
+							savedPlanes[i]->edges[j]->pointsWithDir[k - 1].first->projected2DPosition) - Vec3<double>::normalize(savedPlanes[i]->edges[j]->pointsWithDir[(k
+								+ 1) % savedPlanes[i]->edges[j]->pointsWithDir.size()].first->projected2DPosition -
+								savedPlanes[i]->edges[j]->pointsWithDir[k].first->projected2DPosition)).length() < newDirectionTreshold)
+							savedPlanes[i]->edges[j]->pointsWithDir.erase(savedPlanes[i]->edges[j]->pointsWithDir.begin() + k);
+						else
+							continue;
 						k--;
 						deletedPoint = true;
 					}
@@ -2194,6 +2237,17 @@ void convexSegmentation()
 													holeEdges[absoluteClosestEdgeIndex]->pointsWithDir[(absoluteClosestPointIndex + l) % 
 													holeEdges[absoluteClosestEdgeIndex]->pointsWithDir.size()].first);
 											}
+											/*for (size_t m = 0; m < remainingPoints.size(); m++) {
+												if (remainingPoints[m] == L[L.size() - 1]) {
+													remainingPoints.insert(remainingPoints.begin() + m + 1, L[L.size() - 1]);
+													for (size_t l = 0; l < holeEdges[absoluteClosestEdgeIndex]->pointsWithDir.size() + 1; l++) {
+														remainingPoints.insert(remainingPoints.begin() + m + 1 + l,
+															holeEdges[absoluteClosestEdgeIndex]->pointsWithDir[(absoluteClosestPointIndex + l) %
+															holeEdges[absoluteClosestEdgeIndex]->pointsWithDir.size()].first);
+													}
+													break;
+												}
+											}*/
 											holeEdges.erase(holeEdges.begin() + absoluteClosestEdgeIndex);
 											j = -1;
 											break;
@@ -2257,9 +2311,9 @@ void convexSegmentation()
 							convexFace.push_back(L[j]);
 						}
 						savedPlanes[i]->convexFaces.push_back(convexFace);
-						if (currentFrame == 1 && i == 0 && savedPlanes[i]->convexFaces.size() == 14) {
-							//std::cout << "asd";
-							return;
+						if (currentFrame == 21 && i == 0 && savedPlanes[i]->convexFaces.size() == 4) {
+							std::cout << "asd";
+							//return;
 						}
 						remainingPoints = remainingPointsHelper;
 						currentConvexId++;
@@ -2301,7 +2355,7 @@ void saveSavedPoints()
 
 void exportObjects(size_t pointCloudIndex)
 {	
-	if (currentFrame == 36) {
+	if (currentFrame == 21) {
 		std::cout << "asd";
 	}
 	std::string name = "C:\\Users\\ungbo\\Desktop\\BME\\_Diplomamunka\\Diplomamunka\\Diplomamunka\\Assets\\Resources\\Generated_Models_" + 
@@ -2326,9 +2380,6 @@ void exportObjects(size_t pointCloudIndex)
 			for (size_t k = 0; k < savedPlanes[i]->edges[j]->pointsWithDir.size(); k++) {
 				if (savedPlanes[i]->edges[j]->pointsWithDir[k].first->isCorner) {
 					savedPlanes[i]->edges[j]->pointsWithDir[k].first->cornerId = currentCornerId;
-					if (currentCornerId == 7) {
-						std::cout << "asd";
-					}
 					savedPlanes[i]->edges[j]->pointsWithDir[k].first->cornerIndex = currentCornerIndex;
 					corners.push_back(savedPlanes[i]->edges[j]->pointsWithDir[k].first);
 					currentCornerIndex++;
