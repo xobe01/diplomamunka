@@ -1086,8 +1086,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   angles: {x: -18, y: 20}
-  pointCount: 200000
-  verticalPointCount: 200
+  pointCount: 20000
+  verticalPointCount: 40
   unprocesseedColor: {r: 1, g: 1, b: 1, a: 1}
   linePrefab: {fileID: 4164652104965098200, guid: f405672ddcabc504887feed33e591ca1, type: 3}
   normalArrow: {fileID: 1620961892595129951, guid: 57325ff12ea32a54a8b72858208b1416, type: 3}
@@ -7220,7 +7220,7 @@ MonoBehaviour:
   - {r: 1, g: 0, b: 0.9021702, a: 1}
   - {r: 1, g: 0.99081707, b: 0, a: 1}
   - {r: 1, g: 0.42777634, b: 0, a: 1}
-  dontScan: 1
+  dontScan: 0
   isGeneratorScene: 0
   moveAndScanCount: 100
   displayFrame: 0

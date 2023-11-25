@@ -87,7 +87,7 @@ struct Plane {
 const double PI = 3.14159265359;
 const std::pair<double, double> rayAngles = { -18, 20 };
 
-const size_t pointCloudCount = 5;
+const size_t pointCloudCount = 100;
 const size_t pointCloudBeginIndex = 0;
 const int pointCloudTestIndex = -1;
 Vec3<double> egoCarPos;
