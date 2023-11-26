@@ -7220,12 +7220,12 @@ MonoBehaviour:
   - {r: 1, g: 0, b: 0.9021702, a: 1}
   - {r: 1, g: 0.99081707, b: 0, a: 1}
   - {r: 1, g: 0.42777634, b: 0, a: 1}
-  dontScan: 0
+  dontScan: 1
   isGeneratorScene: 0
   moveAndScanCount: 100
   displayFrame: 0
   generatedModelsIndex: 0
-  visualizeFrameCount: 0
+  visualizeFrameCount: 100
 --- !u!1001 &1910080556
 PrefabInstance:
   m_ObjectHideFlags: 0

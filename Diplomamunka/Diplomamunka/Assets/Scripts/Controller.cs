@@ -83,6 +83,7 @@ public class Controller : MonoBehaviour
                 egoCar.transform.position += Vector3.back * carSpeed;
             }
             yield return new WaitForSeconds(1);
+            foreach (var obj in generatedModels[generatedModelsIndex]) obj.SetActive(false);
         }
     }
 

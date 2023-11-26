@@ -82,6 +82,24 @@ struct Plane {
 	size_t id;
 	bool isNewlyCreated = true;
 	std::vector<std::vector<Point*>> convexFaces;
+	std::pair<Vec3<double>, Vec3<double>> furthestNormalPoints = { {0,0,0}, {0,0,0} };
+	void calculateAvaragePointPos()
+	{
+		std::pair<double, double> normalDistances = { 1000, -1000 };
+		for (size_t i = 0; i < points.size(); i++) 
+		{
+			double dist = Vec3<double>::dot_product(normal, points[i]->position - planePointPos);
+			if (dist < normalDistances.first) 
+			{
+				normalDistances.first = dist;
+				furthestNormalPoints.first = points[i]->position;
+			}
+			if (dist > normalDistances.second) {
+				normalDistances.second = dist;
+				furthestNormalPoints.second = points[i]->position;
+			}
+		}
+	}
 };
 
 const double PI = 3.14159265359;
