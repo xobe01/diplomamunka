@@ -42,6 +42,7 @@ struct Point
 
 struct Edge
 {
+	bool isMarked = false;
 	bool isHole;
 	bool wasFirstGenerated;
 	bool isInUse = true;
@@ -113,3 +114,4 @@ size_t currentFrame = 0;
 
 bool checkIfBridge(Point* p, bool onlyMarked);
 void writeData(size_t pointCloudIndex);
+bool isEdgeTooTigth(Edge* edge);
