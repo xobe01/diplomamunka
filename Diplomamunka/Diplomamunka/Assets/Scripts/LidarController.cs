@@ -97,7 +97,7 @@ public class LidarController : MonoBehaviour
         {
             line = reader.ReadLine();
             string[] parts = line.Split(';');
-            //if(false)
+            if(false)
                 Instantiate(normalArrow, new Vector3(float.Parse(parts[0].Replace('.', ',')), float.Parse(parts[1].Replace('.', ',')),
                     float.Parse(parts[2].Replace('.', ','))), Quaternion.LookRotation(new Vector3(float.Parse(parts[3].Replace('.', ',')), 
                     float.Parse(parts[4].Replace('.', ',')), float.Parse(parts[5].Replace('.', ',')))));

@@ -7224,7 +7224,7 @@ MonoBehaviour:
   isGeneratorScene: 0
   moveAndScanCount: 100
   displayFrame: 0
-  generatedModelsIndex: 0
+  generatedModelsIndex: 2
   visualizeFrameCount: 0
 --- !u!1001 &1910080556
 PrefabInstance:

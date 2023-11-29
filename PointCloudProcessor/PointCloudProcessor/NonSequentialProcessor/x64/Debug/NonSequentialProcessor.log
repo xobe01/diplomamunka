@@ -1,0 +1,199 @@
+﻿  Compiling CUDA source file kernel_ns.cu...
+  
+  C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor>"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\bin\nvcc.exe" -gencode=arch=compute_52,code=\"sm_52,compute_52\" --use-local-env -ccbin "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\bin\HostX86\x64" -x cu   -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\include" -I"C:\vcpkg\installed\x64-windows\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\include"  -G   --keep-dir x64\Debug  -maxrregcount=0  --machine 64 --compile -cudart static  -g  -DWIN32 -DWIN64 -D_DEBUG -D_CONSOLE -D_MBCS -Xcompiler "/EHsc /W3 /nologo /Od /Fdx64\Debug\vc142.pdb /FS /Zi /RTC1 /MDd " -o C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\x64\Debug\kernel_ns.cu.obj "C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu" 
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.h(104): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(291): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(326): warning #177-D: variable "planeMerged" was declared but never referenced
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(311): warning #177-D: variable "minPointCount" was declared but never referenced
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(312): warning #177-D: variable "counter" was declared but never referenced
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(452): warning #68-D: integer conversion resulted in a change of sign
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(751): warning #550-D: variable "isNeighbour" was set but never used
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(829): warning #177-D: variable "deleteDurroundingCornersTreshold" was declared but never referenced
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(896): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(901): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(901): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(921): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(927): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(927): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(1787): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(1917): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(2000): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(2001): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(2002): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(2003): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(2522): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(15): warning #177-D: variable "objectPointDistance" was declared but never referenced
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.h(104): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(291): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(452): warning #68-D: integer conversion resulted in a change of sign
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(896): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(901): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(901): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(921): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(927): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(927): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(1787): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(1917): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(2000): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(2001): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(2002): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(2003): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(2522): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+  kernel_ns.cu
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(20): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(21): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(22): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(23): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(109): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(109): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(109): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(109): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(112): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(112): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(112): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(112): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(147): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(147): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(147): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(147): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(163): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(163): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(163): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(163): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(172): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(172): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(172): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(172): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(209): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(210): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(211): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(212): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(230): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(232): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(234): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(236): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(287): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(287): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(287): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(287): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(334): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(334): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(334): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(334): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(370): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(326): warning C4101: 'planeMerged': unreferenced local variable
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(409): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(412): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(415): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(418): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(473): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(476): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(479): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(482): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(493): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(570): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(574): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(578): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(582): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(608): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(608): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(608): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(608): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(618): warning C4244: 'initializing': conversion from 'T' to 'float', possible loss of data
+          with
+          [
+              T=double
+          ]
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(673): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(682): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(752): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(752): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(752): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(752): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(961): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(961): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(961): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(961): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(1371): warning C4805: '==': unsafe mix of type 'size_t' and type 'bool' in operation
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(2352): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(2373): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(2445): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(2564): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(2575): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\include\utility(194): warning C4267: 'initializing': conversion from 'size_t' to '_Ty2', possible loss of data
+          with
+          [
+              _Ty2=int
+          ]
+  C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(456): note: see reference to function template instantiation 'std::pair<Point *,int>::pair<Point*&,size_t&,0>(_Other1,_Other2) noexcept' being compiled
+          with
+          [
+              _Other1=Point *&,
+              _Other2=size_t &
+          ]
+  C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(456): note: see reference to function template instantiation 'std::pair<Point *,int>::pair<Point*&,size_t&,0>(_Other1,_Other2) noexcept' being compiled
+          with
+          [
+              _Other1=Point *&,
+              _Other2=size_t &
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\include\utility(194): warning C4244: 'initializing': conversion from '_Ty' to '_Ty2', possible loss of data
+          with
+          [
+              _Ty=unsigned __int64
+          ]
+          and
+          [
+              _Ty2=int
+          ]
+  C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(524): note: see reference to function template instantiation 'std::pair<Point *,int>::pair<Point*&,size_t,0>(_Other1,_Other2 &&) noexcept' being compiled
+          with
+          [
+              _Other1=Point *&,
+              _Other2=size_t
+          ]
+  C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\NonSequentialProcessor\kernel_ns.cu(524): note: see reference to function template instantiation 'std::pair<Point *,int>::pair<Point*&,size_t,0>(_Other1,_Other2 &&) noexcept' being compiled
+          with
+          [
+              _Other1=Point *&,
+              _Other2=size_t
+          ]
+  NonSequentialProcessor.vcxproj -> C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\x64\Debug\NonSequentialProcessor.exe

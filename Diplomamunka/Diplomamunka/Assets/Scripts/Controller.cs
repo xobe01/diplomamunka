@@ -57,7 +57,7 @@ public class Controller : MonoBehaviour
             lidarCont.ReadRawData(displayFrame);
         }
         lidarCont.ReadProcessedData();
-        ImportObjects();
+        ImportObjects(generatedModelsIndex == -1);
         if (visualizeFrameCount > 0)
             StartCoroutine(VisualizeModels());
         //lidarCont.Display(false);
@@ -138,23 +138,29 @@ public class Controller : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha6))
         {
             objectsShowed = !objectsShowed;
-            foreach (var obj in generatedModels[generatedModelsIndex]) obj.SetActive(objectsShowed);
+            foreach (var obj in generatedModels[generatedModelsIndex == -1 ? 0 : generatedModelsIndex]) obj.SetActive(objectsShowed);
         }
         if (Input.GetKeyDown(KeyCode.G))
         {
-            foreach (var obj in generatedModels[generatedModelsIndex]) obj.SetActive(false);
-            generatedModelsIndex++;
-            if (generatedModelsIndex > generatedModels.Count - 1) generatedModelsIndex = 0;
-            if (objectsShowed)
-                foreach (var obj in generatedModels[generatedModelsIndex]) obj.SetActive(true);
+            if(generatedModelsIndex > -1)
+            {
+                foreach (var obj in generatedModels[generatedModelsIndex]) obj.SetActive(false);
+                generatedModelsIndex++;
+                if (generatedModelsIndex > generatedModels.Count - 1) generatedModelsIndex = 0;
+                if (objectsShowed)
+                    foreach (var obj in generatedModels[generatedModelsIndex]) obj.SetActive(true);
+            }            
         }
         if (Input.GetKeyDown(KeyCode.F))
         {
-            foreach (var obj in generatedModels[generatedModelsIndex]) obj.SetActive(false);
-            generatedModelsIndex--;
-            if (generatedModelsIndex < 0) generatedModelsIndex = generatedModels.Count - 1;
-            if (objectsShowed)
-                foreach (var obj in generatedModels[generatedModelsIndex]) obj.SetActive(true);
+            if (generatedModelsIndex > -1)
+            {
+                foreach (var obj in generatedModels[generatedModelsIndex]) obj.SetActive(false);
+                generatedModelsIndex--;
+                if (generatedModelsIndex < 0) generatedModelsIndex = generatedModels.Count - 1;
+                if (objectsShowed)
+                    foreach (var obj in generatedModels[generatedModelsIndex]) obj.SetActive(true);
+            }
         }
         if (displayedById)
         {
@@ -165,12 +171,12 @@ public class Controller : MonoBehaviour
         }
     }
 
-    void ImportObjects()
+    void ImportObjects(bool test)
     {
-        for (int i = 0; i < 100; i++)
+        if (test)
         {
             int counter = 0;
-            GameObject obj = Resources.Load<GameObject>("Generated_Models_" + i + "/processed_obj_0");
+            GameObject obj = Resources.Load<GameObject>("Generated_Models_test/processed_obj_0");
             generatedModels.Add(new List<GameObject>());
             while (obj != null)
             {
@@ -182,10 +188,34 @@ public class Controller : MonoBehaviour
                 //Material m = Instantiate(objMaterial);
                 //m.color = pointColors[(counter + 1) % pointColors.Length];
                 //instance.GetComponent<MeshRenderer>().material = m;
-                generatedModels[i].Add(instance);
+                generatedModels[0].Add(instance);
                 instance.SetActive(false);
                 counter++;
-                obj = Resources.Load<GameObject>("Generated_Models_" + i + "/processed_obj_" + counter);
+                obj = Resources.Load<GameObject>("Generated_Models_test/processed_obj_" + counter);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < 100; i++)
+            {
+                int counter = 0;
+                GameObject obj = Resources.Load<GameObject>("Generated_Models_" + i + "/processed_obj_0");
+                generatedModels.Add(new List<GameObject>());
+                while (obj != null)
+                {
+                    var instance = (Instantiate(obj));
+                    instance.AddComponent<MeshFilter>();
+                    instance.GetComponent<MeshFilter>().mesh = obj.transform.GetChild(0)
+                            .GetComponent<MeshFilter>().sharedMesh;
+                    instance.AddComponent<MeshRenderer>();
+                    //Material m = Instantiate(objMaterial);
+                    //m.color = pointColors[(counter + 1) % pointColors.Length];
+                    //instance.GetComponent<MeshRenderer>().material = m;
+                    generatedModels[i].Add(instance);
+                    instance.SetActive(false);
+                    counter++;
+                    obj = Resources.Load<GameObject>("Generated_Models_" + i + "/processed_obj_" + counter);
+                }
             }
         }
     }

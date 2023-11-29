@@ -17,11 +17,10 @@ std::vector<Point*> savedPoints;
 std::vector<Edge*> edges;
 std::vector<Plane*> planes;
 std::vector<Plane*> savedPlanes;
-std::vector<int> verticalCounts;
+
 size_t horizontalCount;
 size_t verticalCount;
 int currentCornerId = 1;
-int currentSeparatedObjectId = 1;
 int currentPlaneId = 1;
 int currentOutlineId = 1;
 int currentCornerIndex = 0;
@@ -42,13 +41,10 @@ void readData(size_t pointCloudIndex)
 	points.clear();
 	addedPoints.clear();
 	planes.clear();
-	verticalCounts.clear();
 	currentCornerId = 1;
-	currentSeparatedObjectId = 1;
 	currentPlaneId = 1;
 	currentOutlineId = 1;
 	currentCornerIndex = 0;
-	verticalCounts.push_back(0);
     std::string myText;		  
     std::ifstream MyReadFile("C:/Users/ungbo/Desktop/BME/_Diplomamunka/Diplomamunka/Diplomamunka/Assets/Resources/points_raw_" + 
 		(pointCloudTestIndex == -1 ? (pointCloudCount == 0 ? "test" : std::to_string(pointCloudIndex)) : std::to_string(pointCloudTestIndex)) + ".txt");
@@ -71,10 +67,7 @@ void readData(size_t pointCloudIndex)
 		std::stringstream ss(myText);
 		std::string _x, _y, _z, _horizontalIndex, _verticalIndex, _id;
 		std::getline(ss, _x, ';');
-		if (_x == myText) {
-			verticalCounts.push_back(std::stoi(myText));
-		}
-		else {
+		if (_x != myText) {
 			std::getline(ss, _y, ';');
 			std::getline(ss, _z, ';');
 			std::getline(ss, _horizontalIndex, ';');
@@ -104,10 +97,6 @@ void groundSegmentation() { //TODO point struktúra megvátozott
 		}
 	}
 }
-
-#include <random>
-
-std::mt19937 gen(100);
 
 void setPointsMarked(std::vector<Point*> points, bool isMarked, bool isMarked2)
 {
@@ -2610,6 +2599,21 @@ void convexSegmentation()
 	}
 }
 
+void fitPointsToPlane()
+{
+	for (size_t i = 0; i < savedPlanes.size(); i++) {
+		auto normal = savedPlanes[i]->normal;
+		auto planePointPos = savedPlanes[i]->planePointPos;
+		for (size_t j = 0; j < savedPlanes[i]->edges.size(); j++) {
+			for (size_t k = 0; k < savedPlanes[i]->edges[j]->pointsWithDir.size(); k++) 
+			{
+				double dist = Vec3<double>::dot_product(normal, savedPlanes[i]->edges[j]->pointsWithDir[k].first->position - planePointPos);
+				savedPlanes[i]->edges[j]->pointsWithDir[k].first->position = savedPlanes[i]->edges[j]->pointsWithDir[k].first->position - normal * dist;
+			}
+		}
+	}
+}
+
 void saveSavedPoints()
 {
 	for (size_t i = 0; i < savedPlanes.size(); i++) {
@@ -2831,9 +2835,8 @@ int main()
 {
 	double avarageComputeTime = 0;
 	size_t endIndex = (pointCloudTestIndex == -1 ? std::max<size_t>(1, pointCloudCount) : 1);
-	for (currentFrame = (pointCloudTestIndex == -1 ? pointCloudBeginIndex : 0); 
-		currentFrame < endIndex; currentFrame++)
-	{
+	for (currentFrame = (pointCloudTestIndex == -1 ? pointCloudBeginIndex : 0);
+		currentFrame < endIndex; currentFrame++) {
 		auto start = std::chrono::steady_clock::now();
 		readData(currentFrame);
 		auto end = std::chrono::steady_clock::now();
@@ -2847,10 +2850,10 @@ int main()
 			<< (double)std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() / 1000
 			<< " sec" << std::endl;
 		avarageComputeTime += (double)std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() / 1000;
-		if (currentFrame == endIndex - 1) 
-		{
+		if (true || currentFrame == endIndex - 1) {
 			start = std::chrono::steady_clock::now();
 			convexSegmentation();
+			fitPointsToPlane();
 			exportObjects(currentFrame);
 			writeData(currentFrame);
 			end = std::chrono::steady_clock::now();
