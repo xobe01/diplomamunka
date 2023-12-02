@@ -44,30 +44,28 @@ void readData(size_t pointCloudIndex)
 	std::getline(ss, _z, ';');
 	egoCarPos.push_back({ std::stof(_x),  std::stof(_y),  std::stof(_z) });
 	getline(MyReadFile, myText);
-	getline(MyReadFile, myText);
 	horizontalCount = std::stoi(myText);
 	getline(MyReadFile, myText);
 	verticalCount = std::stoi(myText);
+	getline(MyReadFile, myText);
 	points[pointCloudIndex].resize(verticalCount * horizontalCount);
 	while (getline(MyReadFile, myText)) {
 		std::replace(myText.begin(), myText.end(), ',', '.');
 		std::stringstream ss(myText);
 		std::string _x, _y, _z, _horizontalIndex, _verticalIndex, _id;
 		std::getline(ss, _x, ';');
-		if (_x != myText) {
-			std::getline(ss, _y, ';');
-			std::getline(ss, _z, ';');
-			std::getline(ss, _horizontalIndex, ';');
-			std::getline(ss, _verticalIndex, ';');
-			std::getline(ss, _id, ';');
-			double x = std::stof(_x);
-			double y = std::stof(_y);
-			double z = std::stof(_z);
-			int id = std::stoi(_id);
-			int horizontalIndex = std::stoi(_horizontalIndex);
-			int verticalIndex = std::stoi(_verticalIndex);
-			points[pointCloudIndex][getOffset(horizontalIndex, verticalIndex)] = new Point({ x, y, z }, horizontalIndex, verticalIndex, nullptr);
-		}
+		std::getline(ss, _y, ';');
+		std::getline(ss, _z, ';');
+		std::getline(ss, _horizontalIndex, ';');
+		std::getline(ss, _verticalIndex, ';');
+		std::getline(ss, _id, ';');
+		double x = std::stof(_x);
+		double y = std::stof(_y);
+		double z = std::stof(_z);
+		int id = std::stoi(_id);
+		int horizontalIndex = std::stoi(_horizontalIndex);
+		int verticalIndex = std::stoi(_verticalIndex);
+		points[pointCloudIndex][getOffset(horizontalIndex, verticalIndex)] = new Point({ x, y, z }, horizontalIndex, verticalIndex, nullptr);
 	}
 	MyReadFile.close();
 }
@@ -2040,7 +2038,7 @@ void relocateHoleNeighbours(Plane* plane)
 				}
 			}
 		}
-	}
+	}	
 }
 
 void groupPlanes()
@@ -2064,11 +2062,9 @@ void groupPlanes()
 	}
 	std::vector<Plane*> tempPlanes;
 	bool foundNewConnectionAtAll = true;
-	while (foundNewConnectionAtAll)
-	{
+	while (foundNewConnectionAtAll) {
 		foundNewConnectionAtAll = false;
-		while (allPlanes.size() > 0) 
-		{
+		while (allPlanes.size() > 0) {
 			for (size_t i = 1; i < allPlanes.size(); i++) {
 				bool foundNewConnection = arePlanesIntersecting(allPlanes[0], allPlanes[i]);
 				if (foundNewConnection) {
@@ -2089,10 +2085,8 @@ void groupPlanes()
 		std::cout << "Kept plane count in iteration: " << allPlanes.size() << std::endl;
 		tempPlanes.clear();
 	}
-	for (size_t i = 0; i < allPlanes.size(); i++) 
-	{
-		if (allPlanes[i]->presentInFrames < 2) 
-		{
+	for (size_t i = 0; i < allPlanes.size(); i++) {
+		if (allPlanes[i]->presentInFrames < 2) {
 			delete allPlanes[i];
 			allPlanes.erase(allPlanes.begin() + i);
 			i--;
@@ -2100,9 +2094,8 @@ void groupPlanes()
 		}
 		size_t neighboursSizeNonHole = 0;
 		size_t neighboursSizeHole = 0;
-		for (size_t j = 0; j < allPlanes[i]->edges.size(); j++) 
-		{
-			if(allPlanes[i]->edges[j]->isHole)
+		for (size_t j = 0; j < allPlanes[i]->edges.size(); j++) {
+			if (allPlanes[i]->edges[j]->isHole)
 				neighboursSizeHole += allPlanes[i]->edges[j]->closestNeighbourPoints.size();
 			else
 				neighboursSizeNonHole += allPlanes[i]->edges[j]->closestNeighbourPoints.size();
@@ -2117,8 +2110,12 @@ void groupPlanes()
 				allPlanes[i]->closestNeighbourPointsNonHole.insert(allPlanes[i]->closestNeighbourPointsNonHole.end(), allPlanes[i]->edges[j]->closestNeighbourPoints.begin(),
 					allPlanes[i]->edges[j]->closestNeighbourPoints.end());
 		}
+		auto start = std::chrono::steady_clock::now();
 		relocateHoleNeighbours(allPlanes[i]);
-		std::cout << "Relocated Neighbours complete " << allPlanes.size() << "/" << i << std::endl;
+		auto end = std::chrono::steady_clock::now();
+		std::cout << "Relocated neighbours " + std::to_string(allPlanes.size()) + "/" + std::to_string(i) + " Elapsed time in seconds : "
+			<< (double)std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() / 1000
+			<< " sec" << std::endl;
 	}
 }
 

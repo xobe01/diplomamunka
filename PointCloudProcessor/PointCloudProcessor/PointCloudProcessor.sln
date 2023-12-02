@@ -7,6 +7,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PointCloudProcessor", "Poin
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NonSequentialProcessor", "NonSequentialProcessor\NonSequentialProcessor.vcxproj", "{E5B57DC8-D6D4-49CE-A4AF-190488951D2E}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Parallel", "Parallel\Parallel.vcxproj", "{F4D499AF-0270-4947-80BB-4ADDF699657B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CudaRuntime1", "CudaRuntime1\CudaRuntime1.vcxproj", "{282C2004-7797-4FBD-92EE-FD94999FE350}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +25,14 @@ Global
 		{E5B57DC8-D6D4-49CE-A4AF-190488951D2E}.Debug|x64.Build.0 = Debug|x64
 		{E5B57DC8-D6D4-49CE-A4AF-190488951D2E}.Release|x64.ActiveCfg = Release|x64
 		{E5B57DC8-D6D4-49CE-A4AF-190488951D2E}.Release|x64.Build.0 = Release|x64
+		{F4D499AF-0270-4947-80BB-4ADDF699657B}.Debug|x64.ActiveCfg = Debug|x64
+		{F4D499AF-0270-4947-80BB-4ADDF699657B}.Debug|x64.Build.0 = Debug|x64
+		{F4D499AF-0270-4947-80BB-4ADDF699657B}.Release|x64.ActiveCfg = Release|x64
+		{F4D499AF-0270-4947-80BB-4ADDF699657B}.Release|x64.Build.0 = Release|x64
+		{282C2004-7797-4FBD-92EE-FD94999FE350}.Debug|x64.ActiveCfg = Debug|x64
+		{282C2004-7797-4FBD-92EE-FD94999FE350}.Debug|x64.Build.0 = Debug|x64
+		{282C2004-7797-4FBD-92EE-FD94999FE350}.Release|x64.ActiveCfg = Release|x64
+		{282C2004-7797-4FBD-92EE-FD94999FE350}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

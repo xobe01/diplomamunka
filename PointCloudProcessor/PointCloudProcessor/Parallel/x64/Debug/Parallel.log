@@ -1,0 +1,285 @@
+﻿  Compiling CUDA source file kernel_p.cu...
+  
+  C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel>"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\bin\nvcc.exe" -gencode=arch=compute_52,code=\"sm_52,compute_52\" --use-local-env -ccbin "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\bin\HostX86\x64" -x cu   -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\include" -I"C:\vcpkg\installed\x64-windows\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\include"  -G   --keep-dir x64\Debug  -maxrregcount=0  --machine 64 --compile -cudart static  -g  -DWIN32 -DWIN64 -D_DEBUG -D_CONSOLE -D_MBCS -Xcompiler "/EHsc /W3 /nologo /Od /Fdx64\Debug\vc142.pdb /FS /Zi /RTC1 /MDd " -o C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\x64\Debug\kernel_p.cu.obj "C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu" 
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.h(116): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.h(116): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.h(117): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.h(119): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.h(121): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.h(123): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.h(163): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.h(193): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.h(193): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.h(194): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.h(196): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.h(198): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.h(200): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(295): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(336): warning #177-D: variable "planeMerged" was declared but never referenced
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(315): warning #177-D: variable "minPointCount" was declared but never referenced
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(316): warning #177-D: variable "counter" was declared but never referenced
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(472): warning #68-D: integer conversion resulted in a change of sign
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(771): warning #550-D: variable "isNeighbour" was set but never used
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(849): warning #177-D: variable "deleteDurroundingCornersTreshold" was declared but never referenced
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(916): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(921): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(921): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(941): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(947): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(947): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(1352): warning #128-D: loop is not reachable
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(1814): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(1944): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(2027): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(2028): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(2029): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(2030): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(2151): warning #780-D: reference is to variable "i"
+  (2134): here -- under old for-init scoping rules it would have been variable "i"
+  (2143): here
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(2151): warning #780-D: reference is to variable "i"
+  (2134): here -- under old for-init scoping rules it would have been variable "i"
+  (2143): here
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(2151): warning #780-D: reference is to variable "i"
+  (2134): here -- under old for-init scoping rules it would have been variable "i"
+  (2143): here
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(2151): warning #780-D: reference is to variable "i"
+  (2134): here -- under old for-init scoping rules it would have been variable "i"
+  (2143): here
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(2152): warning #780-D: reference is to variable "i"
+  (2134): here -- under old for-init scoping rules it would have been variable "i"
+  (2143): here
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(2276): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(2277): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(2278): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(2279): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(2867): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(15): warning #177-D: variable "objectPointDistance" was declared but never referenced
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.h(163): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(295): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(472): warning #68-D: integer conversion resulted in a change of sign
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(916): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(921): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(921): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(941): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(947): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(947): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(1352): warning #128-D: loop is not reachable
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(1814): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(1944): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(2027): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(2028): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(2029): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(2030): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(2151): warning #780-D: reference is to variable "i"
+  (2134): here -- under old for-init scoping rules it would have been variable "i"
+  (2143): here
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(2151): warning #780-D: reference is to variable "i"
+  (2134): here -- under old for-init scoping rules it would have been variable "i"
+  (2143): here
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(2151): warning #780-D: reference is to variable "i"
+  (2134): here -- under old for-init scoping rules it would have been variable "i"
+  (2143): here
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(2151): warning #780-D: reference is to variable "i"
+  (2134): here -- under old for-init scoping rules it would have been variable "i"
+  (2143): here
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(2152): warning #780-D: reference is to variable "i"
+  (2134): here -- under old for-init scoping rules it would have been variable "i"
+  (2143): here
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(2276): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(2277): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(2278): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(2279): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(2867): warning #461-D: initial value of reference to non-const must be an lvalue
+  
+  kernel_p.cu
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(20): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(21): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(22): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(23): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(111): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(111): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(111): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(111): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(114): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(114): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(114): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(114): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(149): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(149): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(149): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(149): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(165): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(165): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(165): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(165): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(174): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(174): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(174): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(174): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(211): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(212): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(213): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(214): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(232): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(234): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(236): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(238): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(291): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(291): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(291): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(291): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(344): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(344): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(344): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(344): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(389): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(336): warning C4101: 'planeMerged': unreferenced local variable
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(429): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(432): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(435): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(438): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(493): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(496): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(499): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(502): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(513): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(590): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(594): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(598): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(602): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(628): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(628): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(628): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(628): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(638): warning C4244: 'initializing': conversion from 'T' to 'float', possible loss of data
+          with
+          [
+              T=double
+          ]
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(693): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(702): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(772): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(772): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(772): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(772): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(981): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(981): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(981): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(981): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(1398): warning C4805: '==': unsafe mix of type 'size_t' and type 'bool' in operation
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(2138): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(2697): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(2718): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(2790): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(2909): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(2920): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\include\utility(194): warning C4267: 'initializing': conversion from 'size_t' to '_Ty2', possible loss of data
+          with
+          [
+              _Ty2=int
+          ]
+  C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(476): note: see reference to function template instantiation 'std::pair<Point *,int>::pair<Point*&,size_t&,0>(_Other1,_Other2) noexcept' being compiled
+          with
+          [
+              _Other1=Point *&,
+              _Other2=size_t &
+          ]
+  C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(476): note: see reference to function template instantiation 'std::pair<Point *,int>::pair<Point*&,size_t&,0>(_Other1,_Other2) noexcept' being compiled
+          with
+          [
+              _Other1=Point *&,
+              _Other2=size_t &
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\include\utility(194): warning C4244: 'initializing': conversion from '_Ty' to '_Ty2', possible loss of data
+          with
+          [
+              _Ty=unsigned __int64
+          ]
+          and
+          [
+              _Ty2=int
+          ]
+  C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(544): note: see reference to function template instantiation 'std::pair<Point *,int>::pair<Point*&,size_t,0>(_Other1,_Other2 &&) noexcept' being compiled
+          with
+          [
+              _Other1=Point *&,
+              _Other2=size_t
+          ]
+  C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\Parallel\kernel_p.cu(544): note: see reference to function template instantiation 'std::pair<Point *,int>::pair<Point*&,size_t,0>(_Other1,_Other2 &&) noexcept' being compiled
+          with
+          [
+              _Other1=Point *&,
+              _Other2=size_t
+          ]
+     Creating library C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\x64\Debug\Parallel.lib and object C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\x64\Debug\Parallel.exp
+  Parallel.vcxproj -> C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\x64\Debug\Parallel.exe

@@ -51,14 +51,14 @@ struct Vec3 {
 		T x = v1.x < v2.x ? v1.x : v2.x;
 		T y = v1.y < v2.y ? v1.y : v2.y;
 		T z = v1.z < v2.z ? v1.z : v2.z;
-		return Vec3_CUDA(x, y, z);
+		return Vec3(x, y, z);
 	}
 
 	static Vec3<T> max(Vec3<T> v1, Vec3<T> v2) {
 		T x = v1.x > v2.x ? v1.x : v2.x;
 		T y = v1.y > v2.y ? v1.y : v2.y;
 		T z = v1.z > v2.z ? v1.z : v2.z;
-		return Vec3_CUDA(x, y, z);
+		return Vec3(x, y, z);
 	}
 
 	std::string to_string() {

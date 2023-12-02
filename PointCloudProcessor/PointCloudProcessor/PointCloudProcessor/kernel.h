@@ -9,13 +9,13 @@ struct Point
 	bool isMarked2{ false };
 	size_t horizontalIndex;
 	size_t verticalIndex;
-	Vec3<double> position;
-	Vec3<double> projected2DPosition;
+	Vec3_CUDA<double> position;
+	Vec3_CUDA<double> projected2DPosition;
 	Plane* plane{ 0 };
 	size_t cornerId{ 0 };
 	size_t outlineId{ 0 };
 	size_t cornerIndex{ 0 };
-	Vec3<double> normal = { 0, 0, 0 };
+	Vec3_CUDA<double> normal = { 0, 0, 0 };
 	bool isMarked{ false };
 
 	std::vector<Point*> neighbourPlaneNeighbours;
@@ -24,7 +24,7 @@ struct Point
 	std::vector<size_t> convexIndex;
 	bool isCorner;
 
-	Point(Vec3<double> _position, size_t _horizontalIndex, size_t _verticalIndex, Plane* _plane) : position(_position), horizontalIndex(_horizontalIndex),
+	Point(Vec3_CUDA<double> _position, size_t _horizontalIndex, size_t _verticalIndex, Plane* _plane) : position(_position), horizontalIndex(_horizontalIndex),
 		verticalIndex(_verticalIndex), plane(_plane)
 	{
 		isCorner = false;
@@ -47,7 +47,7 @@ struct Edge
 	bool wasFirstGenerated;
 	bool isInUse = true;
 	Point* startPoint;
-	std::vector<std::pair<Vec3<double>, Vec3<double>>> closestNeighbourPoints;
+	std::vector<std::pair<Vec3_CUDA<double>, Vec3_CUDA<double>>> closestNeighbourPoints;
 	std::vector<std::pair<Point*, int>> pointsWithDir;
 	std::pair<double, double> xBounds2D;
 	std::pair<double, double> yBounds2D;
@@ -77,19 +77,19 @@ struct Edge
 struct Plane {
 	std::vector<Point*> points;
 	std::vector<Edge*> edges; //wasFirstGenerated, startpoint, points, direction
-	Vec3<double> planePointPos;
-	Vec3<double> normal;
-	std::pair<Vec3<double>, Vec3<double>> pointDirections;
+	Vec3_CUDA<double> planePointPos;
+	Vec3_CUDA<double> normal;
+	std::pair<Vec3_CUDA<double>, Vec3_CUDA<double>> pointDirections;
 	size_t id;
 	bool isNewlyCreated = true;
 	std::vector<std::vector<Point*>> convexFaces;
-	std::pair<Vec3<double>, Vec3<double>> furthestNormalPoints = { {0,0,0}, {0,0,0} };
+	std::pair<Vec3_CUDA<double>, Vec3_CUDA<double>> furthestNormalPoints = { {0,0,0}, {0,0,0} };
 	void calculateAvaragePointPos()
 	{
 		std::pair<double, double> normalDistances = { 1000, -1000 };
 		for (size_t i = 0; i < points.size(); i++) 
 		{
-			double dist = Vec3<double>::dot_product(normal, points[i]->position - planePointPos);
+			double dist = Vec3_CUDA<double>::dot_product(normal, points[i]->position - planePointPos);
 			if (dist < normalDistances.first) 
 			{
 				normalDistances.first = dist;
@@ -106,10 +106,10 @@ struct Plane {
 const double PI = 3.14159265359;
 const std::pair<double, double> rayAngles = { -18, 20 };
 
-const size_t pointCloudCount = 99;
+const size_t pointCloudCount = 100;
 const size_t pointCloudBeginIndex = 0;
 const int pointCloudTestIndex = -1;
-Vec3<double> egoCarPos;
+Vec3_CUDA<double> egoCarPos;
 size_t currentFrame = 0;
 
 bool checkIfBridge(Point* p, bool onlyMarked);

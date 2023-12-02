@@ -7,7 +7,7 @@ public class LidarController : MonoBehaviour
 {
     [SerializeField] Vector2 angles;
     [SerializeField] int pointCount;
-    [SerializeField] int verticalPointCount;
+    [SerializeField] int verticalCount;
     [SerializeField] Color unprocesseedColor;
     [SerializeField] LineRenderer linePrefab;
     [SerializeField] GameObject normalArrow;
@@ -20,7 +20,6 @@ public class LidarController : MonoBehaviour
     List<List<Point>> pointsById;
     List<List<Vector3>> linePoints;
     List<List<Vector3>> convexLinePoints;
-    List<int> verticalCount;
     List<GameObject> lines;
     List<GameObject> convexLines;
     Color[] pointColors;
@@ -40,29 +39,26 @@ public class LidarController : MonoBehaviour
         pointsById = new List<List<Point>>();
         linePoints = new List<List<Vector3>>();
         convexLinePoints= new List<List<Vector3>>();
-        verticalCount = new List<int>();
         lines = new List<GameObject>();
         convexLines = new List<GameObject>();
         particleSystem = GetComponent<ParticleSystem>();
-        horizontalCount = pointCount / verticalPointCount;
+        horizontalCount = pointCount / verticalCount;
         if(cont != null)
             pointColors = cont.GetColors();
     }
 
     public void Scan(bool isGeneratorScene, int scanIndex)
     {
-        verticalCount.Clear();
         scannedPoints.Clear();
         verticalCounter = 0;
         for (float i = 0; i < horizontalCount; i++)
         {
-            for (int j = 0; j < verticalPointCount; j++)
+            for (int j = 0; j < verticalCount; j++)
             {
                 ShootRay(new Vector3(Mathf.Sin(2 * Mathf.PI * (i / horizontalCount)),
-                    angles.y / 45 + (angles.x - angles.y) / 45 / verticalPointCount * j ,
+                    angles.y / 45 + (angles.x - angles.y) / 45 / verticalCount * j ,
                     Mathf.Cos(2 * Mathf.PI * (i / horizontalCount))), j, (int)i); 
             }
-            verticalCount.Add(verticalCounter);
         }
         if(scanIndex == -1)
             DisplayPoints(scannedPoints, 0);
@@ -154,7 +150,7 @@ public class LidarController : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(transform.position, dir, out hit))
         {
-            if (hit.point.magnitude < maxDistance)
+            if (hit.point.magnitude < maxDistance && hit.collider.tag != "Ground")
             {
                 scannedPoints.Add(new Point(hit.point, verticalIndex, horizontalIndex, 0, 0, 0));
                 verticalCounter++;
@@ -227,13 +223,9 @@ public class LidarController : MonoBehaviour
         }
         StreamWriter writer = new StreamWriter(fileName, true);
         writer.WriteLine(transform.position.x + ";" + transform.position.y + ";" + transform.position.z);
-        writer.WriteLine(scannedPoints.Count);
         writer.WriteLine(horizontalCount);
-        writer.WriteLine(verticalPointCount);
-        for (int i = 0; i < verticalCount.Count; i++)
-        {
-            writer.WriteLine(verticalCount[i]);
-        }
+        writer.WriteLine(verticalCount);
+        writer.WriteLine(scannedPoints.Count);
         for (int i = 0; i < scannedPoints.Count; i++){
             writer.WriteLine(scannedPoints[i].Position.x + ";" + scannedPoints[i].Position.y + ";" + scannedPoints[i].Position.z +';' + scannedPoints[i].HorizontalIndex
                 + ';' + scannedPoints[i].VerticalIndex + ';' + scannedPoints[i].Id);

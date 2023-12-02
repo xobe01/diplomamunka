@@ -57,30 +57,28 @@ void readData(size_t pointCloudIndex)
 	std::getline(ss, _z, ';');
 	egoCarPos = { std::stof(_x),  std::stof(_y),  std::stof(_z) };
 	getline(MyReadFile, myText);
-	getline(MyReadFile, myText);
 	horizontalCount = std::stoi(myText);
 	getline(MyReadFile, myText);
 	verticalCount = std::stoi(myText);
+	getline(MyReadFile, myText);
 	points.resize(verticalCount * horizontalCount);
     while (getline(MyReadFile, myText)) {
 		std::replace(myText.begin(), myText.end(), ',', '.');
 		std::stringstream ss(myText);
 		std::string _x, _y, _z, _horizontalIndex, _verticalIndex, _id;
 		std::getline(ss, _x, ';');
-		if (_x != myText) {
-			std::getline(ss, _y, ';');
-			std::getline(ss, _z, ';');
-			std::getline(ss, _horizontalIndex, ';');
-			std::getline(ss, _verticalIndex, ';');
-			std::getline(ss, _id, ';');
-			double x = std::stof(_x);
-			double y = std::stof(_y);
-			double z = std::stof(_z);
-			int id = std::stoi(_id);
-			int horizontalIndex = std::stoi(_horizontalIndex);
-			int verticalIndex = std::stoi(_verticalIndex);
-			points[getOffset(horizontalIndex, verticalIndex)] = new Point({ x, y, z }, horizontalIndex, verticalIndex, nullptr);
-		}		
+		std::getline(ss, _y, ';');
+		std::getline(ss, _z, ';');
+		std::getline(ss, _horizontalIndex, ';');
+		std::getline(ss, _verticalIndex, ';');
+		std::getline(ss, _id, ';');
+		double x = std::stof(_x);
+		double y = std::stof(_y);
+		double z = std::stof(_z);
+		int id = std::stoi(_id);
+		int horizontalIndex = std::stoi(_horizontalIndex);
+		int verticalIndex = std::stoi(_verticalIndex);
+		points[getOffset(horizontalIndex, verticalIndex)] = new Point({ x, y, z }, horizontalIndex, verticalIndex, nullptr);
 	}
     MyReadFile.close();
 }
