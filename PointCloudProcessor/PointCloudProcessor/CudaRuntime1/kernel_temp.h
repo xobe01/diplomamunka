@@ -1,5 +1,6 @@
 #pragma once
 
+#include <thread>
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
 #include <stdio.h>
@@ -205,7 +206,7 @@ const double PI = 3.14159265359;
 const std::pair<double, double> rayAngles = { -18, 20 };
 
 double dbgTimeCounter = 0;
-const size_t pointCloudCount = 2;
+const size_t pointCloudCount = 10;
 const size_t pointCloudBeginIndex = 0;
 const int pointCloudTestIndex = -1;
 std::vector<Vec3<double>> egoCarPos;

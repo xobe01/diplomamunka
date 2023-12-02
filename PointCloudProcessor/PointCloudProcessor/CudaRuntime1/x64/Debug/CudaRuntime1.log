@@ -1,31 +1,31 @@
 ﻿  Compiling CUDA source file kernel_temp.cu...
   
   C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1>"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\bin\nvcc.exe" -gencode=arch=compute_52,code=\"sm_52,compute_52\" --use-local-env -ccbin "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\bin\HostX86\x64" -x cu   -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\include" -I"C:\vcpkg\installed\x64-windows\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\include"  -G   --keep-dir x64\Debug  -maxrregcount=0  --machine 64 --compile -cudart static  -g  -DWIN32 -DWIN64 -D_DEBUG -D_CONSOLE -D_MBCS -Xcompiler "/EHsc /W3 /nologo /Od /Fdx64\Debug\vc142.pdb /FS /Zi /RTC1 /MDd " -o C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\x64\Debug\kernel_temp.cu.obj "C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu" 
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.h(116): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
-  
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.h(116): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.h(117): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
   
 C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.h(117): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.h(119): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.h(118): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.h(121): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.h(120): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.h(123): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.h(122): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.h(163): warning #461-D: initial value of reference to non-const must be an lvalue
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.h(124): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.h(193): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
-  
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.h(193): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.h(164): warning #461-D: initial value of reference to non-const must be an lvalue
   
 C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.h(194): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.h(196): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.h(194): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.h(198): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.h(195): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.h(200): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.h(197): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.h(199): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
+  
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.h(201): warning #20014-D: calling a __host__ function from a __host__ __device__ function is not allowed
   
 C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(291): warning #461-D: initial value of reference to non-const must be an lvalue
   
@@ -53,37 +53,37 @@ C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor
   
 C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(926): warning #461-D: initial value of reference to non-const must be an lvalue
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(1472): warning #177-D: variable "hasFoundIntersection" was declared but never referenced
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(1488): warning #177-D: variable "hasFoundIntersection" was declared but never referenced
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(1795): warning #461-D: initial value of reference to non-const must be an lvalue
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(1811): warning #461-D: initial value of reference to non-const must be an lvalue
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(1921): warning #461-D: initial value of reference to non-const must be an lvalue
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(1937): warning #461-D: initial value of reference to non-const must be an lvalue
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2013): warning #461-D: initial value of reference to non-const must be an lvalue
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2029): warning #461-D: initial value of reference to non-const must be an lvalue
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2014): warning #461-D: initial value of reference to non-const must be an lvalue
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2030): warning #461-D: initial value of reference to non-const must be an lvalue
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2015): warning #461-D: initial value of reference to non-const must be an lvalue
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2031): warning #461-D: initial value of reference to non-const must be an lvalue
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2016): warning #461-D: initial value of reference to non-const must be an lvalue
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2032): warning #461-D: initial value of reference to non-const must be an lvalue
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2044): warning #461-D: initial value of reference to non-const must be an lvalue
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2060): warning #461-D: initial value of reference to non-const must be an lvalue
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2045): warning #461-D: initial value of reference to non-const must be an lvalue
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2061): warning #461-D: initial value of reference to non-const must be an lvalue
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2046): warning #461-D: initial value of reference to non-const must be an lvalue
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2062): warning #461-D: initial value of reference to non-const must be an lvalue
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2047): warning #461-D: initial value of reference to non-const must be an lvalue
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2063): warning #461-D: initial value of reference to non-const must be an lvalue
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2455): warning #177-D: variable "neighbourSize_hole" was declared but never referenced
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2471): warning #177-D: variable "neighbourSize_hole" was declared but never referenced
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2457): warning #177-D: variable "edgeCount_hole" was declared but never referenced
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2473): warning #177-D: variable "edgeCount_hole" was declared but never referenced
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2960): warning #461-D: initial value of reference to non-const must be an lvalue
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2978): warning #461-D: initial value of reference to non-const must be an lvalue
   
 C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(15): warning #177-D: variable "objectPointDistance" was declared but never referenced
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.h(163): warning #461-D: initial value of reference to non-const must be an lvalue
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.h(164): warning #461-D: initial value of reference to non-const must be an lvalue
   
 C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(291): warning #461-D: initial value of reference to non-const must be an lvalue
   
@@ -101,27 +101,27 @@ C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor
   
 C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(926): warning #461-D: initial value of reference to non-const must be an lvalue
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(1795): warning #461-D: initial value of reference to non-const must be an lvalue
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(1811): warning #461-D: initial value of reference to non-const must be an lvalue
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(1921): warning #461-D: initial value of reference to non-const must be an lvalue
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(1937): warning #461-D: initial value of reference to non-const must be an lvalue
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2013): warning #461-D: initial value of reference to non-const must be an lvalue
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2029): warning #461-D: initial value of reference to non-const must be an lvalue
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2014): warning #461-D: initial value of reference to non-const must be an lvalue
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2030): warning #461-D: initial value of reference to non-const must be an lvalue
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2015): warning #461-D: initial value of reference to non-const must be an lvalue
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2031): warning #461-D: initial value of reference to non-const must be an lvalue
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2016): warning #461-D: initial value of reference to non-const must be an lvalue
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2032): warning #461-D: initial value of reference to non-const must be an lvalue
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2044): warning #461-D: initial value of reference to non-const must be an lvalue
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2060): warning #461-D: initial value of reference to non-const must be an lvalue
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2045): warning #461-D: initial value of reference to non-const must be an lvalue
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2061): warning #461-D: initial value of reference to non-const must be an lvalue
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2046): warning #461-D: initial value of reference to non-const must be an lvalue
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2062): warning #461-D: initial value of reference to non-const must be an lvalue
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2047): warning #461-D: initial value of reference to non-const must be an lvalue
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2063): warning #461-D: initial value of reference to non-const must be an lvalue
   
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2960): warning #461-D: initial value of reference to non-const must be an lvalue
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2978): warning #461-D: initial value of reference to non-const must be an lvalue
   
   kernel_temp.cu
 C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(20): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
@@ -194,17 +194,17 @@ C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor
 C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(751): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
 C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(751): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
 C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(751): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(960): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(960): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(960): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(960): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(1371): warning C4805: '==': unsafe mix of type 'size_t' and type 'bool' in operation
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2460): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2790): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2811): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2883): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(3002): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(3013): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(959): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(959): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(959): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(959): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(1387): warning C4805: '==': unsafe mix of type 'size_t' and type 'bool' in operation
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2476): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2808): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2829): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(2901): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(3020): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\CudaRuntime1\kernel_temp.cu(3031): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
 C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\include\utility(194): warning C4267: 'initializing': conversion from 'size_t' to '_Ty2', possible loss of data
           with
           [
@@ -243,4 +243,5 @@ C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.2
               _Other1=Point *&,
               _Other2=size_t
           ]
+     Creating library C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\x64\Debug\CudaRuntime1.lib and object C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\x64\Debug\CudaRuntime1.exp
   CudaRuntime1.vcxproj -> C:\Users\ungbo\Desktop\BME\_Diplomamunka\PointCloudProcessor\PointCloudProcessor\x64\Debug\CudaRuntime1.exe

@@ -42,6 +42,7 @@ public class Controller : MonoBehaviour
         if (isGeneratorScene)
         {
             traindataGen.GenerateSceneTrigger();
+            return;
         }
         else if(!dontScan) 
         {
@@ -50,7 +51,7 @@ public class Controller : MonoBehaviour
                 StartCoroutine(MultipleScan());
             }
             else
-                lidarCont.Scan(false, -1);
+                lidarCont.Scan(false,  false, -1);
         }
         if (dontScan)
         {
@@ -91,7 +92,7 @@ public class Controller : MonoBehaviour
     {
         for (int i = 0; i < moveAndScanCount; i++)
         {
-            lidarCont.Scan(false, i);
+            lidarCont.Scan(false, false, i);
             if (i < moveAndScanCount - 1) egoCar.transform.position += Vector3.back * carSpeed;
             yield return new WaitForSeconds(0.1f);
         }

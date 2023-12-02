@@ -118,7 +118,7 @@ int spikeType(Point* p, int arriveDirection, bool onlyMarkedNeighbours, size_t p
 	}
 	for (size_t j = 0; j < 4; j++) {
 		if (diagNeighbourPoints[j] && (j > 1 || y > 0) && (j < 2 || y < verticalCount - 1) && diagNeighbourPoints[j]->plane == p->plane &&
-			(!onlyMarkedNeighbours || diagNeighbourPoints[j]->isMarked)) {
+			(!onlyMarkedNeighbours || diagNeighbourPoints[j]->isMarked)) { 
 			diagIsNeighbour[j] = true;
 		}
 	}
@@ -949,11 +949,10 @@ void findPlaneConnections(size_t pointCloudIndex)
 {
 	for (size_t i = 0; i < planes[pointCloudIndex].size(); i++) {
 		for (size_t j = 0; j < planes[pointCloudIndex][i]->edges.size(); j++) {
-			for (size_t k = 0; k < planes[pointCloudIndex][i]->edges[j]->pointsWithDir.size(); k++) {
+			for (size_t k = 0; k < planes[pointCloudIndex][i]->edges[j]->pointsWithDir.size(); k++) 
+			{
+
 				Point* point = planes[pointCloudIndex][i]->edges[j]->pointsWithDir[k].first;
-				if (point->horizontalIndex == 339 && point->verticalIndex == 14) {
-					//std::cout << "asd";
-				}
 				int direction = planes[pointCloudIndex][i]->edges[j]->pointsWithDir[k].second;
 				size_t x = point->horizontalIndex;
 				size_t y = point->verticalIndex;
@@ -1247,6 +1246,23 @@ size_t isPointInsidePolygon(std::vector<Point*>polygon, Vec3<double> point, std:
 	return false;
 }
 
+bool isPointInsidePolygon_short(std::vector<Point*>polygon, Vec3<double> point, std::pair<double, double> xBounds, std::pair<double, double> yBounds)
+{
+	bool isInside = false;
+	if (point.x > xBounds.first && point.x < xBounds.second &&
+		point.y > yBounds.first && point.y < yBounds.second)
+	{
+		for (size_t i = 0; i < polygon.size(); i++) {
+			auto p1 = polygon[i]->projected2DPosition;
+			auto p2 = polygon[(i + 1) % polygon.size()]->projected2DPosition;
+			if (((p1.y > point.y) != (p2.y > point.y)) &&
+				(point.x < (p2.x - p1.x) * (point.y - p1.y) / (p2.y - p1.y) + p1.x))
+				isInside = !isInside;
+		}
+	}
+	return isInside;
+}
+
 void changeBaseTo2D(Edge* edge, std::pair<Vec3<double>, Vec3<double>> newBase = { {0,0,0}, {0,0,0} })
 {
 	edge->xBounds2D = { 100000, -100000 };
@@ -1474,13 +1490,13 @@ bool areEdgesIntersect(Edge* savedEdge, Edge* newEdge)
 	auto newEdgePoints = newEdge->getPoints();
 
 	for (size_t j = 0; j < newEdge->pointsWithDir.size(); j++) {
-		if (isPointInsidePolygon(savedEdgePoints, newEdge->pointsWithDir[j].first->projected2DPosition, savedEdge->xBounds2D, savedEdge->yBounds2D, true)) {
+		if (isPointInsidePolygon_short(savedEdgePoints, newEdge->pointsWithDir[j].first->projected2DPosition, savedEdge->xBounds2D, savedEdge->yBounds2D)) {
 			dbgCounter2++;
 			return true;
 		}
 	}
 	for (size_t i = 0; i < savedEdge->pointsWithDir.size(); i++) {
-		if (isPointInsidePolygon(newEdgePoints, savedEdge->pointsWithDir[i].first->projected2DPosition, newEdge->xBounds2D, newEdge->yBounds2D, true)) {
+		if (isPointInsidePolygon_short(newEdgePoints, savedEdge->pointsWithDir[i].first->projected2DPosition, newEdge->xBounds2D, newEdge->yBounds2D)) {
 			dbgCounter2++;
 			return true;
 		}
@@ -2485,7 +2501,7 @@ void filterNeighbours()
 	size_t counter = 0;
 	for (size_t l = 0; l < 2; l++) {
 		for (size_t i = 0; i < allPlanes.size(); i++) {
-			auto neighbours = (l == 0 ? allPlanes[i]->closestNeighbourPointsNonHole : allPlanes[i]->closestNeighbourPointsHole);
+			std::vector<std::pair<Vec3<double>, Vec3<double>>>& neighbours = (l == 0 ? allPlanes[i]->closestNeighbourPointsNonHole : allPlanes[i]->closestNeighbourPointsHole);
 			for (size_t j = 0; j < neighbours.size(); j++) 
 			{
 
@@ -2647,6 +2663,9 @@ void fitPlanes()
 	}
 	for (auto& th : t) {              
 		th.join();
+	}
+	for (int i = 0; i < allPlanes.size(); i++) {
+		fitOnePlane(i);
 	}
 	auto end = std::chrono::steady_clock::now();
 	std::cout << "Planes fit: Elapsed time in seconds : "
@@ -3026,18 +3045,13 @@ void processData(size_t pointCloudIndex)
 	size_t endIndex = (pointCloudTestIndex == -1 ? std::max<size_t>(1, pointCloudCount) : 1);
 	for (currentFrame = (pointCloudTestIndex == -1 ? pointCloudBeginIndex : 0);
 		currentFrame < endIndex; currentFrame++) {
-		groundSegmentation(currentFrame);
+		egoCarSegmentation(currentFrame);
 	}
 	auto end = std::chrono::steady_clock::now();
-	std::cout << "groundSegmentation: Elapsed time in seconds : "
+	std::cout << "egoCarSegmentation: Elapsed time in seconds : "
 		<< (double)std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() / 1000
 		<< " sec" << std::endl;
 
-	start = std::chrono::steady_clock::now();
-	for (currentFrame = (pointCloudTestIndex == -1 ? pointCloudBeginIndex : 0);
-		currentFrame < endIndex; currentFrame++) {
-		egoCarSegmentation(currentFrame);
-	}
 	end = std::chrono::steady_clock::now();
 	std::cout << "egoCarSegmentation: Elapsed time in seconds : "
 		<< (double)std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() / 1000

@@ -25,12 +25,12 @@ public class TrainDataGenerator : MonoBehaviour
 
     public void GenerateSceneTrigger()
     {
-        StartCoroutine(GenerateScene(1));
+        StartCoroutine(GenerateScene(200, 50));
     }
 
-    IEnumerator GenerateScene(int sceneCount)
+    IEnumerator GenerateScene(int trainCount, int testCount)
     {
-        for (int i = 0; i < sceneCount; i++)
+        for (int i = 0; i < trainCount + testCount; i++)
         {
             foreach (var obj in generatedObjects)
             {
@@ -45,13 +45,13 @@ public class TrainDataGenerator : MonoBehaviour
                 streetObjectClearer.TurnOffCollder();
             }
             yield return new WaitForSeconds(1);
-            lidarCont.Scan(false, -1);
+            lidarCont.Scan(true, i >= trainCount, -1);
         }        
     }
 
      void Generate()
     {
-        UnityEngine.Random.seed = 13;
+        //UnityEngine.Random.seed = 13;
         egoCar.transform.position = new Vector3(UnityEngine.Random.Range(0.0f, 1.0f) < 0.5f ? 0 : 7.5f, egoCar.transform.position.y,
             egoCar.transform.position.z);
 
@@ -113,7 +113,7 @@ public class TrainDataGenerator : MonoBehaviour
             }
         }
         //crossing
-        crossingSpawn.transform.position += Vector3.forward * UnityEngine.Random.Range(-200.0f, 200.0f);
+        /*crossingSpawn.transform.position += Vector3.forward * UnityEngine.Random.Range(-200.0f, 200.0f);
         if(UnityEngine.Random.Range(0,1) < 0.6f)
         {
             int pedestrianCount = UnityEngine.Random.Range(1, 6);
@@ -127,7 +127,7 @@ public class TrainDataGenerator : MonoBehaviour
                 generatedObjects.Add(Instantiate(pedestrian, spawnPoint, Quaternion.Euler(pedestrian.transform.rotation.eulerAngles.x,
                     UnityEngine.Random.Range(0, 360), pedestrian.transform.rotation.eulerAngles.z)));
             }
-        }
+        }*/
         print("end");
     }
 }

@@ -11,6 +11,8 @@ public class Point
     int id;
     int outlineId;
     int lineId;
+    float distance;
+    bool isHouse;
 
     public Vector3 Position
     {
@@ -48,7 +50,15 @@ public class Point
         set { horizontalIndex = value; }
     }
 
-    public Point(Vector3 _position, int _verticalIndex, int _horizontalIndex, int _id, int _outlineId, int _lineId)
+    public float Distance
+    {
+        get { return distance; }
+    }
+
+    public bool IsHouse
+    { get { return isHouse; } }
+
+    public Point(Vector3 _position, int _verticalIndex, int _horizontalIndex, int _id, int _outlineId, int _lineId, float distance, bool isHouse)
     {
         position = _position;
         verticalIndex = _verticalIndex;
@@ -56,5 +66,7 @@ public class Point
         id = _id;
         outlineId = _outlineId;
         lineId = _lineId;
+        this.distance = distance;
+        this.isHouse = isHouse;
     }
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System.Linq;
 
 public class LidarController : MonoBehaviour
 {
@@ -47,7 +48,7 @@ public class LidarController : MonoBehaviour
             pointColors = cont.GetColors();
     }
 
-    public void Scan(bool isGeneratorScene, int scanIndex)
+    public void Scan(bool isGeneratorScene, bool isTest, int scanIndex)
     {
         scannedPoints.Clear();
         verticalCounter = 0;
@@ -62,7 +63,7 @@ public class LidarController : MonoBehaviour
         }
         if(scanIndex == -1)
             DisplayPoints(scannedPoints, 0);
-        SaveToFile(isGeneratorScene, scanIndex);
+        SaveToFile(isGeneratorScene, isTest, scanIndex);
         print("Scan done: " + scanIndex);
         if(!isGeneratorScene && scanIndex == -1) TurnOffColliders(false);
     }
@@ -78,7 +79,7 @@ public class LidarController : MonoBehaviour
         while ((line = reader.ReadLine()) != null)
         {
             string[] parts = line.Split(';');
-            scannedPoints.Add(new Point(new Vector3(float.Parse(parts[0]), float.Parse(parts[1]), float.Parse(parts[2])),0, 0, 0, 0, 0));
+            scannedPoints.Add(new Point(new Vector3(float.Parse(parts[0]), float.Parse(parts[1]), float.Parse(parts[2])),0, 0, 0, 0, 0, 0, false));
         }
     }
 
@@ -106,7 +107,7 @@ public class LidarController : MonoBehaviour
             {
                 Point newPoint = new Point(new Vector3(float.Parse(parts[0].Replace('.', ',')), float.Parse(parts[1].Replace('.', ',')),
                     float.Parse(parts[2].Replace('.', ','))), int.Parse(parts[3]), int.Parse(parts[4]), int.Parse(parts[5]),
-                    int.Parse(parts[6]), int.Parse(parts[7]));
+                    int.Parse(parts[6]), int.Parse(parts[7]), 0, false);
                 int id = int.Parse(parts[5]);
                 int lineId = int.Parse(parts[7]);
                 double temp = double.Parse(parts[8]);
@@ -152,7 +153,7 @@ public class LidarController : MonoBehaviour
         {
             if (hit.point.magnitude < maxDistance && hit.collider.tag != "Ground")
             {
-                scannedPoints.Add(new Point(hit.point, verticalIndex, horizontalIndex, 0, 0, 0));
+                scannedPoints.Add(new Point(hit.point, verticalIndex, horizontalIndex, 0, 0, 0, hit.point.magnitude, hit.collider.transform.root.tag != "StreetObject"));
                 verticalCounter++;
             }
         }
@@ -212,25 +213,51 @@ public class LidarController : MonoBehaviour
         particleSystem.SetParticles(cloud, cloud.Length);
     }
 
-    void SaveToFile(bool isGeneratorScene, int scanIndex)
+    void SaveToFile(bool isGeneratorScene, bool isTest, int scanIndex)
     {
-        string fileName = Application.dataPath + (isGeneratorScene ? "/Resources/Train_Data/points_"+ scenesGenerated + ".txt" : "/Resources/points_raw_" +
+        string fileName = Application.dataPath + (isGeneratorScene ? "/Resources/Train_Data/" : "/Resources/points_raw_" +
             (scanIndex == -1 ? "test" : scanIndex) + ".txt");
-        if (isGeneratorScene) scenesGenerated++;
-        if (File.Exists(fileName))
+        if (isGeneratorScene)
         {
-            File.Delete(fileName);
+            Texture2D texture = new Texture2D(horizontalCount, verticalCount);
+            Texture2D textureLabel = new Texture2D(horizontalCount, verticalCount);
+            UnityEngine.Color[] pixels = Enumerable.Repeat(UnityEngine.Color.black, horizontalCount * verticalCount).ToArray();
+            texture.SetPixels(pixels);
+            textureLabel.SetPixels(pixels);
+            for (int i = 0; i < scannedPoints.Count; i++)
+            {
+                texture.SetPixel(scannedPoints[i].HorizontalIndex, -scannedPoints[i].VerticalIndex, new Color(1 - scannedPoints[i].Distance / maxDistance,
+                   1 - scannedPoints[i].Distance / maxDistance, 1 - scannedPoints[i].Distance / maxDistance));
+                if(!scannedPoints[i].IsHouse)
+                    textureLabel.SetPixel(scannedPoints[i].HorizontalIndex, - scannedPoints[i].VerticalIndex, Color.white);
+            }
+            texture.Apply();
+            textureLabel.Apply();
+            scenesGenerated++;
+
+            byte[] bytes = texture.EncodeToPNG();
+            File.WriteAllBytes(fileName + (isTest ? "test" : "train") + "/points_" + scenesGenerated + ".png", bytes);
+            bytes = textureLabel.EncodeToPNG();
+            File.WriteAllBytes(fileName + (isTest ? "test" : "train") + "/points_" + scenesGenerated + "_label.png", bytes);
         }
-        StreamWriter writer = new StreamWriter(fileName, true);
-        writer.WriteLine(transform.position.x + ";" + transform.position.y + ";" + transform.position.z);
-        writer.WriteLine(horizontalCount);
-        writer.WriteLine(verticalCount);
-        writer.WriteLine(scannedPoints.Count);
-        for (int i = 0; i < scannedPoints.Count; i++){
-            writer.WriteLine(scannedPoints[i].Position.x + ";" + scannedPoints[i].Position.y + ";" + scannedPoints[i].Position.z +';' + scannedPoints[i].HorizontalIndex
-                + ';' + scannedPoints[i].VerticalIndex + ';' + scannedPoints[i].Id);
+        else
+        {
+            if (File.Exists(fileName))
+            {
+                File.Delete(fileName);
+            }
+            StreamWriter writer = new StreamWriter(fileName, true);
+            writer.WriteLine(transform.position.x + ";" + transform.position.y + ";" + transform.position.z);
+            writer.WriteLine(horizontalCount);
+            writer.WriteLine(verticalCount);
+            writer.WriteLine(scannedPoints.Count);
+            for (int i = 0; i < scannedPoints.Count; i++)
+            {
+                writer.WriteLine(scannedPoints[i].Position.x + ";" + scannedPoints[i].Position.y + ";" + scannedPoints[i].Position.z + ';' + scannedPoints[i].HorizontalIndex
+                    + ';' + scannedPoints[i].VerticalIndex + ';' + scannedPoints[i].Id);
+            }
+            writer.Close();
         }
-        writer.Close();
     }
 
     void TurnOffColliders(bool on)
