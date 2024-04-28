@@ -1,6 +1,6 @@
-Pointcloud-based surface modeling program.
+# Pointcloud-based surface modeling program
 
-_Diplomamunka_: Unity framework for testing
+_Diplomamunka_: Unity framework for generating pointclouds and testing the algorithm
 
 _Neural network_: U-net for stray point filtering
 
